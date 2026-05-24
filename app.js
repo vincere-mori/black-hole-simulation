@@ -390,7 +390,7 @@ let hudFps, hudTemp;
 let renderer, scene, camera, controls, clock;
 let orthoCamera, orthoScene, shaderMaterial;
 let uniforms = {};
-let galaxyParticles, galaxyDust, systemNodes = [];
+let galaxyParticles, galaxyDust, coreSprite, systemNodes = [];
 let raycaster, mouse;
 let targetCameraPos = new THREE.Vector3();
 let targetLookAt = new THREE.Vector3();
@@ -609,12 +609,16 @@ async function initApp() {
             renderer.clear();
             systemNodes.forEach(n => n.visible = false);
             if (galaxyDust) galaxyDust.visible = false;
+            if (galaxyParticles) galaxyParticles.visible = false;
+            if (coreSprite) coreSprite.visible = false;
             renderer.render(scene, camera);
             
             renderer.render(orthoScene, orthoCamera);
             
             systemNodes.forEach(n => n.visible = true);
             if (galaxyDust) galaxyDust.visible = true;
+            if (galaxyParticles) galaxyParticles.visible = true;
+            if (coreSprite) coreSprite.visible = true;
             renderer.autoClear = true;
         }
     }
@@ -764,7 +768,7 @@ function buildGalaxyMap() {
         blending: THREE.AdditiveBlending,
         depthWrite: false
     });
-    const coreSprite = new THREE.Sprite(coreSpriteMat);
+    coreSprite = new THREE.Sprite(coreSpriteMat);
     coreSprite.scale.set(7.0, 7.0, 1.0);
     scene.add(coreSprite);
 
@@ -818,6 +822,8 @@ function onMouseMove(e) {
 
 function onMouseClick(e) {
     if (appState !== 'GALAXY' || transitionProgress < 1.0) return;
+    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
     raycaster.setFromCamera(mouse, camera);
     const hits = raycaster.intersectObjects(systemNodes);
     if (hits.length > 0) {
