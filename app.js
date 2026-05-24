@@ -287,7 +287,7 @@ async function init() {
             systemNodes.forEach(node => {
                 node.rotation.y = -elapsed * 0.1;
                 // Subtle pulse size
-                const pulse = 1.0 + 0.08 * sin(elapsed * 4.0 + node.position.x);
+                const pulse = 1.0 + 0.08 * Math.sin(elapsed * 4.0 + node.position.x);
                 node.scale.set(pulse, pulse, pulse);
             });
 
@@ -692,6 +692,7 @@ function updateColorTheme(obj, idx) {
 function syncUI() {
     for (const key in sliders) {
         displays[key].textContent = parseFloat(sliders[key].value).toFixed(2);
+        updateSliderFill(sliders[key]);
     }
     
     // Dynamic boundary rules for slider dependencies
@@ -790,4 +791,77 @@ function showShaderErrorOverlay() {
     document.body.appendChild(overlay);
 }
 
-window.onload = init;
+window.onload = () => {
+    init();
+    initTutorial();
+};
+
+// --- Tutorial Onboarding ---
+
+function initTutorial() {
+    const overlay = document.getElementById('tutorial-overlay');
+    if (!overlay) return;
+
+    const done = localStorage.getItem('stellar_tutorial_done');
+    if (done) {
+        overlay.classList.add('hidden');
+        return;
+    }
+
+    let currentStep = 0;
+    const steps = overlay.querySelectorAll('.tutorial-step');
+    const totalSteps = steps.length;
+    const btnNext = document.getElementById('btn-tutorial-next');
+    const btnSkip = document.getElementById('btn-tutorial-skip');
+
+    function goToStep(idx) {
+        steps.forEach((s, i) => {
+            s.classList.remove('active', 'exit-left');
+            if (i < idx) s.classList.add('exit-left');
+        });
+        steps[idx].classList.add('active');
+        currentStep = idx;
+
+        if (idx === totalSteps - 1) {
+            btnNext.innerHTML = 'Done <i class="fas fa-check"></i>';
+        } else {
+            btnNext.innerHTML = 'Next <i class="fas fa-arrow-right"></i>';
+        }
+    }
+
+    function dismiss() {
+        localStorage.setItem('stellar_tutorial_done', '1');
+        overlay.classList.add('hidden');
+    }
+
+    btnNext.addEventListener('click', () => {
+        if (currentStep < totalSteps - 1) {
+            goToStep(currentStep + 1);
+        } else {
+            dismiss();
+        }
+    });
+
+    btnSkip.addEventListener('click', dismiss);
+
+    // Help button re-opens the tutorial
+    const btnHelp = document.getElementById('btn-help');
+    if (btnHelp) {
+        btnHelp.addEventListener('click', () => {
+            overlay.classList.remove('hidden');
+            goToStep(0);
+        });
+    }
+
+    goToStep(0);
+}
+
+// --- Slider colored fill ---
+
+function updateSliderFill(slider) {
+    const min = parseFloat(slider.min);
+    const max = parseFloat(slider.max);
+    const val = parseFloat(slider.value);
+    const pct = ((val - min) / (max - min)) * 100;
+    slider.style.background = `linear-gradient(to right, var(--accent) 0%, var(--accent) ${pct}%, rgba(255,255,255,0.1) ${pct}%)`;
+}

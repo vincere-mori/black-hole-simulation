@@ -4,181 +4,210 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stellar Cartography — Deep Space Explorer</title>
-    <!-- Google Fonts -->
+    <meta name="description" content="Interactive 3D cosmic map with relativistic simulations of black holes, pulsars, wormholes and megastructures">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-fontawesome/6.4.0/css/all.min.css">
-    <!-- Custom Style -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <!-- Three.js and OrbitControls -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 </head>
-<body class="galaxy-state">
-    <!-- WebGL Rendering Canvas -->
-    <canvas id="webgl-canvas"></canvas>
-
-    <!-- Global Interface Container -->
-    <div id="ui-container">
-        
-        <!-- Top Navigation Header -->
-        <header id="nav-header" class="glass-panel">
-            <div class="logo-area">
-                <i class="fas fa-satellite-dish pulse-icon"></i>
-                <div>
-                    <h1>STELLAR CARTOGRAPHY</h1>
-                    <span class="sub">Deep Space anomaly network</span>
-                </div>
+<body>
+    <!-- ========== BOOT TERMINAL ========== -->
+    <div id="boot-screen">
+        <div id="boot-scanline"></div>
+        <div id="boot-content">
+            <div id="boot-logo">
+                <pre id="ascii-logo">
+ ╔═══════════════════════════════════════════════╗
+ ║   S T E L L A R   C A R T O G R A P H Y     ║
+ ║          DEEP SPACE ANOMALY NETWORK           ║
+ ╚═══════════════════════════════════════════════╝
+                </pre>
             </div>
-            <nav class="navigation-controls">
-                <button id="btn-back-to-galaxy" class="nav-btn hidden">
-                    <i class="fas fa-globe"></i> Galaxy Map
+            <div id="boot-terminal"></div>
+            <div id="boot-progress-wrap" class="boot-hidden">
+                <div id="boot-progress-bar"></div>
+                <span id="boot-progress-pct">0%</span>
+            </div>
+            <div id="boot-enter-wrap" class="boot-hidden">
+                <button id="boot-enter-btn">
+                    <i class="fas fa-satellite-dish"></i>
+                    INITIALIZE STAR CHART
                 </button>
-            </nav>
-            <div id="connection-status" class="hud-mono">
-                <span class="dot green"></span> SYS_ONLINE
+                <p class="boot-hint">Press ENTER or click to launch</p>
             </div>
-        </header>
-
-        <!-- Right Side: Object Info Card (Shown on Map view hover/selection) -->
-        <aside id="info-card" class="glass-panel hidden">
-            <div class="info-header">
-                <span class="sector-tag hud-mono">SECTOR 04-A</span>
-                <h2 id="info-title">Gargantua Singularity</h2>
-                <p id="info-class" class="hud-mono">CLASS: ROTATING SCHWARZSCHILD BLACK HOLE</p>
-            </div>
-            
-            <div class="info-body">
-                <div class="stats-table">
-                    <div class="stat-row">
-                        <span class="stat-label">COORDINATES</span>
-                        <span id="info-coords" class="stat-value hud-mono">X: 104.2 / Y: -32.8</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">MASS (SOLAR)</span>
-                        <span id="info-mass" class="stat-value hud-mono">4.3e6 M☉</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">RADIATION STATE</span>
-                        <span id="info-rad" class="stat-value hud-mono">STABLE</span>
-                    </div>
-                </div>
-                <div class="description-box">
-                    <p id="info-desc">A supermassive gravitational anomaly located at the galactic center. Surrounded by a massive Keplerian accretion disk exhibiting extreme Doppler beaming and relativistic light bending geodesics.</p>
-                </div>
-            </div>
-
-            <div class="info-footer">
-                <button id="btn-enter-orbit" class="glowing-btn">
-                    <span class="btn-glow"></span>
-                    <i class="fas fa-crosshairs"></i> ENTER ORBIT
-                </button>
-            </div>
-        </aside>
-
-        <!-- Left Side: Simulator Controls Sidebar (Visible only in Orbital view) -->
-        <aside id="control-sidebar" class="glass-panel collapsed">
-            <header class="sidebar-header">
-                <h1 id="active-object-name">Gargantua</h1>
-                <p class="subtitle">PHYSICS PARAMETERS</p>
-            </header>
-
-            <div class="sidebar-content">
-                <!-- Section: Presets (Changes dynamically based on active object) -->
-                <section class="control-section">
-                    <h2 class="section-title"><i class="fas fa-wand-magic-sparkles"></i> Preset Profiles</h2>
-                    <div class="preset-grid" id="preset-container">
-                        <!-- Filled dynamically by JavaScript -->
-                    </div>
-                </section>
-
-                <!-- Section: Core Physics -->
-                <section class="control-section">
-                    <h2 class="section-title"><i class="fas fa-atom"></i> Singularity Physics</h2>
-                    
-                    <div class="control-group">
-                        <div class="control-label-row">
-                            <label for="slider-rs" id="label-rs">Horizon Mass (R<sub>s</sub>)</label>
-                            <span class="value-display" id="val-rs">1.00</span>
-                        </div>
-                        <input type="range" id="slider-rs" min="0.2" max="2.2" step="0.05" value="1.00">
-                    </div>
-
-                    <div class="control-group" id="group-distortion">
-                        <div class="control-label-row">
-                            <label for="slider-distortion">Warp Distortion</label>
-                            <span class="value-display" id="val-distortion">1.00</span>
-                        </div>
-                        <input type="range" id="slider-distortion" min="0.0" max="3.0" step="0.05" value="1.00">
-                    </div>
-                </section>
-
-                <!-- Section: Accessory (Accretion Disk, Jets, or Shell Panels) -->
-                <section class="control-section" id="section-accessory">
-                    <h2 class="section-title" id="accessory-title"><i class="fas fa-circle-notch"></i> Structure Details</h2>
-
-                    <div class="control-group" id="group-outer">
-                        <div class="control-label-row">
-                            <label for="slider-outer" id="label-outer">Outer Boundary</label>
-                            <span class="value-display" id="val-outer">9.50</span>
-                        </div>
-                        <input type="range" id="slider-outer" min="4.0" max="15.0" step="0.10" value="9.50">
-                    </div>
-
-                    <div class="control-group">
-                        <div class="control-label-row">
-                            <label for="slider-speed" id="label-speed">Keplerian Rotation Speed</label>
-                            <span class="value-display" id="val-speed">1.60</span>
-                        </div>
-                        <input type="range" id="slider-speed" min="0.0" max="4.0" step="0.05" value="1.60">
-                    </div>
-
-                    <div class="control-group" id="group-doppler">
-                        <div class="control-label-row">
-                            <label for="slider-doppler" id="label-doppler">Relativistic Doppler</label>
-                            <span class="value-display" id="val-doppler">1.00</span>
-                        </div>
-                        <input type="range" id="slider-doppler" min="0.0" max="2.5" step="0.05" value="1.00">
-                    </div>
-                </section>
-
-                <!-- Section: Aesthetics -->
-                <section class="control-section">
-                    <h2 class="section-title"><i class="fas fa-palette"></i> Radiance & Sky</h2>
-                    
-                    <div class="control-group">
-                        <label>Energy Color Palette</label>
-                        <div class="theme-picker" id="color-theme-picker">
-                            <!-- Filled dynamically by JavaScript -->
-                        </div>
-                    </div>
-
-                    <div class="control-group">
-                        <div class="control-label-row">
-                            <label for="slider-stars">Starfield Density</label>
-                            <span class="value-display" id="val-stars">1.00</span>
-                        </div>
-                        <input type="range" id="slider-stars" min="0.0" max="3.0" step="0.05" value="1.00">
-                    </div>
-                </section>
-            </div>
-
-            <footer class="sidebar-footer">
-                <button id="btn-camera" class="action-btn"><i class="fas fa-video"></i> Orbital Autopilot</button>
-            </footer>
-        </aside>
-
-        <!-- Technical Telemetry HUD -->
-        <div id="tech-hud" class="glass-panel">
-            <div class="hud-item"><span class="hud-label">FPS:</span> <span id="hud-fps">60</span></div>
-            <div class="hud-item"><span class="hud-label">SIM_SPD:</span> <span id="hud-sim-speed">1.00</span> GFLOPS</div>
-            <div class="hud-item"><span class="hud-label">TEMP:</span> <span id="hud-temp">8.4e6</span> K</div>
+        </div>
+        <div id="boot-stats">
+            <span>SYS_BUILD: 4.7.2-rc1</span>
+            <span>KERNEL: ASTRO-NAV/x86_64</span>
+            <span id="boot-clock">00:00:00 UTC</span>
         </div>
     </div>
 
-    <!-- App Orchestration Script -->
+    <!-- ========== MAIN APP (hidden during boot) ========== -->
+    <div id="app-container" class="app-hidden">
+        <canvas id="webgl-canvas"></canvas>
+
+        <div id="ui-container">
+            <header id="nav-header" class="glass-panel">
+                <div class="logo-area">
+                    <i class="fas fa-satellite-dish pulse-icon"></i>
+                    <div>
+                        <h1>STELLAR CARTOGRAPHY</h1>
+                        <span class="sub">Deep Space anomaly network</span>
+                    </div>
+                </div>
+                <nav class="navigation-controls">
+                    <button id="btn-help" class="nav-btn" title="Show guide">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                    <button id="btn-back-to-galaxy" class="nav-btn hidden">
+                        <i class="fas fa-globe"></i> Galaxy Map
+                    </button>
+                </nav>
+                <div id="connection-status" class="hud-mono">
+                    <span class="dot green"></span> SYS_ONLINE
+                </div>
+            </header>
+
+            <aside id="info-card" class="glass-panel hidden">
+                <div class="info-header">
+                    <span class="sector-tag hud-mono" id="info-sector">SECTOR 04-A</span>
+                    <h2 id="info-title">—</h2>
+                    <p id="info-class" class="hud-mono">—</p>
+                </div>
+                <div class="info-body">
+                    <div class="stats-table">
+                        <div class="stat-row">
+                            <span class="stat-label">COORDINATES</span>
+                            <span id="info-coords" class="stat-value hud-mono">—</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">MASS</span>
+                            <span id="info-mass" class="stat-value hud-mono">—</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">STATUS</span>
+                            <span id="info-rad" class="stat-value hud-mono">—</span>
+                        </div>
+                    </div>
+                    <div class="description-box">
+                        <p id="info-desc">—</p>
+                    </div>
+                </div>
+                <div class="info-footer">
+                    <button id="btn-enter-orbit" class="glowing-btn">
+                        <i class="fas fa-crosshairs"></i> ENTER ORBIT
+                    </button>
+                </div>
+            </aside>
+
+            <aside id="control-sidebar" class="glass-panel collapsed">
+                <header class="sidebar-header">
+                    <h1 id="active-object-name">—</h1>
+                    <p class="subtitle">PHYSICS PARAMETERS</p>
+                </header>
+                <div class="sidebar-content">
+                    <section class="control-section">
+                        <h2 class="section-title"><i class="fas fa-star"></i> Presets</h2>
+                        <div class="preset-grid" id="preset-container"></div>
+                    </section>
+                    <section class="control-section">
+                        <h2 class="section-title"><i class="fas fa-atom"></i> Physics</h2>
+                        <div class="control-group">
+                            <div class="control-label-row">
+                                <label for="slider-rs" id="label-rs">Mass (R<sub>s</sub>)</label>
+                                <span class="value-display" id="val-rs">1.00</span>
+                            </div>
+                            <input type="range" id="slider-rs" min="0.2" max="2.2" step="0.05" value="1.00">
+                        </div>
+                        <div class="control-group" id="group-distortion">
+                            <div class="control-label-row">
+                                <label for="slider-distortion">Warp Distortion</label>
+                                <span class="value-display" id="val-distortion">1.00</span>
+                            </div>
+                            <input type="range" id="slider-distortion" min="0.0" max="3.0" step="0.05" value="1.00">
+                        </div>
+                    </section>
+                    <section class="control-section" id="section-accessory">
+                        <h2 class="section-title" id="accessory-title"><i class="fas fa-circle-notch"></i> Structure</h2>
+                        <div class="control-group" id="group-outer">
+                            <div class="control-label-row">
+                                <label for="slider-outer" id="label-outer">Outer Boundary</label>
+                                <span class="value-display" id="val-outer">9.50</span>
+                            </div>
+                            <input type="range" id="slider-outer" min="4.0" max="15.0" step="0.10" value="9.50">
+                        </div>
+                        <div class="control-group">
+                            <div class="control-label-row">
+                                <label for="slider-speed" id="label-speed">Rotation</label>
+                                <span class="value-display" id="val-speed">1.60</span>
+                            </div>
+                            <input type="range" id="slider-speed" min="0.0" max="4.0" step="0.05" value="1.60">
+                        </div>
+                        <div class="control-group" id="group-doppler">
+                            <div class="control-label-row">
+                                <label for="slider-doppler" id="label-doppler">Doppler</label>
+                                <span class="value-display" id="val-doppler">1.00</span>
+                            </div>
+                            <input type="range" id="slider-doppler" min="0.0" max="2.5" step="0.05" value="1.00">
+                        </div>
+                    </section>
+                    <section class="control-section">
+                        <h2 class="section-title"><i class="fas fa-palette"></i> Radiance</h2>
+                        <div class="control-group">
+                            <label>Color Palette</label>
+                            <div class="theme-picker" id="color-theme-picker"></div>
+                        </div>
+                        <div class="control-group">
+                            <div class="control-label-row">
+                                <label for="slider-stars">Star Density</label>
+                                <span class="value-display" id="val-stars">1.00</span>
+                            </div>
+                            <input type="range" id="slider-stars" min="0.0" max="3.0" step="0.05" value="1.00">
+                        </div>
+                    </section>
+                </div>
+                <footer class="sidebar-footer">
+                    <button id="btn-camera" class="action-btn"><i class="fas fa-video"></i> Orbital Autopilot</button>
+                </footer>
+            </aside>
+
+            <div id="tech-hud" class="glass-panel">
+                <div class="hud-item"><span class="hud-label">FPS:</span> <span id="hud-fps">—</span></div>
+                <div class="hud-item"><span class="hud-label">TEMP:</span> <span id="hud-temp">—</span> K</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== GUIDE OVERLAY ========== -->
+    <div id="guide-overlay" class="guide-hidden">
+        <div id="guide-panel" class="glass-panel">
+            <h2><i class="fas fa-compass"></i> Quick Reference</h2>
+            <div class="guide-grid">
+                <div class="guide-item">
+                    <div class="guide-icon"><i class="fas fa-mouse-pointer"></i></div>
+                    <div><strong>Navigate</strong><br>Drag to orbit, scroll to zoom</div>
+                </div>
+                <div class="guide-item">
+                    <div class="guide-icon"><i class="fas fa-crosshairs"></i></div>
+                    <div><strong>Select</strong><br>Click glowing markers on the map</div>
+                </div>
+                <div class="guide-item">
+                    <div class="guide-icon"><i class="fas fa-rocket"></i></div>
+                    <div><strong>Enter Orbit</strong><br>Open info card → click ENTER ORBIT</div>
+                </div>
+                <div class="guide-item">
+                    <div class="guide-icon"><i class="fas fa-sliders-h"></i></div>
+                    <div><strong>Tune Physics</strong><br>Use sliders, presets and palettes</div>
+                </div>
+            </div>
+            <button id="guide-close" class="glowing-btn"><i class="fas fa-check"></i> GOT IT</button>
+        </div>
+    </div>
+
     <script src="app.js"></script>
 </body>
 </html>
