@@ -417,38 +417,34 @@ function createNodeTexture(hex) {
     
     ctx.clearRect(0, 0, 128, 128);
     ctx.shadowColor = hex;
-    ctx.shadowBlur = 12;
+    ctx.shadowBlur = 10;
     
-    // Outer thin circle
     ctx.strokeStyle = hex;
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.arc(64, 64, 48, 0, Math.PI * 2);
+    for (let i = 0; i < 6; i++) {
+        const angle = i * Math.PI / 3;
+        const x = 64 + 48 * Math.cos(angle);
+        const y = 64 + 48 * Math.sin(angle);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
     ctx.stroke();
     
-    // Middle dashed ring
     ctx.lineWidth = 1.5;
-    ctx.setLineDash([6, 8]);
-    ctx.beginPath();
-    ctx.arc(64, 64, 38, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(64, 24); ctx.lineTo(64, 40); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(64, 104); ctx.lineTo(64, 88); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(24, 64); ctx.lineTo(40, 64); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(104, 64); ctx.lineTo(88, 64); ctx.stroke();
     
-    // Crosshair ticks
-    ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(64, 16); ctx.lineTo(64, 28); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(64, 112); ctx.lineTo(64, 100); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(16, 64); ctx.lineTo(28, 64); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(112, 64); ctx.lineTo(100, 64); ctx.stroke();
-    
-    // Glowing center
-    const gradient = ctx.createRadialGradient(64, 64, 2, 64, 64, 16);
+    const gradient = ctx.createRadialGradient(64, 64, 2, 64, 64, 20);
     gradient.addColorStop(0, '#ffffff');
-    gradient.addColorStop(0.3, hex);
+    gradient.addColorStop(0.4, hex);
     gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
     ctx.fillStyle = gradient;
     ctx.beginPath();
-    ctx.arc(64, 64, 16, 0, Math.PI * 2);
+    ctx.arc(64, 64, 20, 0, Math.PI * 2);
     ctx.fill();
     
     return new THREE.CanvasTexture(c);
@@ -506,13 +502,13 @@ async function initApp() {
 
     scene = new THREE.Scene();
     clock = new THREE.Clock();
-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 150);
-    camera.position.set(0, 14, 25);
+    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 200);
+    camera.position.set(0, 20, 45);
 
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.maxDistance = 50.0;
+    controls.maxDistance = 80.0;
     controls.minDistance = 3.0;
 
     raycaster = new THREE.Raycaster();
@@ -575,7 +571,7 @@ async function initApp() {
             }
         }
 
-        if (appState === 'GALAXY') {
+        if (appState === 'GALAXY' || appState === 'TRANSITION') {
             if (galaxyParticles) galaxyParticles.rotation.y = elapsed * 0.03;
             if (galaxyDust) galaxyDust.rotation.y = elapsed * 0.03;
 
@@ -586,10 +582,10 @@ async function initApp() {
 
             if (autoRotate && transitionProgress === 1.0) {
                 const mt = elapsed * 0.03;
-                const radius = 25.0;
+                const radius = 45.0;
                 camera.position.x = radius * Math.cos(mt);
                 camera.position.z = radius * Math.sin(mt);
-                camera.position.y = 12.0 + 4.0 * Math.sin(mt * 0.5);
+                camera.position.y = 15.0 + 5.0 * Math.sin(mt * 0.5);
                 controls.target.set(0, 0, 0);
             }
 
@@ -608,7 +604,18 @@ async function initApp() {
             uniforms.uInvProjection.value.copy(camera.projectionMatrixInverse);
             uniforms.uCamWorld.value.copy(camera.matrixWorld);
             uniforms.uTime.value = elapsed;
+            
+            renderer.autoClear = false;
+            renderer.clear();
+            systemNodes.forEach(n => n.visible = false);
+            if (galaxyDust) galaxyDust.visible = false;
+            renderer.render(scene, camera);
+            
             renderer.render(orthoScene, orthoCamera);
+            
+            systemNodes.forEach(n => n.visible = true);
+            if (galaxyDust) galaxyDust.visible = true;
+            renderer.autoClear = true;
         }
     }
 
@@ -617,12 +624,12 @@ async function initApp() {
 
 function buildGalaxyMap() {
     // 1. Distant background starfield
-    const bgCount = 3000;
+    const bgCount = 6000;
     const bgGeo = new THREE.BufferGeometry();
     const bgPos = new Float32Array(bgCount * 3);
     const bgCol = new Float32Array(bgCount * 3);
     for (let i = 0; i < bgCount; i++) {
-        const r = 55.0 + Math.random() * 35.0;
+        const r = 85.0 + Math.random() * 45.0;
         const u = Math.random() * 2.0 - 1.0;
         const phi = Math.random() * Math.PI * 2.0;
         const theta = Math.acos(u);
@@ -661,12 +668,12 @@ function buildGalaxyMap() {
     const cEdge = new THREE.Color('#03011c');
 
     for (let i = 0; i < count; i++) {
-        const r = Math.pow(Math.random(), 2.3) * 16.0;
+        const r = Math.pow(Math.random(), 2.3) * 24.0;
         const armIdx = i % 2;
         const theta = (armIdx * Math.PI) + (r * 0.45);
-        const sx = (Math.random() - 0.5) * (1.2 / (r * 0.1 + 0.5));
-        const sy = (Math.random() - 0.5) * (0.8 / (r * 0.15 + 0.5));
-        const sz = (Math.random() - 0.5) * (1.2 / (r * 0.1 + 0.5));
+        const sx = (Math.random() - 0.5) * (1.8 / (r * 0.1 + 0.5));
+        const sy = (Math.random() - 0.5) * (1.2 / (r * 0.15 + 0.5));
+        const sz = (Math.random() - 0.5) * (1.8 / (r * 0.1 + 0.5));
 
         pos[i * 3]     = r * Math.cos(theta) + sx;
         pos[i * 3 + 1] = sy;
@@ -707,13 +714,13 @@ function buildGalaxyMap() {
     const colorCoreGlow = new THREE.Color('#f0a030');
     
     for (let i = 0; i < dustCount; i++) {
-        const r = Math.pow(Math.random(), 1.8) * 16.0;
+        const r = Math.pow(Math.random(), 1.8) * 24.0;
         const armIdx = i % 2;
         const theta = (armIdx * Math.PI) + (r * 0.45) + (Math.random() - 0.5) * 0.22;
         
-        const sx = (Math.random() - 0.5) * (2.2 / (r * 0.1 + 0.5));
-        const sy = (Math.random() - 0.5) * (1.2 / (r * 0.15 + 0.5));
-        const sz = (Math.random() - 0.5) * (2.2 / (r * 0.1 + 0.5));
+        const sx = (Math.random() - 0.5) * (3.3 / (r * 0.1 + 0.5));
+        const sy = (Math.random() - 0.5) * (1.8 / (r * 0.15 + 0.5));
+        const sz = (Math.random() - 0.5) * (3.3 / (r * 0.1 + 0.5));
         
         dustPos[i * 3]     = r * Math.cos(theta) + sx;
         dustPos[i * 3 + 1] = sy;
@@ -753,11 +760,12 @@ function buildGalaxyMap() {
     const coreSpriteMat = new THREE.SpriteMaterial({
         map: createCoreGlowTexture(),
         transparent: true,
+        opacity: 0.6,
         blending: THREE.AdditiveBlending,
         depthWrite: false
     });
     const coreSprite = new THREE.Sprite(coreSpriteMat);
-    coreSprite.scale.set(10.0, 10.0, 1.0);
+    coreSprite.scale.set(7.0, 7.0, 1.0);
     scene.add(coreSprite);
 
     // 5. System Nodes (rendered as sprites, facing camera)
@@ -785,8 +793,9 @@ function buildGalaxyMap() {
             depthWrite: false
         });
         const sprite = new THREE.Sprite(spriteMat);
-        sprite.position.copy(obj.position);
-        sprite.scale.set(1.8, 1.8, 1.0);
+        sprite.position.copy(obj.position).multiplyScalar(2.5);
+        sprite.scale.set(2.4, 2.4, 1.0);
+        sprite.renderOrder = 999;
         sprite.userData = { id: key };
         scene.add(sprite);
         systemNodes.push(sprite);
@@ -802,7 +811,6 @@ function onMouseMove(e) {
     const hits = raycaster.intersectObjects(systemNodes);
     if (hits.length > 0) {
         document.body.style.cursor = 'pointer';
-        showInfoCard(hits[0].object.userData.id);
     } else {
         document.body.style.cursor = 'default';
     }
@@ -815,7 +823,7 @@ function onMouseClick(e) {
     if (hits.length > 0) {
         showInfoCard(hits[0].object.userData.id);
         autoRotate = false;
-        btnAutopilot.classList.remove('active');
+        if (btnAutopilot) btnAutopilot.classList.remove('active');
     }
 }
 
@@ -924,9 +932,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         setTimeout(() => {
             appState = 'GALAXY';
-            camera.position.set(0, 14, 25);
+            camera.position.set(0, 20, 45);
             controls.target.set(0, 0, 0);
-            controls.maxDistance = 50.0;
+            controls.maxDistance = 80.0;
             controls.minDistance = 6.0;
             autoRotate = true;
             btnAutopilot.classList.remove('active');
@@ -1070,8 +1078,8 @@ function setupUIEvents() {
             if (!obj) return;
             appState = 'TRANSITION';
             transitionProgress = 0.0;
-            targetCameraPos.copy(obj.position).add(new THREE.Vector3(0, 3, 7));
-            targetLookAt.copy(obj.position);
+            targetCameraPos.copy(obj.position).multiplyScalar(2.5).add(new THREE.Vector3(0, 3, 7));
+            targetLookAt.copy(obj.position).multiplyScalar(2.5);
             currentLookAt.copy(controls.target);
             infoCard.classList.add('hidden');
             autoRotate = false;
