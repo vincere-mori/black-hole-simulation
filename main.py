@@ -19,10 +19,18 @@ SHADERS_DIR = os.path.join(os.path.dirname(__file__), "shaders")
 
 # Object metadata and file mappings
 OBJECTS = {
-    "1": {"file": "black-hole.frag", "name": "Black Hole Singularity", "rs": 1.0, "outer": 9.5, "speed": 1.6, "dop": 1.0, "dist": 1.0},
+    "1": {"file": "black-hole.frag", "name": "Gargantua Singularity", "rs": 1.0, "outer": 9.5, "speed": 1.6, "dop": 1.0, "dist": 1.0},
     "2": {"file": "pulsar.frag", "name": "Vela Pulsar", "rs": 0.8, "outer": 12.0, "speed": 2.0, "dop": 1.0, "dist": 1.0},
     "3": {"file": "wormhole.frag", "name": "Cygnus Wormhole", "rs": 1.0, "outer": 10.0, "speed": 1.0, "dop": 1.0, "dist": 1.0},
-    "4": {"file": "dyson-sphere.frag", "name": "Kepler Dyson Sphere", "rs": 0.9, "outer": 2.8, "speed": 1.5, "dop": 1.8, "dist": 0.0}
+    "4": {"file": "dyson-sphere.frag", "name": "Kepler Dyson Sphere", "rs": 0.9, "outer": 2.8, "speed": 1.5, "dop": 1.8, "dist": 0.0},
+    "5": {"file": "black-hole.frag", "name": "Sagittarius A*", "rs": 1.5, "outer": 11.0, "speed": 2.2, "dop": 1.3, "dist": 1.4},
+    "6": {"file": "pulsar.frag", "name": "Crab Pulsar", "rs": 0.9, "outer": 14.0, "speed": 3.5, "dop": 1.8, "dist": 1.2},
+    "7": {"file": "wormhole.frag", "name": "Andromeda Gateway", "rs": 1.2, "outer": 11.5, "speed": 1.8, "dop": 1.4, "dist": 1.5},
+    "8": {"file": "dyson-sphere.frag", "name": "Solara Dyson Swarm", "rs": 0.85, "outer": 2.5, "speed": 1.0, "dop": 1.2, "dist": 0.0},
+    "9": {"file": "black-hole.frag", "name": "Polaris Singularity", "rs": 0.6, "outer": 6.5, "speed": 2.0, "dop": 0.7, "dist": 0.8},
+    "0": {"file": "dyson-sphere.frag", "name": "Aldebaran Bulge", "rs": 1.5, "outer": 3.8, "speed": 0.8, "dop": 1.0, "dist": 0.0},
+    "-": {"file": "pulsar.frag", "name": "SGR 1806-20 Magnetar", "rs": 0.8, "outer": 16.0, "speed": 4.2, "dop": 2.4, "dist": 2.5},
+    "=": {"file": "wormhole.frag", "name": "Centauri Bridge", "rs": 0.5, "outer": 7.5, "speed": 1.2, "dop": 0.7, "dist": 1.2}
 }
 
 active_key = "1"
@@ -30,22 +38,54 @@ current_obj = OBJECTS[active_key]
 
 # Color Themes matching the Web app
 THEMES = {
-    "1": [ # Black Hole themes
-        {"c1": (1.0, 0.85, 0.5), "c2": (0.9, 0.22, 0.02), "name": "Gargantua Orange"},
-        {"c1": (0.4, 0.95, 1.0), "c2": (0.01, 0.2, 0.8), "name": "Cosmic Cyan"},
-        {"c1": (0.9, 0.5, 1.0), "c2": (0.3, 0.01, 0.65), "name": "Quantum Purple"}
+    "1": [ # Gargantua
+        {"c1": (1.0, 0.75, 0.0), "c2": (1.0, 0.13, 0.0), "name": "Gargantua Orange"},
+        {"c1": (0.0, 0.94, 1.0), "c2": (0.0, 0.07, 1.0), "name": "Cosmic Cyan"},
+        {"c1": (0.92, 0.0, 1.0), "c2": (0.32, 0.0, 1.0), "name": "Quantum Purple"}
     ],
-    "2": [ # Pulsar themes
+    "2": [ # Vela
         {"c1": (0.0, 0.9, 1.0), "c2": (0.32, 0.0, 1.0), "name": "Gamma Blue"},
         {"c1": (1.0, 0.25, 0.25), "c2": (0.9, 0.0, 1.0), "name": "Magnetar Purple"}
     ],
-    "3": [ # Wormhole themes
-        {"c1": (0.9, 0.0, 1.0), "c2": (0.0, 0.9, 1.0), "name": "Nebula Portal"},
+    "3": [ # Cygnus
+        {"c1": (0.92, 0.0, 1.0), "c2": (0.0, 0.9, 1.0), "name": "Nebula Portal"},
         {"c1": (1.0, 0.75, 0.0), "c2": (0.0, 1.0, 0.4), "name": "Gold-Emerald Bridge"}
     ],
-    "4": [ # Dyson Sphere themes
-        {"c1": (1.0, 0.6, 0.0), "c2": (1.0, 0.8, 0.0), "name": "Solar Gold"},
+    "4": [ # Kepler
+        {"c1": (1.0, 0.62, 0.0), "c2": (1.0, 0.8, 0.0), "name": "Solar Gold"},
         {"c1": (0.0, 0.9, 1.0), "c2": (1.0, 1.0, 1.0), "name": "Sirius White-Blue"}
+    ],
+    "5": [ # Sgr A*
+        {"c1": (1.0, 0.2, 0.0), "c2": (1.0, 0.6, 0.0), "name": "Plasma Flare"},
+        {"c1": (0.0, 1.0, 0.8), "c2": (0.0, 0.33, 1.0), "name": "Core Cyan"}
+    ],
+    "6": [ # Crab
+        {"c1": (0.0, 0.66, 1.0), "c2": (0.0, 0.13, 0.53), "name": "Blue Nebula"},
+        {"c1": (1.0, 0.0, 0.33), "c2": (0.33, 0.0, 1.0), "name": "Chandra Pink"}
+    ],
+    "7": [ # Andromeda
+        {"c1": (0.8, 0.0, 1.0), "c2": (0.2, 0.0, 0.4), "name": "Andromeda Magenta"},
+        {"c1": (0.0, 1.0, 0.66), "c2": (0.0, 0.2, 0.07), "name": "Bio-Green Portal"}
+    ],
+    "8": [ # Solara
+        {"c1": (0.66, 1.0, 0.0), "c2": (1.0, 0.66, 0.0), "name": "Solara Amber"},
+        {"c1": (1.0, 0.0, 1.0), "c2": (1.0, 1.0, 1.0), "name": "Nebular Violet"}
+    ],
+    "9": [ # Polaris
+        {"c1": (0.0, 1.0, 1.0), "c2": (0.0, 0.33, 1.0), "name": "Polar Blue"},
+        {"c1": (1.0, 0.0, 1.0), "c2": (0.4, 0.0, 0.6), "name": "Ultraviolet Flare"}
+    ],
+    "0": [ # Aldebaran
+        {"c1": (1.0, 0.26, 0.0), "c2": (1.0, 0.8, 0.0), "name": "Aldebaran Fire"},
+        {"c1": (1.0, 0.0, 0.33), "c2": (1.0, 0.66, 0.93), "name": "Magenta Glow"}
+    ],
+    "-": [ # SGR 1806-20
+        {"c1": (1.0, 0.2, 0.0), "c2": (0.33, 0.0, 1.0), "name": "Magnetic Red-Violet"},
+        {"c1": (0.0, 1.0, 0.8), "c2": (0.0, 0.2, 0.4), "name": "Hyper-Gamma Cyan"}
+    ],
+    "=": [ # Centauri
+        {"c1": (0.0, 1.0, 1.0), "c2": (0.92, 0.0, 1.0), "name": "Quantum Portal"},
+        {"c1": (1.0, 0.8, 0.0), "c2": (1.0, 0.2, 0.0), "name": "Solaris Gateway"}
     ]
 }
 
@@ -95,7 +135,7 @@ def compile_object_shader(obj_key):
     params["distortion"] = obj["dist"]
     theme_idx = 0
     
-    if obj_key == "4": # Dyson sphere inner radius is star size, not horizon scale
+    if obj_key in ["4", "8", "0"]: # Dyson sphere inner radius is star size, not horizon scale
         params["inner_radius"] = obj["rs"] * 0.9
     else:
         params["inner_radius"] = obj["rs"] * 2.2
@@ -186,10 +226,18 @@ def print_help():
     print("           STELLAR CARTOGRAPHY EXPLORER (DESKTOP)")
     print("=" * 60)
     print("Key bindings to switch space objects:")
-    print("  1  : Schwarzschild Black Hole")
+    print("  1  : Gargantua Singularity")
     print("  2  : Vela Pulsar")
     print("  3  : Cygnus Wormhole")
     print("  4  : Kepler Dyson Sphere")
+    print("  5  : Sagittarius A*")
+    print("  6  : Crab Pulsar")
+    print("  7  : Andromeda Gateway")
+    print("  8  : Solara Dyson Swarm")
+    print("  9  : Polaris Intermediate Black Hole")
+    print("  0  : Aldebaran Stellar Bulge")
+    print("  -  : SGR 1806-20 Magnetar")
+    print("  =  : Centauri Bridge Wormhole")
     print("  ")
     print("Camera Controls:")
     print("  Mouse Drag       : Orbit Camera")
@@ -226,7 +274,7 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 running = False
-            elif event.key in [pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4]:
+            elif event.key in [pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9, pygame.K_0, pygame.K_MINUS, pygame.K_EQUALS]:
                 key_char = pygame.key.name(event.key)
                 if key_char in OBJECTS and key_char != active_key:
                     active_key = key_char
@@ -286,7 +334,7 @@ while running:
         params["distortion"] = max(0.0, params["distortion"] - 0.02)
 
     # Dynamic limits for boundaries
-    if active_key == "4": # Dyson star
+    if active_key in ["4", "8", "0"]: # Dyson star
         params["inner_radius"] = params["rs"] * 0.9
         params["outer_radius"] = max(params["rs"] * 1.6, params["outer_radius"])
     else:

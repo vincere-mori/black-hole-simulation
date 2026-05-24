@@ -1,87 +1,107 @@
-# Stellar Cartography — Interactive Cosmic Map Explorer
+# 🌌 Stellar Cartography
 
-An interactive 3D Cosmic Map and real-time relativistic anomaly simulator featuring high-performance physics-based shaders. The project includes:
-1. **Interactive 3D Galaxy Map (Web)**: A rotating spiral galaxy of 10,000 stars built using `Three.js` (WebGL). It lets you locate, hover, and select major cosmic anomalies. Selecting a node triggers a smooth camera zoom animation and opens a dedicated simulator.
-2. **Volumetric Relativistic Simulations**: Four custom-built GLSL fragment shaders (run either locally on desktop or via browser) representing:
-   * **Schwarzschild Black Hole**: Gravitational lensing geodesic raymarching with 3D volumetric thickness, Doppler beaming, and gravitational redshift.
-   * **Vela Pulsar**: A precessing, fast-spinning neutron star emitting conical relativistic jets and a dipole magnetosphere grid.
-   * **Cygnus Wormhole**: Morris-Thorne Einstein-Rosen bridge coordinate inversion that lets you look straight through a spherical throat to see an alternate universe background.
-   * **Kepler Dyson Megastructure**: Orbiting geometric panel shields surrounding a star, exposing dynamic solar flares and core temperatures through panel gaps.
-3. **Python Desktop App**: Run any of the four shaders locally in a Pygame window powered by PyOpenGL hardware acceleration.
+An interactive 3D Cosmic Map and real-time relativistic anomaly simulator. Explore intermediate and supermassive black holes, pulsars, wormholes, and megastructures directly in your browser or via a desktop application.
+
+* Live Web Application: [https://vincere-mori.github.io/stellar-cartography/](https://vincere-mori.github.io/stellar-cartography/)
+* Desktop Version: Powered by Python + PyOpenGL (real-time GLSL shader compilation)
 
 ---
 
-## Simulated Objects & Physics Math
+## 🌟 Catalog of Anomalies
 
-### 1. Schwarzschild Black Hole (`shaders/black-hole.frag`)
+The map features 12 unique celestial objects, each located at specific galactic coordinates:
 
-Bends incoming light rays from background stars based on Schwarzschild spacetime geodesics:
-
-$$\vec{a} = -\frac{1.5 \cdot R_s \cdot |\vec{L}|^2}{r^5} \vec{p}$$
-
-Features a true 3D volumetric accretion disk calculated inside a vertical Gaussian density envelope:
-
-$$\text{Density}_{\text{vol}} = \text{FBM}(r, \theta) \cdot \exp\left(-\frac{y^2}{d^2}\right)$$
-
-And shifts frequencies due to both Keplerian orbital speeds (Doppler Beaming) and gravity well energy loss (Gravitational Redshift):
-
-$$D = \frac{1}{\gamma(1 - \beta \cos\theta)}, \quad z_g = \frac{1}{\sqrt{1 - R_s/r}} - 1$$
-
-### 2. Vela Pulsar (`shaders/pulsar.frag`)
-A precessing magnetic axis vector $\vec{m}(t)$ creates precessing cones of radiation. When a photon enters the cone ($\cos\alpha > \text{threshold}$), it accumulates high-energy jet glow:
-
-$$\text{JetGlow} \propto \frac{\text{power}(\cos\alpha, N)}{r}$$
-
-Surrounding the star is a dipole magnetosphere grid representing field line equations.
-
-### 3. Cygnus Wormhole (`shaders/wormhole.frag`)
-Models a Morris-Thorne wormhole throat transition. When a ray reaches throat radius $r < R_s$, the space coordinate is inverted:
-
-$$\vec{p}_{\text{new}} = -\vec{p} \cdot 1.01$$
-
-The ray emerges on the opposite side of the throat and continues its trajectory inside an **alternate universe** sampling a different colored nebula and starfield.
-
-### 4. Kepler Dyson Sphere (`shaders/dyson-sphere.frag`)
-A central star sphere surrounded by a larger spherical shell. A rotating sin-cos grid equation partitions the shell into geometric panels and structural gaps:
-
-$$\text{Panel} = \text{step}(\text{gap}, \text{fract}(\theta \cdot F)) \cdot \text{step}(\text{gap}, \text{fract}(\phi \cdot F))$$
-
-Rays passing through gaps expose active solar flares on the star core.
+| Key | Name | Classification | Coordinates | Core Characteristics |
+|---|---|---|---|---|
+| **1** | **Gargantua Singularity** | Schwarzschild Black Hole | X: -3.50, Y: 0.80, Z: -2.00 | Volumetric accretion disk, Keplerian velocity, Doppler lensing |
+| **2** | **Vela Pulsar** | Rotating Neutron Star | X: 5.00, Y: 1.00, Z: -4.00 | Conical relativistic radio jets, precessing magnetic dipole field |
+| **3** | **Cygnus Wormhole** | Morris-Thorne Bridge | X: -6.00, Y: -1.00, Z: 5.00 | Spacetime bridge, throat inversion to an alternate universe |
+| **4** | **Kepler Dyson Sphere** | Stellar Megastructure | X: 3.00, Y: -2.00, Z: 7.00 | Swarm of geometric solar panels, stellar flares, silhouettes |
+| **5** | **Sagittarius A*** | Supermassive Black Hole | X: 0.00, Y: 0.00, Z: 0.00 | Milky Way galactic core, extreme redshift, active plasma flow |
+| **6** | **Crab Pulsar** | High-Spin Neutron Star | X: -8.00, Y: 3.00, Z: -6.00 | Young pulsar, ultra-rapid rotation, Chandra X-ray pink theme |
+| **7** | **Andromeda Gateway** | Intergalactic Wormhole | X: 8.00, Y: -3.00, Z: -8.00 | Massive gateway bridge leading to the Andromeda galaxy |
+| **8** | **Solara Dyson Swarm** | Dense Megastructure | X: -2.00, Y: -4.00, Z: -5.00 | Solar energy collector plates with escaping coronal glare |
+| **9** | **Polaris Singularity** | Intermediate Black Hole | X: 1.00, Y: 6.00, Z: -7.00 | High-spin intermediate singularity, ultraviolet accretion disk |
+| **10** | **Aldebaran Bulge** | Stellar Core Flare | X: -4.00, Y: 5.00, Z: 3.00 | Hyperactive red giant star core, violent flares, magnetic clouds |
+| **11** | **SGR 1806-20 Magnetar** | Extreme Magnetar | X: -7.00, Y: -5.00, Z: 2.00 | Strongest magnetic field observed, precessing gamma-ray jets |
+| **12** | **Centauri Bridge** | Micro Wormhole | X: 4.00, Y: -3.00, Z: -2.00 | Quantum-stabilized micro-throat connecting Sol and Centauri |
 
 ---
 
-## Running the Web App Locally
+## 🔬 Physics & Mathematics
 
-Due to browser security CORS restrictions, loading fragment shaders dynamically requires running a simple web server:
+The simulations run directly on the GPU using high-performance GLSL fragment shaders. The underlying physics models include:
+
+### Gravitational Spacetime Bending
+Light rays near black holes and wormholes are bent using Schwarzschild geodesics integrated step-by-step during raymarching:
+
+`a = -1.5 * Rs * |L|² / (r⁵) * p`
+
+* **p**: Photon position vector
+* **a**: Bending acceleration vector
+* **Rs**: Schwarzschild horizon radius
+* **L**: Angular momentum vector (`L = p × v`)
+
+### Volumetric Accretion Disk
+Accretion disks are rendered as 3D participating media with density mapped inside a vertical Gaussian envelope:
+
+`Density = Noise(r, θ) * exp(-y² / thickness²)`
+
+This produces realistic gas silhouettes from edge-on camera angles rather than flat 2D planes.
+
+### Relativistic Doppler Beaming & Redshift
+* **Doppler Shift**: Relativistic beaming shifts the color and brightness of the accretion disk depending on whether gas is moving towards or away from the camera:
+  `D = 1 / (γ * (1 - β * cos(θ)))`
+* **Gravitational Redshift**: Light escaping from the gravity well shifts towards dark red/infrared near the event horizon:
+  `z = 1 / sqrt(1 - Rs / r) - 1`
+
+### Morris-Thorne Throat Crossing
+When a ray penetrates the wormhole throat boundary (`r < Rs`), coordinates are inverted:
+
+`p_new = -p * 1.01`
+
+The ray emerges in another coordinate space, sampling an alternate starfield background.
+
+---
+
+## 💻 Running the Application
+
+### 1. Web Version (Local Development)
+Because browser security policies (CORS) restrict loading shader files directly from local storage, serve the directory using any local server:
 
 ```bash
-# Using Python
-python -m http.server 8000
+# Option A: Python (installed by default on most systems)
+python -m http.server 8080
 
-# Using Node.js
+# Option B: Node.js / npm
 npx serve .
 ```
 
-Open `http://localhost:8000` in your web browser.
+Then open `http://localhost:8080` in your web browser.
 
----
-
-## Running the Python Desktop App
-
-Ensure you have Python 3.8+ and run:
+### 2. Desktop Version
+Run the simulation locally on your desktop using hardware-accelerated OpenGL:
 
 ```bash
+# Install dependencies
 pip install -r requirements.txt
+
+# Run the app
 python main.py
 ```
 
-### Desktop Bindings
-* **`1` / `2` / `3` / `4`**: Swap active object (Black Hole, Pulsar, Wormhole, Dyson Sphere).
-* **Mouse Drag / Scroll**: Orbit / Zoom camera.
-* **SPACE**: Toggle Camera Autopilot.
-* **Q / A**: Adjust Horizon/Star Radius ($R_s$).
-* **W / S**: Adjust Spin/Orbital Speed.
-* **E / D**: Adjust Glow/Circuit Brightness.
-* **R / F**: Adjust Lensing/Warp strength.
-* **T**: Cycle through Theme color palettes.
-* **ESC**: Close application.
+#### Keyboard & Mouse Controls (Desktop)
+
+| Control | Action |
+|---|---|
+| **Mouse Drag** | Rotate / Orbit Camera |
+| **Mouse Scroll** | Zoom Camera In / Out |
+| **SPACE** | Toggle Camera Autopilot |
+| **1 – 9** | Switch to Gargantua, Vela, Cygnus, Kepler, Sgr A*, Crab, Andromeda, Solara, Polaris |
+| **0, -, =** | Switch to Aldebaran, SGR 1806-20, Centauri Bridge |
+| **Q / A** | Increase / Decrease Schwarzschild Radius (Rs) |
+| **W / S** | Increase / Decrease Spin / Orbital Speed |
+| **E / D** | Increase / Decrease Jet Glow / Telemetry Intensity |
+| **R / F** | Increase / Decrease Spacetime Lensing Warp |
+| **T** | Swap Theme Color Palette |
+| **ESC** | Close Desktop Window |

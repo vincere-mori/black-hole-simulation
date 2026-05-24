@@ -4,12 +4,12 @@ const OBJECTS = {
         name: "Gargantua Singularity",
         class: "SCHWARZSCHILD BLACK HOLE",
         sector: "SECTOR 04-A",
-        coords: "X: 0.00 / Y: 0.00 / Z: 0.00",
+        coords: "X: -3.50 / Y: 0.80 / Z: -2.00",
         mass: "4.3e6 M☉",
         rad: "STABLE CORE",
         desc: "Supermassive singularity at galactic center. Accretion disk with Keplerian velocity profiles, relativistic Doppler beaming, and gravitational lensing geodesics.",
         shader: "shaders/black-hole.frag",
-        position: new THREE.Vector3(0, 0, 0),
+        position: new THREE.Vector3(-3.5, 0.8, -2),
         presets: {
             "gargantua": { rs: 1.0, distortion: 1.0, outer: 9.5, speed: 1.6, doppler: 1.0, stars: 1.0, theme: 0 },
             "supermassive": { rs: 1.8, distortion: 0.7, outer: 14.5, speed: 0.8, doppler: 0.5, stars: 1.2, theme: 1 }
@@ -80,10 +80,169 @@ const OBJECTS = {
             { c1: '#00e5ff', c2: '#ffffff', name: 'Sirius White-Blue', temp: '9940' }
         ],
         labels: { rs: "Star Diameter", distortion: "Gravity Flex", outer: "Shell Size", speed: "Orbital Speed", doppler: "Circuit Radiance" }
+    },
+    sgr_a: {
+        name: "Sagittarius A*",
+        class: "SUPERMASSIVE BLACK HOLE",
+        sector: "SECTOR 00-CORE",
+        coords: "X: 0.00 / Y: 0.00 / Z: 0.00",
+        mass: "4.15e6 M☉",
+        rad: "EVENT HORIZON DETECTED",
+        desc: "The supermassive black hole at the center of the Milky Way. Creates intense gravitational lensing of background stars and features a highly energetic plasma accretion flow.",
+        shader: "shaders/black-hole.frag",
+        position: new THREE.Vector3(0, 0, 0),
+        presets: {
+            "core-singularity": { rs: 1.5, distortion: 1.4, outer: 11.0, speed: 2.2, doppler: 1.3, stars: 1.2, theme: 0 },
+            "quiet-horizon": { rs: 0.8, distortion: 0.8, outer: 8.0, speed: 1.2, doppler: 0.8, stars: 1.0, theme: 1 }
+        },
+        themes: [
+            { c1: '#ff3300', c2: '#ff9900', name: 'Plasma Flare', temp: '1.5e7' },
+            { c1: '#00ffcc', c2: '#0055ff', name: 'Core Cyan', temp: '8.9e6' }
+        ],
+        labels: { rs: "Horizon Mass (Rs)", distortion: "Warp Lensing", outer: "Disk Outer Bound", speed: "Disk Rotation", doppler: "Doppler Beaming" }
+    },
+    crab: {
+        name: "Crab Pulsar",
+        class: "HIGH-SPIN NEUTRON STAR",
+        sector: "SECTOR 05-B",
+        coords: "X: -8.00 / Y: 3.00 / Z: -6.00",
+        mass: "1.4 M☉",
+        rad: "RAPID BEAMING",
+        desc: "A young, rapidly spinning neutron star at the center of the Crab Nebula. Emits intense, highly-collimated electromagnetic jets and powers the surrounding glowing nebula filaments.",
+        shader: "shaders/pulsar.frag",
+        position: new THREE.Vector3(-8, 3, -6),
+        presets: {
+            "crab-rapid": { rs: 0.9, distortion: 1.2, outer: 14.0, speed: 3.5, doppler: 1.8, stars: 0.8, theme: 0 },
+            "crab-nebula": { rs: 0.7, distortion: 0.8, outer: 10.0, speed: 1.5, doppler: 1.0, stars: 1.2, theme: 1 }
+        },
+        themes: [
+            { c1: '#00aaff', c2: '#002288', name: 'Blue Nebula', temp: '3.2e8' },
+            { c1: '#ff0055', c2: '#5500ff', name: 'Chandra Pink', temp: '4.8e8' }
+        ],
+        labels: { rs: "Core Size (Rs)", distortion: "Magneto-Warp", outer: "Field Boundary", speed: "Spin Frequency", doppler: "Jet Intensity" }
+    },
+    andromeda: {
+        name: "Andromeda Gateway",
+        class: "INTERGALACTIC WORMHOLE",
+        sector: "SECTOR 99-Z",
+        coords: "X: 8.00 / Y: -3.00 / Z: -8.00",
+        mass: "N/A (Exotic Matter)",
+        rad: "STABLE ALIEN BRIDGE",
+        desc: "A massive, artificially-stabilized Morris-Thorne wormhole connecting our galaxy to the Andromeda galaxy. Gravitational lensing warps our view of the Andromeda starfield inside the throat.",
+        shader: "shaders/wormhole.frag",
+        position: new THREE.Vector3(8, -3, -8),
+        presets: {
+            "intergalactic": { rs: 1.2, distortion: 1.5, outer: 11.5, speed: 1.8, doppler: 1.4, stars: 1.0, theme: 0 },
+            "void-gate": { rs: 0.7, distortion: 2.5, outer: 9.0, speed: 0.5, doppler: 0.8, stars: 1.5, theme: 1 }
+        },
+        themes: [
+            { c1: '#cc00ff', c2: '#330066', name: 'Andromeda Magenta', temp: '0' },
+            { c1: '#00ffaa', c2: '#003311', name: 'Bio-Green Portal', temp: '6' }
+        ],
+        labels: { rs: "Throat Radius (Rs)", distortion: "Throat Bending", outer: "Lensing Zone", speed: "Chromatic Drift", doppler: "Alternate Lumens" }
+    },
+    dyson_swarm: {
+        name: "Solara Dyson Swarm",
+        class: "DENSE MEGASTRUCTURE",
+        sector: "SECTOR 15-D",
+        coords: "X: -2.00 / Y: -4.00 / Z: -5.00",
+        mass: "0.95 M☉ (Host Star)",
+        rad: "CLOSED COLLECTOR SHELL",
+        desc: "A dense swarm of solar collector plates surrounding the star Solara. Star flares escape through grid gaps, emitting high thermal radiation.",
+        shader: "shaders/dyson-sphere.frag",
+        position: new THREE.Vector3(-2, -4, -5),
+        presets: {
+            "full-collect": { rs: 0.85, distortion: 0.0, outer: 2.5, speed: 1.0, doppler: 1.2, stars: 0.9, theme: 0 },
+            "active-gaps": { rs: 1.1, distortion: 0.0, outer: 3.2, speed: 2.2, doppler: 2.0, stars: 1.1, theme: 1 }
+        },
+        themes: [
+            { c1: '#aaff00', c2: '#ffaa00', name: 'Solara Amber', temp: '4800' },
+            { c1: '#ff00ff', c2: '#ffffff', name: 'Nebular Violet', temp: '8500' }
+        ],
+        labels: { rs: "Star Diameter", distortion: "Gravity Flex", outer: "Shell Size", speed: "Orbital Speed", doppler: "Circuit Radiance" }
+    },
+    polaris: {
+        name: "Polaris Singularity",
+        class: "INTERMEDIATE BLACK HOLE",
+        sector: "SECTOR 02-B",
+        coords: "X: 1.00 / Y: 6.00 / Z: -7.00",
+        mass: "1.2e5 M☉",
+        rad: "STABLE HORIZON",
+        desc: "An intermediate-mass black hole located in the Polaris system. Features a highly warped accretion flow with extreme gravitational time dilation near the photon sphere.",
+        shader: "shaders/black-hole.frag",
+        position: new THREE.Vector3(1, 6, -7),
+        presets: {
+            "intermediate": { rs: 0.6, distortion: 0.8, outer: 6.5, speed: 2.0, doppler: 0.7, stars: 1.1, theme: 0 },
+            "high-spin": { rs: 0.9, distortion: 1.3, outer: 9.0, speed: 3.5, doppler: 1.5, stars: 0.8, theme: 1 }
+        },
+        themes: [
+            { c1: '#00ffff', c2: '#0055ff', name: 'Polar Blue', temp: '5.2e6' },
+            { c1: '#ff00ff', c2: '#660099', name: 'Ultraviolet Flare', temp: '7.8e6' }
+        ],
+        labels: { rs: "Horizon Mass (Rs)", distortion: "Warp Lensing", outer: "Disk Outer Bound", speed: "Disk Rotation", doppler: "Doppler Beaming" }
+    },
+    aldebaran: {
+        name: "Aldebaran Bulge",
+        class: "STELLAR CORE FLARE",
+        sector: "SECTOR 08-A",
+        coords: "X: -4.00 / Y: 5.00 / Z: 3.00",
+        mass: "1.7 M☉ (Host Core)",
+        rad: "CORONAL RADIATION",
+        desc: "The hyperactive glowing core of the Aldebaran supergiant star, surrounded by dynamic magnetic dust clouds and intense coronal loops.",
+        shader: "shaders/dyson-sphere.frag",
+        position: new THREE.Vector3(-4, 5, 3),
+        presets: {
+            "supergiant": { rs: 1.5, distortion: 0.0, outer: 3.8, speed: 0.8, doppler: 1.0, stars: 1.0, theme: 0 },
+            "hyper-flare": { rs: 1.8, distortion: 0.0, outer: 4.5, speed: 2.5, doppler: 2.0, stars: 1.2, theme: 1 }
+        },
+        themes: [
+            { c1: '#ff4400', c2: '#ffcc00', name: 'Aldebaran Fire', temp: '3910' },
+            { c1: '#ff0055', c2: '#ffaaee', name: 'Magenta Glow', temp: '4200' }
+        ],
+        labels: { rs: "Star Diameter", distortion: "Gravity Flex", outer: "Shell Size", speed: "Orbital Speed", doppler: "Circuit Radiance" }
+    },
+    magnetar_1806: {
+        name: "SGR 1806-20 Magnetar",
+        class: "EXTREME MAGNETAR",
+        sector: "SECTOR 18-F",
+        coords: "X: -7.00 / Y: -5.00 / Z: 2.00",
+        mass: "2.1 M☉",
+        rad: "MAGNETIC FIELD BURST",
+        desc: "An ultradense magnetosphere generator. The strongest magnetic field observed in the universe, distorting the surrounding space and emitting violent gamma-ray flares.",
+        shader: "shaders/pulsar.frag",
+        position: new THREE.Vector3(-7, -5, 2),
+        presets: {
+            "magnetar-burst": { rs: 0.8, distortion: 2.5, outer: 16.0, speed: 4.2, doppler: 2.4, stars: 0.7, theme: 0 },
+            "rest-state": { rs: 0.6, distortion: 1.5, outer: 11.0, speed: 1.2, doppler: 1.0, stars: 1.1, theme: 1 }
+        },
+        themes: [
+            { c1: '#ff3300', c2: '#5500ff', name: 'Magnetic Red-Violet', temp: '5.2e8' },
+            { c1: '#00ffcc', c2: '#003366', name: 'Hyper-Gamma Cyan', temp: '6.5e8' }
+        ],
+        labels: { rs: "Core Size (Rs)", distortion: "Magneto-Warp", outer: "Field Boundary", speed: "Spin Frequency", doppler: "Jet Intensity" }
+    },
+    centauri: {
+        name: "Centauri Bridge",
+        class: "MICRO WORMHOLE",
+        sector: "SECTOR 01-C",
+        coords: "X: 4.00 / Y: -3.00 / Z: -2.00",
+        mass: "N/A (Microgateway)",
+        rad: "QUANTUM INTERCEPT",
+        desc: "A small wormhole stabilized by quantum fields. Acts as a high-speed communications gateway linking the Sol system and Centauri cluster.",
+        shader: "shaders/wormhole.frag",
+        position: new THREE.Vector3(4, -3, -2),
+        presets: {
+            "micro-link": { rs: 0.5, distortion: 1.2, outer: 7.5, speed: 1.2, doppler: 0.7, stars: 1.3, theme: 0 },
+            "quantum-drift": { rs: 0.35, distortion: 2.0, outer: 6.0, speed: 2.2, doppler: 1.5, stars: 1.5, theme: 1 }
+        },
+        themes: [
+            { c1: '#00ffff', c2: '#ea00ff', name: 'Quantum Portal', temp: '0' },
+            { c1: '#ffcc00', c2: '#ff3300', name: 'Solaris Gateway', temp: '9' }
+        ],
+        labels: { rs: "Throat Radius (Rs)", distortion: "Throat Bending", outer: "Lensing Zone", speed: "Chromatic Drift", doppler: "Alternate Lumens" }
     }
 };
-
-// ===== State =====
+// ===== State ===== =====
 let appState = 'BOOT';
 let activeObjectId = 'gargantua';
 let activeThemeIdx = 0;
@@ -110,11 +269,19 @@ const BOOT_LINES = [
     { text: "  Fragment shader pipeline: 4 programs queued", cls: "line-dim", delay: 40 },
     { text: "", cls: "line-dim", delay: 20 },
     { text: "> Scanning deep space telemetry feeds ...", cls: "line-info", delay: 100 },
-    { text: "  [ANOMALY] Gargantua Singularity  — SECTOR 04-A — 4.3e6 M☉", cls: "line-warn", delay: 80 },
-    { text: "  [ANOMALY] Vela Pulsar             — SECTOR 12-C — 1.44 M☉", cls: "line-warn", delay: 70 },
-    { text: "  [ANOMALY] Cygnus Wormhole          — SECTOR 07-F — exotic", cls: "line-warn", delay: 70 },
-    { text: "  [ANOMALY] Kepler Dyson Sphere      — SECTOR 19-B — 1.08 M☉", cls: "line-warn", delay: 70 },
-    { text: "  Total anomalies registered: 4", cls: "line-dim", delay: 40 },
+    { text: "  [ANOMALY] Gargantua Singularity  — SEC_04-A — 4.3e6 M☉", cls: "line-warn", delay: 30 },
+    { text: "  [ANOMALY] Vela Pulsar             — SEC_12-C — 1.44 M☉", cls: "line-warn", delay: 30 },
+    { text: "  [ANOMALY] Cygnus Wormhole          — SEC_07-F — exotic", cls: "line-warn", delay: 30 },
+    { text: "  [ANOMALY] Kepler Dyson Sphere      — SEC_19-B — megastruct", cls: "line-warn", delay: 30 },
+    { text: "  [ANOMALY] Sagittarius A*          — SEC_00-C — 4.15e6 M☉", cls: "line-warn", delay: 30 },
+    { text: "  [ANOMALY] Crab Pulsar             — SEC_05-B — 1.40 M☉", cls: "line-warn", delay: 30 },
+    { text: "  [ANOMALY] Andromeda Gateway       — SEC_99-Z — bridge", cls: "line-warn", delay: 30 },
+    { text: "  [ANOMALY] Solara Dyson Swarm      — SEC_15-D — megastruct", cls: "line-warn", delay: 30 },
+    { text: "  [ANOMALY] Polaris Singularity     — SEC_02-B — 1.2e5 M☉", cls: "line-warn", delay: 30 },
+    { text: "  [ANOMALY] Aldebaran Bulge         — SEC_08-A — active core", cls: "line-warn", delay: 30 },
+    { text: "  [ANOMALY] SGR 1806-20 Magnetar    — SEC_18-F — extreme", cls: "line-warn", delay: 30 },
+    { text: "  [ANOMALY] Centauri Bridge         — SEC_01-C — quantum", cls: "line-warn", delay: 30 },
+    { text: "  Total anomalies registered: 12", cls: "line-dim", delay: 40 },
     { text: "", cls: "line-dim", delay: 20 },
     { text: "> Building galaxy particle field (10000 stars) ...", cls: "line-info", delay: 100 },
     { text: "  Spiral arm algorithm: 2-arm log-distribution", cls: "line-dim", delay: 50 },
@@ -223,7 +390,7 @@ let hudFps, hudTemp;
 let renderer, scene, camera, controls, clock;
 let orthoCamera, orthoScene, shaderMaterial;
 let uniforms = {};
-let galaxyParticles, systemNodes = [];
+let galaxyParticles, galaxyDust, systemNodes = [];
 let raycaster, mouse;
 let targetCameraPos = new THREE.Vector3();
 let targetLookAt = new THREE.Vector3();
@@ -245,17 +412,73 @@ function createStarTexture() {
 
 function createNodeTexture(hex) {
     const c = document.createElement('canvas');
+    c.width = 128; c.height = 128;
+    const ctx = c.getContext('2d');
+    
+    ctx.clearRect(0, 0, 128, 128);
+    ctx.shadowColor = hex;
+    ctx.shadowBlur = 12;
+    
+    // Outer thin circle
+    ctx.strokeStyle = hex;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(64, 64, 48, 0, Math.PI * 2);
+    ctx.stroke();
+    
+    // Middle dashed ring
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([6, 8]);
+    ctx.beginPath();
+    ctx.arc(64, 64, 38, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    
+    // Crosshair ticks
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(64, 16); ctx.lineTo(64, 28); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(64, 112); ctx.lineTo(64, 100); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(16, 64); ctx.lineTo(28, 64); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(112, 64); ctx.lineTo(100, 64); ctx.stroke();
+    
+    // Glowing center
+    const gradient = ctx.createRadialGradient(64, 64, 2, 64, 64, 16);
+    gradient.addColorStop(0, '#ffffff');
+    gradient.addColorStop(0.3, hex);
+    gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(64, 64, 16, 0, Math.PI * 2);
+    ctx.fill();
+    
+    return new THREE.CanvasTexture(c);
+}
+
+function createNebulaTexture() {
+    const c = document.createElement('canvas');
     c.width = 64; c.height = 64;
     const ctx = c.getContext('2d');
-    ctx.strokeStyle = hex;
-    ctx.lineWidth = 4;
-    ctx.beginPath();
-    ctx.arc(32, 32, 22, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.fillStyle = hex;
-    ctx.beginPath();
-    ctx.arc(32, 32, 8, 0, Math.PI * 2);
-    ctx.fill();
+    const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+    g.addColorStop(0, 'rgba(255,255,255,1.0)');
+    g.addColorStop(0.15, 'rgba(255,255,255,0.6)');
+    g.addColorStop(0.45, 'rgba(255,255,255,0.18)');
+    g.addColorStop(1, 'rgba(255,255,255,0.0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 64, 64);
+    return new THREE.CanvasTexture(c);
+}
+
+function createCoreGlowTexture() {
+    const c = document.createElement('canvas');
+    c.width = 128; c.height = 128;
+    const ctx = c.getContext('2d');
+    const g = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+    g.addColorStop(0, 'rgba(255, 235, 200, 1.0)');
+    g.addColorStop(0.2, 'rgba(255, 180, 100, 0.65)');
+    g.addColorStop(0.5, 'rgba(255, 100, 50, 0.2)');
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 128, 128);
     return new THREE.CanvasTexture(c);
 }
 
@@ -354,11 +577,11 @@ async function initApp() {
 
         if (appState === 'GALAXY') {
             if (galaxyParticles) galaxyParticles.rotation.y = elapsed * 0.03;
+            if (galaxyDust) galaxyDust.rotation.y = elapsed * 0.03;
 
             systemNodes.forEach(node => {
-                node.rotation.y = -elapsed * 0.1;
-                const pulse = 1.0 + 0.08 * Math.sin(elapsed * 4.0 + node.position.x);
-                node.scale.set(pulse, pulse, pulse);
+                const pulse = 1.8 + 0.15 * Math.sin(elapsed * 4.0 + node.position.x);
+                node.scale.set(pulse, pulse, 1.0);
             });
 
             if (autoRotate && transitionProgress === 1.0) {
@@ -393,7 +616,42 @@ async function initApp() {
 }
 
 function buildGalaxyMap() {
-    const count = 10000;
+    // 1. Distant background starfield
+    const bgCount = 3000;
+    const bgGeo = new THREE.BufferGeometry();
+    const bgPos = new Float32Array(bgCount * 3);
+    const bgCol = new Float32Array(bgCount * 3);
+    for (let i = 0; i < bgCount; i++) {
+        const r = 55.0 + Math.random() * 35.0;
+        const u = Math.random() * 2.0 - 1.0;
+        const phi = Math.random() * Math.PI * 2.0;
+        const theta = Math.acos(u);
+        
+        bgPos[i * 3]     = r * Math.sin(theta) * Math.cos(phi);
+        bgPos[i * 3 + 1] = r * Math.sin(theta) * Math.sin(phi);
+        bgPos[i * 3 + 2] = r * Math.cos(theta);
+        
+        const brightness = 0.4 + Math.random() * 0.6;
+        bgCol[i * 3]     = brightness;
+        bgCol[i * 3 + 1] = brightness * (0.9 + Math.random() * 0.1);
+        bgCol[i * 3 + 2] = brightness * (0.8 + Math.random() * 0.2);
+    }
+    bgGeo.setAttribute('position', new THREE.BufferAttribute(bgPos, 3));
+    bgGeo.setAttribute('color', new THREE.BufferAttribute(bgCol, 3));
+    const bgMat = new THREE.PointsMaterial({
+        size: 0.09,
+        map: createStarTexture(),
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.6,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+    });
+    const bgStars = new THREE.Points(bgGeo, bgMat);
+    scene.add(bgStars);
+
+    // 2. Bright stars of the galaxy (40000 particles)
+    const count = 40000;
     const geo = new THREE.BufferGeometry();
     const pos = new Float32Array(count * 3);
     const col = new Float32Array(count * 3);
@@ -403,7 +661,7 @@ function buildGalaxyMap() {
     const cEdge = new THREE.Color('#03011c');
 
     for (let i = 0; i < count; i++) {
-        const r = Math.pow(Math.random(), 2.5) * 16.0;
+        const r = Math.pow(Math.random(), 2.3) * 16.0;
         const armIdx = i % 2;
         const theta = (armIdx * Math.PI) + (r * 0.45);
         const sx = (Math.random() - 0.5) * (1.2 / (r * 0.1 + 0.5));
@@ -438,23 +696,100 @@ function buildGalaxyMap() {
     galaxyParticles = new THREE.Points(geo, mat);
     scene.add(galaxyParticles);
 
-    const nodeGeom = new THREE.PlaneGeometry(1.6, 1.6);
-    const nodeColors = { gargantua: '#ffaa00', vela: '#00ffff', cygnus: '#ff00ff', kepler: '#00ff66' };
+    // 3. Volumetric dust/nebula clouds (15000 particles)
+    const dustCount = 15000;
+    const dustGeo = new THREE.BufferGeometry();
+    const dustPos = new Float32Array(dustCount * 3);
+    const dustCol = new Float32Array(dustCount * 3);
+    
+    const colorArmA = new THREE.Color('#38bdf8');
+    const colorArmB = new THREE.Color('#ea00ff');
+    const colorCoreGlow = new THREE.Color('#f0a030');
+    
+    for (let i = 0; i < dustCount; i++) {
+        const r = Math.pow(Math.random(), 1.8) * 16.0;
+        const armIdx = i % 2;
+        const theta = (armIdx * Math.PI) + (r * 0.45) + (Math.random() - 0.5) * 0.22;
+        
+        const sx = (Math.random() - 0.5) * (2.2 / (r * 0.1 + 0.5));
+        const sy = (Math.random() - 0.5) * (1.2 / (r * 0.15 + 0.5));
+        const sz = (Math.random() - 0.5) * (2.2 / (r * 0.1 + 0.5));
+        
+        dustPos[i * 3]     = r * Math.cos(theta) + sx;
+        dustPos[i * 3 + 1] = sy;
+        dustPos[i * 3 + 2] = r * Math.sin(theta) + sz;
+        
+        let c;
+        if (r < 3.0) {
+            c = colorCoreGlow.clone().lerp(colorArmB, r / 3.0);
+        } else {
+            c = (armIdx === 0) 
+                ? colorArmB.clone().lerp(colorArmA, (r - 3.0) / 13.0)
+                : colorArmA.clone().lerp(new THREE.Color('#050228'), (r - 3.0) / 13.0);
+        }
+        
+        dustCol[i * 3]     = c.r;
+        dustCol[i * 3 + 1] = c.g;
+        dustCol[i * 3 + 2] = c.b;
+    }
+    
+    dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
+    dustGeo.setAttribute('color', new THREE.BufferAttribute(dustCol, 3));
+    
+    const dustMat = new THREE.PointsMaterial({
+        size: 2.0,
+        map: createNebulaTexture(),
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.14,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+    });
+    
+    galaxyDust = new THREE.Points(dustGeo, dustMat);
+    scene.add(galaxyDust);
+
+    // 4. Central core bulge glow
+    const coreSpriteMat = new THREE.SpriteMaterial({
+        map: createCoreGlowTexture(),
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+    });
+    const coreSprite = new THREE.Sprite(coreSpriteMat);
+    coreSprite.scale.set(10.0, 10.0, 1.0);
+    scene.add(coreSprite);
+
+    // 5. System Nodes (rendered as sprites, facing camera)
+    const nodeColors = {
+        gargantua: '#f0a030',
+        vela: '#00ffff',
+        cygnus: '#ff00ff',
+        kepler: '#00ff66',
+        sgr_a: '#ff4500',
+        crab: '#38bdf8',
+        andromeda: '#bf55ec',
+        dyson_swarm: '#c5eff7',
+        polaris: '#48929b',
+        aldebaran: '#ff6b6b',
+        magnetar_1806: '#d2527f',
+        centauri: '#673ab7'
+    };
 
     for (const key in OBJECTS) {
         const obj = OBJECTS[key];
-        const nodeMat = new THREE.MeshBasicMaterial({
+        const spriteMat = new THREE.SpriteMaterial({
             map: createNodeTexture(nodeColors[key] || '#ffffff'),
             transparent: true,
             blending: THREE.AdditiveBlending,
-            depthWrite: false,
-            side: THREE.DoubleSide
+            depthWrite: false
         });
-        const mesh = new THREE.Mesh(nodeGeom, nodeMat);
-        mesh.position.copy(obj.position);
-        mesh.userData = { id: key };
-        scene.add(mesh);
-        systemNodes.push(mesh);
+        const sprite = new THREE.Sprite(spriteMat);
+        sprite.position.copy(obj.position);
+        sprite.scale.set(1.8, 1.8, 1.0);
+        sprite.userData = { id: key };
+        scene.add(sprite);
+        systemNodes.push(sprite);
     }
 }
 
@@ -499,18 +834,6 @@ function showInfoCard(id) {
 }
 
 // ===== Transitions =====
-btnOrbit && document.getElementById('btn-enter-orbit').addEventListener('click', () => {
-    const obj = OBJECTS[activeObjectId];
-    if (!obj) return;
-    appState = 'TRANSITION';
-    transitionProgress = 0.0;
-    targetCameraPos.copy(obj.position).add(new THREE.Vector3(0, 3, 7));
-    targetLookAt.copy(obj.position);
-    currentLookAt.copy(controls.target);
-    infoCard.classList.add('hidden');
-    autoRotate = false;
-    if (btnAutopilot) btnAutopilot.classList.remove('active');
-});
 
 async function onTransitionComplete() {
     const obj = OBJECTS[activeObjectId];
@@ -540,7 +863,7 @@ async function onTransitionComplete() {
     const distG = document.getElementById('group-distortion');
     const dopG = document.getElementById('group-doppler');
 
-    if (activeObjectId === 'kepler') {
+    if (activeObjectId === 'kepler' || activeObjectId === 'dyson_swarm' || activeObjectId === 'aldebaran') {
         distG.style.display = 'none';
         dopG.style.display = 'none';
         document.getElementById('accessory-title').innerHTML = '<i class="fas fa-cubes"></i> Panel Grid';
@@ -551,13 +874,13 @@ async function onTransitionComplete() {
     }
 
     // slider bounds
-    if (activeObjectId === 'vela') {
+    if (activeObjectId === 'vela' || activeObjectId === 'crab' || activeObjectId === 'magnetar_1806') {
         sliders.rs.min = 0.2; sliders.rs.max = 1.6; sliders.rs.step = 0.05;
         sliders.outer.min = 6.0; sliders.outer.max = 20.0; sliders.outer.step = 0.2;
-    } else if (activeObjectId === 'cygnus') {
+    } else if (activeObjectId === 'cygnus' || activeObjectId === 'andromeda' || activeObjectId === 'centauri') {
         sliders.rs.min = 0.3; sliders.rs.max = 1.8; sliders.rs.step = 0.05;
         sliders.outer.min = 6.0; sliders.outer.max = 15.0; sliders.outer.step = 0.1;
-    } else if (activeObjectId === 'kepler') {
+    } else if (activeObjectId === 'kepler' || activeObjectId === 'dyson_swarm' || activeObjectId === 'aldebaran') {
         sliders.rs.min = 0.4; sliders.rs.max = 2.0; sliders.rs.step = 0.05;
         sliders.outer.min = 2.0; sliders.outer.max = 5.0; sliders.outer.step = 0.1;
     } else {
@@ -685,7 +1008,7 @@ function syncUI() {
 
     const rs = parseFloat(sliders.rs.value);
 
-    if (activeObjectId === 'kepler') {
+    if (activeObjectId === 'kepler' || activeObjectId === 'dyson_swarm' || activeObjectId === 'aldebaran') {
         sliders.outer.min = (rs * 1.6).toFixed(2);
         if (parseFloat(sliders.outer.value) < rs * 1.6) {
             sliders.outer.value = (rs * 1.6).toFixed(2);
@@ -739,6 +1062,22 @@ function setupUIEvents() {
         autoRotate = false;
         if (btnAutopilot) btnAutopilot.classList.remove('active');
     });
+
+    const btnEnter = document.getElementById('btn-enter-orbit');
+    if (btnEnter) {
+        btnEnter.addEventListener('click', () => {
+            const obj = OBJECTS[activeObjectId];
+            if (!obj) return;
+            appState = 'TRANSITION';
+            transitionProgress = 0.0;
+            targetCameraPos.copy(obj.position).add(new THREE.Vector3(0, 3, 7));
+            targetLookAt.copy(obj.position);
+            currentLookAt.copy(controls.target);
+            infoCard.classList.add('hidden');
+            autoRotate = false;
+            if (btnAutopilot) btnAutopilot.classList.remove('active');
+        });
+    }
 }
 
 function onWindowResize() {
