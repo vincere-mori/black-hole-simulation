@@ -24,10 +24,13 @@ uniform float uStarDensity;     // Density of background stars
 uniform vec3 uColorTheme1;      // Accretion disk hot color (inner)
 uniform vec3 uColorTheme2;      // Accretion disk cold color (outer)
 
-#define MAX_STEPS 140
+#define MAX_STEPS 130
 #define PI 3.14159265359
 
-// Hash functions for noise
+// Volumetric thickness parameters
+const float uThickness = 0.08;
+
+// Hash functions
 float hash(vec2 p) {
     return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
 }
@@ -47,7 +50,7 @@ float noise(vec2 p) {
                mix(hash(i + vec2(0.0,1.0)), hash(i + vec2(1.0,1.0)), u.x), u.y);
 }
 
-// Fractal Brownian Motion (FBM) for accretion disk dust lanes
+// Fractal Brownian Motion
 float fbm(vec2 p) {
     float v = 0.0;
     float a = 0.5;
@@ -60,65 +63,69 @@ float fbm(vec2 p) {
     return v;
 }
 
-// Domain-warped FBM for fluid-like swirls
+// Domain-warped FBM for fluid swirls
 float warpedFbm(vec2 p) {
     vec2 q = vec2(fbm(p), fbm(p + vec2(5.2, 1.3)));
     return fbm(p + 2.0 * q);
 }
 
-// Relativistic Doppler Beaming and Redshift
-vec4 sampleAccretionDisk(vec3 pos, float dist, vec3 v) {
+// Volumetric sampling of the accretion disk
+vec4 sampleDiskVolume(vec3 pos, float dist, vec3 v) {
     float r = dist;
     
-    // Keplerian rotation: inner edge rotates faster
+    // Keplerian rotation profile: speed decreases with distance
     float angle = atan(pos.z, pos.x);
     float angularVelocity = uSpinSpeed * sqrt(uRs / (r * r * r + 0.01));
     float phiRotated = angle - uTime * angularVelocity;
     
-    // Polar coordinates for noise
+    // Noise sampling
     vec2 uvNoise = vec2(r * uNoiseScale, phiRotated * uNoiseDetail);
     float n = warpedFbm(uvNoise);
     
-    // Normalized distance factor in the disk
+    // Gaussian vertical density envelope for 3D thickness profile
+    float verticalFade = exp(-(pos.y * pos.y) / (uThickness * uThickness * 0.6));
+    
+    // Radial boundary fade
     float x = (r - uInnerRadius) / (uOuterRadius - uInnerRadius);
-    float edgeFade = sin(x * PI); // fades to 0 at boundaries
+    float radialFade = sin(x * PI);
     
-    // Density calculation
-    float density = n * edgeFade * 0.45;
-    if (density < 0.01) return vec4(0.0);
+    float density = n * verticalFade * radialFade * 0.7;
+    if (density < 0.005) return vec4(0.0);
     
-    // Base temperature color mapping (hot inner edge -> cooler outer edge)
-    vec3 baseColor = mix(uColorTheme1 * 2.0, uColorTheme2, pow(x, 1.5));
+    // Base temperature color mapping
+    vec3 baseColor = mix(uColorTheme1 * 2.5, uColorTheme2, pow(x, 1.2));
     
     // Relativistic Doppler beaming
     vec3 diskVelocityDir = normalize(vec3(-pos.z, 0.0, pos.x)); // Counter-clockwise flow
     float cosTheta = dot(diskVelocityDir, -v);
     
     // Velocity as fraction of speed of light
-    float beta = 0.45 * sqrt(uRs / r); 
+    float beta = 0.42 * sqrt(uRs / r); 
     float gamma = 1.0 / sqrt(1.0 - beta * beta);
     float dopplerFactor = 1.0 / (gamma * (1.0 - beta * cosTheta));
     
-    // Beaming alters intensity
-    float beaming = pow(dopplerFactor, 3.0 + uBeamingScale);
+    float beaming = pow(dopplerFactor, 3.0 + uBeamingScale) * uDopplerStrength;
+    beaming = mix(1.0, beaming, clamp(uDopplerStrength, 0.0, 1.0));
     density *= beaming;
     
-    // Doppler shifts color (blue-shift for approaching, red-shift for receding)
+    // Doppler color shifting
     vec3 finalColor = baseColor;
     if (dopplerFactor > 1.0) {
-        // Blue shift: shift towards white/blue and increase brightness
-        finalColor = mix(finalColor, vec3(0.7, 0.85, 1.3) * length(baseColor), clamp((dopplerFactor - 1.0) * 0.6, 0.0, 0.7));
+        finalColor = mix(finalColor, vec3(0.7, 0.88, 1.35) * length(baseColor), clamp((dopplerFactor - 1.0) * 0.6, 0.0, 0.8));
     } else {
-        // Red shift: shift towards deep dark red
-        finalColor = mix(finalColor, vec3(0.65, 0.05, 0.01) * length(baseColor), clamp((1.0 - dopplerFactor) * 0.7, 0.0, 0.8));
+        finalColor = mix(finalColor, vec3(0.6, 0.04, 0.0) * length(baseColor), clamp((1.0 - dopplerFactor) * 0.7, 0.0, 0.8));
     }
     
-    finalColor *= beaming;
+    // Relativistic Gravitational Redshift (dimming and shifting to red near event horizon)
+    float redshift = sqrt(1.0 - uRs / r);
+    finalColor = mix(finalColor, vec3(0.4, 0.0, 0.0) * length(finalColor), (1.0 - redshift) * 0.7);
     
-    return vec4(finalColor, clamp(density, 0.0, 1.0));
+    finalColor *= beaming * redshift;
+    
+    return vec4(finalColor, density);
 }
 
-// Warped Starfield Background
+// Lensed Background Starfield
 vec3 getStarfield(vec3 rd) {
     vec3 stars = vec3(0.0);
     for (int j = 0; j < 3; j++) {
@@ -129,7 +136,7 @@ vec3 getStarfield(vec3 rd) {
         float h = hash3(ip);
         if (h > 1.0 - (0.008 * uStarDensity)) {
             float dist = length(fp - vec3(0.5));
-            float size = 0.04 + 0.12 * hash(ip.xy);
+            float size = 0.035 + 0.12 * hash(ip.xy);
             float glow = exp(-dist / size);
             stars += vec3(glow) * h;
         }
@@ -137,12 +144,11 @@ vec3 getStarfield(vec3 rd) {
     return stars;
 }
 
-// 3D Sine noise for background nebula
+// Nebula background noise
 float snoise3D(vec3 p) {
     return sin(p.x + sin(p.y)) * 0.33 + sin(p.y + sin(p.z)) * 0.33 + sin(p.z + sin(p.x)) * 0.34;
 }
 
-// Background Nebula Color
 vec3 getNebula(vec3 rd) {
     float n = 0.0;
     vec3 p = rd * 2.2;
@@ -153,9 +159,9 @@ vec3 getNebula(vec3 rd) {
         a *= 0.5;
     }
     
-    vec3 colBlue = vec3(0.01, 0.03, 0.12);
-    vec3 colPurple = vec3(0.08, 0.01, 0.08);
-    vec3 colSpace = vec3(0.002, 0.001, 0.005);
+    vec3 colBlue = vec3(0.005, 0.02, 0.1);
+    vec3 colPurple = vec3(0.06, 0.008, 0.06);
+    vec3 colSpace = vec3(0.001, 0.0, 0.003);
     
     vec3 col = mix(colSpace, colBlue, n);
     col = mix(col, colPurple, pow(n, 2.0));
@@ -163,12 +169,13 @@ vec3 getNebula(vec3 rd) {
 }
 
 void main() {
-    // Generate initial ray in World Space
+    // Convert UV to View Space Ray
     vec4 ndc = vec4(vUv * 2.0 - 1.0, 1.0, 1.0);
     vec4 rayDirView = uInvProjection * ndc;
     rayDirView.z = -1.0;
     rayDirView.w = 0.0;
     
+    // Transform Ray to World Space
     vec3 rayDirWorld = normalize((uCamWorld * rayDirView).xyz);
     vec3 rayOrigin = uCamPos;
     
@@ -180,26 +187,29 @@ void main() {
     bool hitBH = false;
     vec4 diskColorAccum = vec4(0.0);
     
+    // Inline bloom accumulator along the ray
+    vec3 bloomAccum = vec3(0.0);
+    
     for (int i = 0; i < MAX_STEPS; i++) {
         float r2 = dot(p, p);
         float r = sqrt(r2);
         
-        // Inside Event Horizon (Singularity pull)
+        // Crossed Event Horizon
         if (r < uRs * 1.001) {
             hitBH = true;
             break;
         }
         
-        // Escape boundary
-        if (r > 45.0) {
+        // Escaped outer boundary
+        if (r > 42.0) {
             break;
         }
         
-        // Adaptive step size: smaller steps near Event Horizon, larger far away
-        stepSize = clamp(r * 0.065, 0.012, 0.28);
+        // Fine-tuned adaptive step size
+        // Slower steps near the photon sphere (1.5 * Rs) for razor-sharp lensing boundary
+        stepSize = clamp(r * 0.062, 0.011, 0.28);
         
-        // Relativistic geodesic gravity integration:
-        // Acceleration a = - 1.5 * Rs * L^2 * p / r^5
+        // Geodesic gravity bending integration
         vec3 L = cross(p, v);
         float h2 = dot(L, L);
         vec3 a = -1.5 * uRs * h2 * p / (r2 * r2 * r) * uDistortion;
@@ -209,23 +219,23 @@ void main() {
         
         vec3 nextP = p + v * stepSize;
         
-        // Check intersection with equatorial plane (y = 0)
-        if (p.y * nextP.y < 0.0) {
-            float tPlane = -p.y / v.y;
-            vec3 intersect = p + v * tPlane;
-            float dist = length(intersect.xz);
-            
+        // Volumetric Accretion Disk Marching
+        if (abs(p.y) < uThickness) {
+            float dist = length(p.xz);
             if (dist >= uInnerRadius && dist <= uOuterRadius) {
-                vec4 diskSample = sampleAccretionDisk(intersect, dist, v);
+                vec4 diskSample = sampleDiskVolume(p, dist, v);
                 
-                // Front-to-back compositing
-                float alpha = diskSample.a * (1.0 - diskColorAccum.a);
+                // Front-to-back alpha compositing
+                float alpha = diskSample.a * (1.0 - diskColorAccum.a) * stepSize * 2.8;
                 diskColorAccum.rgb += diskSample.rgb * alpha;
                 diskColorAccum.a += alpha;
                 
+                // Accumulate volumetric glow/bloom along the ray
+                bloomAccum += diskSample.rgb * alpha * exp(-abs(p.y) * 4.0) * 0.12;
+                
                 if (diskColorAccum.a >= 0.98) {
                     diskColorAccum.a = 1.0;
-                    break;
+                    // Continue marching to check if the ray later falls into the BH (eclipse)
                 }
             }
         }
@@ -233,29 +243,29 @@ void main() {
         p = nextP;
     }
     
-    // Final color blending (Black Hole core vs Disk vs Stars)
+    // Final Compositing
     vec3 finalColor = vec3(0.0);
     if (!hitBH) {
-        // Warp coordinates to sample the sky
         vec3 backgroundSky = getStarfield(v) + getNebula(v);
         finalColor = backgroundSky * (1.0 - diskColorAccum.a) + diskColorAccum.rgb;
     } else {
-        // Ray fell into the event horizon
-        finalColor = diskColorAccum.rgb; // only show disk in front of event horizon
+        // Event Horizon core (black), but displays disk in front of it
+        finalColor = diskColorAccum.rgb;
     }
     
-    // Add subtle glow (bloom effect approximation near horizon)
-    float rBH = length(rayOrigin);
-    // Simple radial glow from center
+    // Add volumetric bloom
+    finalColor += bloomAccum;
+    
+    // Relativistic atmospheric scattering/corona glow near horizon
     float centerDist = length(cross(rayOrigin, rayDirWorld));
-    float horizonGlow = exp(-max(0.0, centerDist - uRs) * 2.5) * 0.18;
+    float horizonGlow = exp(-max(0.0, centerDist - uRs) * 2.6) * 0.22;
     if (centerDist > uRs && !hitBH) {
-        finalColor += vec3(0.85, 0.45, 0.15) * horizonGlow * (1.0 - diskColorAccum.a);
+        finalColor += vec3(0.9, 0.48, 0.15) * horizonGlow * (1.0 - diskColorAccum.a);
     }
     
-    // Tone mapping and gamma correction
-    finalColor = finalColor / (finalColor + vec3(1.0)); // Reinhard tone mapping
-    finalColor = pow(finalColor, vec3(1.0 / 2.2));     // Gamma 2.2 correction
+    // Cinematic tone mapping & gamma correction
+    finalColor = finalColor / (finalColor + vec3(0.85)); // Reinhard mapping
+    finalColor = pow(finalColor, vec3(1.0 / 2.2));       // Gamma correction
     
     fragColor = vec4(finalColor, 1.0);
 }

@@ -1,54 +1,58 @@
-# Relativistic Black Hole Simulator
+# Stellar Cartography — Interactive Cosmic Map Explorer
 
-An interactive, real-time relativistic black hole simulation featuring gravitational lensing, a Keplerian accretion disk with Doppler beaming, and a lensed starfield/nebula background. This repository includes two implementations of the simulation sharing the same GLSL fragment shader:
-1. **Python Desktop App**: Built using `ModernGL` and `Pygame` for local high-performance hardware-accelerated rendering.
-2. **Web Application**: Built using `Three.js` (WebGL2) with a modern glassmorphic control panel, hosted live via GitHub Pages.
+An interactive 3D Cosmic Map and real-time relativistic anomaly simulator featuring high-performance physics-based shaders. The project includes:
+1. **Interactive 3D Galaxy Map (Web)**: A rotating spiral galaxy of 10,000 stars built using `Three.js` (WebGL). It lets you locate, hover, and select major cosmic anomalies. Selecting a node triggers a smooth camera zoom animation and opens a dedicated simulator.
+2. **Volumetric Relativistic Simulations**: Four custom-built GLSL fragment shaders (run either locally on desktop or via browser) representing:
+   * **Schwarzschild Black Hole**: Gravitational lensing geodesic raymarching with 3D volumetric thickness, Doppler beaming, and gravitational redshift.
+   * **Vela Pulsar**: A precessing, fast-spinning neutron star emitting conical relativistic jets and a dipole magnetosphere grid.
+   * **Cygnus Wormhole**: Morris-Thorne Einstein-Rosen bridge coordinate inversion that lets you look straight through a spherical throat to see an alternate universe background.
+   * **Kepler Dyson Megastructure**: Orbiting geometric panel shields surrounding a star, exposing dynamic solar flares and core temperatures through panel gaps.
+3. **Python Desktop App**: Run any of the four shaders locally in a Pygame window powered by PyOpenGL hardware acceleration.
 
 ---
 
-## Technical & Physical Details
+## Simulated Objects & Physics Math
 
-The simulation uses raymarching inside a custom GLSL fragment shader to integrate light rays moving through curved spacetime around a non-rotating (Schwarzschild) black hole.
+### 1. Schwarzschild Black Hole (`shaders/black-hole.frag`)
 
-### Gravitational Lensing (Schwarzschild Geodesics)
-
-Rather than travelling in straight lines, photon trajectories are bent by the gravity of the singularity. The geodesic equation for a photon is integrated step-by-step using an adaptive Euler integrator:
+Bends incoming light rays from background stars based on Schwarzschild spacetime geodesics:
 
 $$\vec{a} = -\frac{1.5 \cdot R_s \cdot |\vec{L}|^2}{r^5} \vec{p}$$
 
-Where:
-* $R_s$ is the Schwarzschild radius (event horizon scale).
-* $\vec{p}$ is the current position vector of the photon relative to the singularity.
-* $\vec{L} = \vec{p} \times \vec{v}$ is the angular momentum of the ray (cross product of position and direction).
-* $\vec{a}$ is the resulting acceleration vector pulling the light ray toward the center.
+Features a true 3D volumetric accretion disk calculated inside a vertical Gaussian density envelope:
 
-An adaptive step size is calculated dynamically based on distance to prevent numerical instabilities near the event horizon:
+$$\text{Density}_{\text{vol}} = \text{FBM}(r, \theta) \cdot \exp\left(-\frac{y^2}{d^2}\right)$$
 
-$$\text{stepSize} = \text{clamp}(r \cdot 0.065, 0.012, 0.28)$$
+And shifts frequencies due to both Keplerian orbital speeds (Doppler Beaming) and gravity well energy loss (Gravitational Redshift):
 
-### Accretion Disk & Relativistic Doppler Beaming
+$$D = \frac{1}{\gamma(1 - \beta \cos\theta)}, \quad z_g = \frac{1}{\sqrt{1 - R_s/r}} - 1$$
 
-The accretion disk is modeled in the equatorial plane ($y=0$) and shaded using a multi-octave domain-warped Fractal Brownian Motion (FBM) noise function to create fluid-like dust lanes. 
+### 2. Vela Pulsar (`shaders/pulsar.frag`)
+A precessing magnetic axis vector $\vec{m}(t)$ creates precessing cones of radiation. When a photon enters the cone ($\cos\alpha > \text{threshold}$), it accumulates high-energy jet glow:
 
-To simulate relativistic effects, the disk is subject to **Keplerian velocity fields** ($\beta = v/c \propto \sqrt{R_s/r}$). Matter moving towards the camera appears brighter and blue-shifted (Doppler beaming), while matter moving away is dimmer and red-shifted.
+$$\text{JetGlow} \propto \frac{\text{power}(\cos\alpha, N)}{r}$$
 
-The Doppler factor is defined as:
+Surrounding the star is a dipole magnetosphere grid representing field line equations.
 
-$$D = \frac{1}{\gamma(1 - \beta \cos\theta)}$$
+### 3. Cygnus Wormhole (`shaders/wormhole.frag`)
+Models a Morris-Thorne wormhole throat transition. When a ray reaches throat radius $r < R_s$, the space coordinate is inverted:
 
-Where $\gamma = 1 / \sqrt{1 - \beta^2}$ is the Lorentz factor, and $\theta$ is the angle between the emitter's velocity and the photon ray. The brightness is modulated by $D^{3 + \text{beaming}}$, and the color spectrum is shifted dynamically.
+$$\vec{p}_{\text{new}} = -\vec{p} \cdot 1.01$$
+
+The ray emerges on the opposite side of the throat and continues its trajectory inside an **alternate universe** sampling a different colored nebula and starfield.
+
+### 4. Kepler Dyson Sphere (`shaders/dyson-sphere.frag`)
+A central star sphere surrounded by a larger spherical shell. A rotating sin-cos grid equation partitions the shell into geometric panels and structural gaps:
+
+$$\text{Panel} = \text{step}(\text{gap}, \text{fract}(\theta \cdot F)) \cdot \text{step}(\text{gap}, \text{fract}(\phi \cdot F))$$
+
+Rays passing through gaps expose active solar flares on the star core.
 
 ---
 
-## 1. Web Version (GitHub Pages)
+## Running the Web App Locally
 
-The web version runs fully in any modern web browser supporting WebGL2. It includes a glassmorphic sidebar panel with preset configurations, sliders to modify physics parameters in real-time, and color scheme selectors.
-
-### Local Running
-
-Due to browser CORS security policies, fetching the local `shader.frag` file requires running a simple web server rather than opening `index.html` directly from your file explorer.
-
-Run one of the following commands in the project directory:
+Due to browser security CORS restrictions, loading fragment shaders dynamically requires running a simple web server:
 
 ```bash
 # Using Python
@@ -58,45 +62,26 @@ python -m http.server 8000
 npx serve .
 ```
 
-Then, navigate to `http://localhost:8000` (or the port specified by the server).
+Open `http://localhost:8000` in your web browser.
 
 ---
 
-## 2. Python Version (ModernGL + Pygame)
+## Running the Python Desktop App
 
-The desktop version runs the exact same GLSL shader directly on your GPU using `ModernGL` for OpenGL context wrapping and `Pygame` for window management and inputs.
-
-### Setup and Requirements
-
-Ensure you have Python 3.8+ installed. Install the dependencies using:
+Ensure you have Python 3.8+ and run:
 
 ```bash
 pip install -r requirements.txt
-```
-
-### Running the App
-
-```bash
 python main.py
 ```
 
----
-
-## Interactive Controls
-
-### Navigation (Both Versions)
-* **Left Click + Drag**: Orbit/rotate camera.
-* **Scroll Wheel / Touch pinch**: Zoom camera in and out.
-
-### Python Controls
-* **SPACE**: Toggle camera auto-orbit.
-* **Q / A**: Increase / Decrease Event Horizon Mass ($R_s$).
-* **W / S**: Increase / Decrease Disk Spin Speed.
-* **E / D**: Increase / Decrease Relativistic Doppler Beaming.
-* **R / F**: Increase / Decrease Gravitational Lensing Distortion.
-* **T**: Cycle through Color Themes.
-* **ESC**: Exit application.
-
-### Web Controls
-* Use the sliders, color pickers, and action buttons in the translucent sidebar panel.
-* Select one of the presets (**Gargantua**, **Nebula Quasar**, **Quantum Micro**, **Supermassive Void**) for instant structural transformations.
+### Desktop Bindings
+* **`1` / `2` / `3` / `4`**: Swap active object (Black Hole, Pulsar, Wormhole, Dyson Sphere).
+* **Mouse Drag / Scroll**: Orbit / Zoom camera.
+* **SPACE**: Toggle Camera Autopilot.
+* **Q / A**: Adjust Horizon/Star Radius ($R_s$).
+* **W / S**: Adjust Spin/Orbital Speed.
+* **E / D**: Adjust Glow/Circuit Brightness.
+* **R / F**: Adjust Lensing/Warp strength.
+* **T**: Cycle through Theme color palettes.
+* **ESC**: Close application.
