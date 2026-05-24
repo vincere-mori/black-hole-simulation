@@ -906,6 +906,7 @@ async function onTransitionComplete() {
         uniforms: uniforms,
         depthWrite: false,
         depthTest: false,
+        transparent: true,
         glslVersion: THREE.GLSL3
     });
 

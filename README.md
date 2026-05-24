@@ -35,30 +35,40 @@ The simulations run directly on the GPU using high-performance GLSL fragment sha
 ### Gravitational Spacetime Bending
 Light rays near black holes and wormholes are bent using Schwarzschild geodesics integrated step-by-step during raymarching:
 
-$$ \vec{a} = -\frac{1.5 \cdot R_s \cdot |\vec{L}|^2}{r^5} \cdot \vec{p} $$
+```text
+a = -1.5 * Rs * |L|² / (r⁵) * p
+```
 
 * **p**: Photon position vector
 * **a**: Bending acceleration vector
 * **Rs**: Schwarzschild horizon radius
-* **L**: Angular momentum vector ($\vec{L} = \vec{p} \times \vec{v}$)
+* **L**: Angular momentum vector (L = p × v)
 
 ### Volumetric Accretion Disk
 Accretion disks are rendered as 3D participating media with density mapped inside a vertical Gaussian envelope:
 
-$$ \text{Density} = \text{Noise}(r, \theta) \cdot \exp\left(-\frac{y^2}{\text{thickness}^2}\right) $$
+```text
+Density = Noise(r, θ) * exp(-y² / thickness²)
+```
 
 This produces realistic gas silhouettes from edge-on camera angles rather than flat 2D planes.
 
 ### Relativistic Doppler Beaming & Redshift
 * **Doppler Shift**: Relativistic beaming shifts the color and brightness of the accretion disk depending on whether gas is moving towards or away from the camera:
-  $$ D = \frac{1}{\gamma \cdot (1 - \beta \cdot \cos\theta)} $$
+```text
+  D = 1 / (γ * (1 - β * cos(θ)))
+```
 * **Gravitational Redshift**: Light escaping from the gravity well shifts towards dark red/infrared near the event horizon:
-  $$ z = \frac{1}{\sqrt{1 - \frac{R_s}{r}}} - 1 $$
+```text
+  z = 1 / sqrt(1 - Rs / r) - 1
+```
 
 ### Morris-Thorne Throat Crossing
-When a ray penetrates the wormhole throat boundary ($r < R_s$), coordinates are inverted:
+When a ray penetrates the wormhole throat boundary (r < Rs), coordinates are inverted:
 
-$$ \vec{p}_{\text{new}} = -\vec{p} \cdot 1.01 $$
+```text
+p_new = -p * 1.01
+```
 
 The ray emerges in another coordinate space, sampling an alternate starfield background.
 
