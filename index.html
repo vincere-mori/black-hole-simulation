@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relativistic Black Hole Simulator</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-fontawesome/6.4.0/css/all.min.css">
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Three.js and OrbitControls -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+    <!-- Canvas container -->
+    <canvas id="webgl-canvas"></canvas>
+
+    <!-- UI Overlay -->
+    <div id="ui-container">
+        <!-- Sidebar Toggle -->
+        <button id="sidebar-toggle" aria-label="Toggle Settings">
+            <i class="fas fa-sliders-h"></i>
+        </button>
+
+        <!-- Sidebar Panel -->
+        <aside id="control-sidebar" class="glass-panel">
+            <header class="sidebar-header">
+                <h1>EVENT HORIZON</h1>
+                <p class="subtitle">Relativistic Singularity Engine</p>
+            </header>
+
+            <div class="sidebar-content">
+                <!-- Section: Presets -->
+                <section class="control-section">
+                    <h2 class="section-title"><i class="fas fa-wand-magic-sparkles"></i> Cosmic Presets</h2>
+                    <div class="preset-grid">
+                        <button class="preset-btn active" data-preset="gargantua">Gargantua</button>
+                        <button class="preset-btn" data-preset="quasar">Nebula Quasar</button>
+                        <button class="preset-btn" data-preset="micro">Quantum Micro</button>
+                        <button class="preset-btn" data-preset="void">Supermassive Void</button>
+                    </div>
+                </section>
+
+                <!-- Section: Physics -->
+                <section class="control-section">
+                    <h2 class="section-title"><i class="fas fa-atom"></i> Singularity Physics</h2>
+                    
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <label for="slider-rs">Horizon Mass (R<sub>s</sub>)</label>
+                            <span class="value-display" id="val-rs">1.00</span>
+                        </div>
+                        <input type="range" id="slider-rs" min="0.2" max="2.2" step="0.05" value="1.00">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <label for="slider-distortion">Gravitational Lensing</label>
+                            <span class="value-display" id="val-distortion">1.00</span>
+                        </div>
+                        <input type="range" id="slider-distortion" min="0.0" max="2.5" step="0.05" value="1.00">
+                    </div>
+                </section>
+
+                <!-- Section: Accretion Disk -->
+                <section class="control-section">
+                    <h2 class="section-title"><i class="fas fa-circle-notch"></i> Accretion Disk</h2>
+
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <label for="slider-outer">Disk Outer Bound</label>
+                            <span class="value-display" id="val-outer">9.50</span>
+                        </div>
+                        <input type="range" id="slider-outer" min="4.0" max="15.0" step="0.10" value="9.50">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <label for="slider-speed">Keplerian Rotation Speed</label>
+                            <span class="value-display" id="val-speed">1.60</span>
+                        </div>
+                        <input type="range" id="slider-speed" min="0.0" max="4.0" step="0.05" value="1.60">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <label for="slider-doppler">Doppler Beaming</label>
+                            <span class="value-display" id="val-doppler">1.00</span>
+                        </div>
+                        <input type="range" id="slider-doppler" min="0.0" max="2.5" step="0.05" value="1.00">
+                    </div>
+                </section>
+
+                <!-- Section: Aesthetics -->
+                <section class="control-section">
+                    <h2 class="section-title"><i class="fas fa-palette"></i> Aesthetics</h2>
+                    
+                    <div class="control-group">
+                        <label>Color Theme</label>
+                        <div class="theme-picker">
+                            <button class="theme-btn active" data-theme="0" style="background: linear-gradient(135deg, #ffc000, #ff2200);" title="Gargantua Orange"></button>
+                            <button class="theme-btn" data-theme="1" style="background: linear-gradient(135deg, #00f0ff, #0011ff);" title="Cosmic Cyan"></button>
+                            <button class="theme-btn" data-theme="2" style="background: linear-gradient(135deg, #ea00ff, #5100ff);" title="Quantum Purple"></button>
+                            <button class="theme-btn" data-theme="3" style="background: linear-gradient(135deg, #ff4040, #ff0000);" title="Singularity Crimson"></button>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label-row">
+                            <label for="slider-stars">Starfield Density</label>
+                            <span class="value-display" id="val-stars">1.00</span>
+                        </div>
+                        <input type="range" id="slider-stars" min="0.0" max="3.0" step="0.05" value="1.00">
+                    </div>
+                </section>
+            </div>
+
+            <footer class="sidebar-footer">
+                <button id="btn-camera" class="action-btn"><i class="fas fa-video"></i> Auto Orbit</button>
+                <p class="guide-text"><i class="fas fa-mouse"></i> Click + Drag to rotate. Scroll to Zoom.</p>
+            </footer>
+        </aside>
+
+        <!-- Dynamic Tech HUD -->
+        <div id="tech-hud" class="glass-panel">
+            <div class="hud-item"><span class="hud-label">FPS:</span> <span id="hud-fps">60</span></div>
+            <div class="hud-item"><span class="hud-label">E_H RADIUS:</span> <span id="hud-rs">1.00</span> AU</div>
+            <div class="hud-item"><span class="hud-label">DISC TEMP:</span> <span id="hud-temp">8.4e6</span> K</div>
+        </div>
+    </div>
+
+    <!-- App Script -->
+    <script src="app.js"></script>
+</body>
+</html>
