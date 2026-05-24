@@ -1,2 +1,2 @@
-pygame>=2.0.0
-moderngl>=5.6.0
+pygame-ce>=2.5.0
+PyOpenGL>=3.1.5

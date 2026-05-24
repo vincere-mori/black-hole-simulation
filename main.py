@@ -1,8 +1,10 @@
 import sys
 import os
 import math
+import struct
 import pygame
-import moderngl
+from OpenGL.GL import *
+from OpenGL.GL.shaders import compileProgram, compileShader
 
 # Initialize Pygame
 pygame.init()
@@ -12,17 +14,19 @@ pygame.display.set_caption("Black Hole Relativistic Simulation")
 WIDTH, HEIGHT = 960, 540
 screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.OPENGL | pygame.DOUBLEBUF | pygame.RESIZABLE)
 
-# Create ModernGL context
-ctx = moderngl.create_context()
-
 # Read fragment shader
 shader_path = os.path.join(os.path.dirname(__file__), "shader.frag")
 with open(shader_path, "r", encoding="utf-8") as f:
     frag_shader_source = f.read()
 
+# Desktop GLSL compatibility replacement:
+# Converts GLSL ES 3.0 header to Desktop GLSL 3.3 Core header
+if frag_shader_source.startswith("#version 300 es"):
+    frag_shader_source = frag_shader_source.replace("#version 300 es", "#version 330 core", 1)
+
 # Vertex shader (full-screen quad)
 vert_shader_source = """
-#version 300 es
+#version 330 core
 in vec2 in_vert;
 out vec2 vUv;
 void main() {
@@ -32,18 +36,16 @@ void main() {
 """
 
 try:
-    program = ctx.program(
-        vertex_shader=vert_shader_source,
-        fragment_shader=frag_shader_source
-    )
+    vert_shader = compileShader(vert_shader_source, GL_VERTEX_SHADER)
+    frag_shader = compileShader(frag_shader_source, GL_FRAGMENT_SHADER)
+    program = compileProgram(vert_shader, frag_shader)
 except Exception as e:
     print("Shader Compilation Error:")
     print(e)
     sys.exit(1)
 
-# Full-screen quad vertices
-# 2 triangles forming a quad: [-1, -1] to [1, 1]
-vertices = new_vertices = [
+# Setup full-screen quad VBO/VAO
+vertices = [
     -1.0, -1.0,
      1.0, -1.0,
     -1.0,  1.0,
@@ -51,9 +53,39 @@ vertices = new_vertices = [
      1.0, -1.0,
      1.0,  1.0
 ]
-vbo = ctx.buffer(sys.getsizeof(vertices[0]) * len(vertices))
-vbo.write(bytes(struct_pack := lambda fmt, *args: __import__('struct').pack(fmt, *args), *[('12f', *vertices)]))
-vao = ctx.simple_vertex_array(program, vbo, 'in_vert')
+vertices_data = struct.pack('12f', *vertices)
+
+vao = glGenVertexArrays(1)
+glBindVertexArray(vao)
+
+vbo = glGenBuffers(1)
+glBindBuffer(GL_ARRAY_BUFFER, vbo)
+glBufferData(GL_ARRAY_BUFFER, len(vertices_data), vertices_data, GL_STATIC_DRAW)
+
+# Setup position attribute channel
+in_vert_loc = glGetAttribLocation(program, "in_vert")
+glEnableVertexAttribArray(in_vert_loc)
+glVertexAttribPointer(in_vert_loc, 2, GL_FLOAT, GL_FALSE, 0, None)
+
+glBindVertexArray(0)
+
+# Get Uniform Locations
+uCamPos_loc = glGetUniformLocation(program, 'uCamPos')
+uInvProjection_loc = glGetUniformLocation(program, 'uInvProjection')
+uCamWorld_loc = glGetUniformLocation(program, 'uCamWorld')
+uTime_loc = glGetUniformLocation(program, 'uTime')
+uRs_loc = glGetUniformLocation(program, 'uRs')
+uInnerRadius_loc = glGetUniformLocation(program, 'uInnerRadius')
+uOuterRadius_loc = glGetUniformLocation(program, 'uOuterRadius')
+uSpinSpeed_loc = glGetUniformLocation(program, 'uSpinSpeed')
+uDopplerStrength_loc = glGetUniformLocation(program, 'uDopplerStrength')
+uNoiseScale_loc = glGetUniformLocation(program, 'uNoiseScale')
+uNoiseDetail_loc = glGetUniformLocation(program, 'uNoiseDetail')
+uBeamingScale_loc = glGetUniformLocation(program, 'uBeamingScale')
+uDistortion_loc = glGetUniformLocation(program, 'uDistortion')
+uStarDensity_loc = glGetUniformLocation(program, 'uStarDensity')
+uColorTheme1_loc = glGetUniformLocation(program, 'uColorTheme1')
+uColorTheme2_loc = glGetUniformLocation(program, 'uColorTheme2')
 
 # Predefined Color Themes
 THEMES = [
@@ -135,15 +167,15 @@ while running:
                 
         elif event.type == pygame.VIDEORESIZE:
             WIDTH, HEIGHT = event.size
-            ctx.viewport = (0, 0, WIDTH, HEIGHT)
+            glViewport(0, 0, WIDTH, HEIGHT)
             
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 dragging = True
                 last_mouse_pos = event.pos
-            elif event.button == 4: # Scroll up
+            elif event.button == 4: # Scroll up (zoom in)
                 cam_dist = max(4.0, cam_dist - 0.6)
-            elif event.button == 5: # Scroll down
+            elif event.button == 5: # Scroll down (zoom out)
                 cam_dist = min(40.0, cam_dist + 0.6)
                 
         elif event.type == pygame.MOUSEBUTTONUP:
@@ -161,10 +193,8 @@ while running:
     keys = pygame.key.get_pressed()
     if keys[pygame.K_q]:
         params["rs"] = min(2.5, params["rs"] + 0.02)
-        params["inner_radius"] = max(params["rs"] * 1.5, params["inner_radius"])
     if keys[pygame.K_a]:
         params["rs"] = max(0.2, params["rs"] - 0.02)
-        params["inner_radius"] = max(params["rs"] * 1.5, params["inner_radius"])
         
     if keys[pygame.K_w]:
         params["spin_speed"] = min(5.0, params["spin_speed"] + 0.05)
@@ -182,7 +212,7 @@ while running:
         params["distortion"] = max(0.0, params["distortion"] - 0.02)
 
     # Dynamic outer/inner boundaries based on Rs
-    params["inner_radius"] = max(params["rs"] * 1.6, params["inner_radius"])
+    params["inner_radius"] = params["rs"] * 2.2
     params["outer_radius"] = max(params["inner_radius"] + 2.0, params["outer_radius"])
 
     # Update Title bar with live stats
@@ -203,7 +233,6 @@ while running:
     eye = (cam_x, cam_y, cam_z)
     
     # Calculate Camera Orientation vectors
-    # Target is origin (0, 0, 0)
     target = (0.0, 0.0, 0.0)
     up = (0.0, 1.0, 0.0)
     
@@ -246,31 +275,36 @@ while running:
     ]
 
     # Clear screen
-    ctx.clear(0.0, 0.0, 0.0, 1.0)
+    glClearColor(0.0, 0.0, 0.0, 1.0)
+    glClear(GL_COLOR_BUFFER_BIT)
     
     # Set Uniforms
-    program['uCamPos'].value = eye
-    program['uInvProjection'].write(bytes(struct_pack('16f', *uInvProjection)))
-    program['uCamWorld'].write(bytes(struct_pack('16f', *uCamWorld)))
+    glUseProgram(program)
     
-    program['uTime'].value = current_time
-    program['uRs'].value = params["rs"]
-    program['uInnerRadius'].value = params["inner_radius"]
-    program['uOuterRadius'].value = params["outer_radius"]
-    program['uSpinSpeed'].value = params["spin_speed"]
-    program['uDopplerStrength'].value = params["doppler_strength"]
-    program['uNoiseScale'].value = params["noise_scale"]
-    program['uNoiseDetail'].value = params["noise_detail"]
-    program['uBeamingScale'].value = params["beaming_scale"]
-    program['uDistortion'].value = params["distortion"]
-    program['uStarDensity'].value = params["star_density"]
+    glUniform3f(uCamPos_loc, eye[0], eye[1], eye[2])
+    glUniformMatrix4fv(uInvProjection_loc, 1, GL_FALSE, uInvProjection)
+    glUniformMatrix4fv(uCamWorld_loc, 1, GL_FALSE, uCamWorld)
+    
+    glUniform1f(uTime_loc, current_time)
+    glUniform1f(uRs_loc, params["rs"])
+    glUniform1f(uInnerRadius_loc, params["inner_radius"])
+    glUniform1f(uOuterRadius_loc, params["outer_radius"])
+    glUniform1f(uSpinSpeed_loc, params["spin_speed"])
+    glUniform1f(uDopplerStrength_loc, params["doppler_strength"])
+    glUniform1f(uNoiseScale_loc, params["noise_scale"])
+    glUniform1f(uNoiseDetail_loc, params["noise_detail"])
+    glUniform1f(uBeamingScale_loc, params["beaming_scale"])
+    glUniform1f(uDistortion_loc, params["distortion"])
+    glUniform1f(uStarDensity_loc, params["star_density"])
     
     theme = THEMES[params["theme_idx"]]
-    program['uColorTheme1'].value = theme["c1"]
-    program['uColorTheme2'].value = theme["c2"]
+    glUniform3f(uColorTheme1_loc, theme["c1"][0], theme["c1"][1], theme["c1"][2])
+    glUniform3f(uColorTheme2_loc, theme["c2"][0], theme["c2"][1], theme["c2"][2])
 
     # Render Screen Quad
-    vao.render(moderngl.TRIANGLES)
+    glBindVertexArray(vao)
+    glDrawArrays(GL_TRIANGLES, 0, 6)
+    glBindVertexArray(0)
     
     pygame.display.flip()
 
