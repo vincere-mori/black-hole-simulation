@@ -1,12 +1,13 @@
-// Astronomical Object Definitions & Telemetry Data
+// ===== Object Catalog =====
 const OBJECTS = {
     gargantua: {
         name: "Gargantua Singularity",
         class: "SCHWARZSCHILD BLACK HOLE",
+        sector: "SECTOR 04-A",
         coords: "X: 0.00 / Y: 0.00 / Z: 0.00",
         mass: "4.3e6 M☉",
         rad: "STABLE CORE",
-        desc: "A supermassive singularity exhibiting general relativity light-deflection geodesics, dynamic gravitational lensing, and a rotating accretion disk with Keplerian speed profiles and Doppler beaming.",
+        desc: "Supermassive singularity at galactic center. Accretion disk with Keplerian velocity profiles, relativistic Doppler beaming, and gravitational lensing geodesics.",
         shader: "shaders/black-hole.frag",
         position: new THREE.Vector3(0, 0, 0),
         presets: {
@@ -18,21 +19,16 @@ const OBJECTS = {
             { c1: '#00f0ff', c2: '#0011ff', name: 'Cosmic Cyan', temp: '1.2e7' },
             { c1: '#ea00ff', c2: '#5100ff', name: 'Quantum Purple', temp: '9.8e6' }
         ],
-        labels: {
-            rs: "Horizon Mass (Rs)",
-            distortion: "Warp Lensing",
-            outer: "Disk Outer Bound",
-            speed: "Disk Rotation",
-            doppler: "Doppler Beaming"
-        }
+        labels: { rs: "Horizon Mass (Rs)", distortion: "Warp Lensing", outer: "Disk Outer Bound", speed: "Disk Rotation", doppler: "Doppler Beaming" }
     },
     vela: {
         name: "Vela Pulsar",
         class: "ROTATING NEUTRON STAR",
+        sector: "SECTOR 12-C",
         coords: "X: 5.00 / Y: 1.00 / Z: -4.00",
         mass: "1.44 M☉",
         rad: "EXTREME PULSATION",
-        desc: "A highly magnetized, rapidly rotating neutron star. It emits precessing cones of high-energy radio jets from its magnetic poles and warps surrounding space with a dipole magnetosphere grid.",
+        desc: "Highly magnetized neutron star. Precessing radio jet cones from magnetic poles, dipole magnetosphere field-line grid.",
         shader: "shaders/pulsar.frag",
         position: new THREE.Vector3(5, 1, -4),
         presets: {
@@ -43,21 +39,16 @@ const OBJECTS = {
             { c1: '#00e5ff', c2: '#5100ff', name: 'Gamma Blue', temp: '2.5e8' },
             { c1: '#ff4040', c2: '#ea00ff', name: 'Magnetar Purple', temp: '4.1e8' }
         ],
-        labels: {
-            rs: "Core Size (Rs)",
-            distortion: "Magneto-Warp",
-            outer: "Field Boundary",
-            speed: "Spin Frequency",
-            doppler: "Jet Intensity"
-        }
+        labels: { rs: "Core Size (Rs)", distortion: "Magneto-Warp", outer: "Field Boundary", speed: "Spin Frequency", doppler: "Jet Intensity" }
     },
     cygnus: {
         name: "Cygnus Wormhole",
         class: "MORRIS-THORNE BRIDGE",
+        sector: "SECTOR 07-F",
         coords: "X: -6.00 / Y: -1.00 / Z: 5.00",
-        mass: "N/A (Exotic Matter)",
+        mass: "N/A (Exotic)",
         rad: "STABLE GATEWAY",
-        desc: "A topological shortcut through curved spacetime. Light traversing the throat does not hit a singularity, but crosses the coordinate boundary to sample an alternate universe background.",
+        desc: "Topological shortcut through curved spacetime. Light crosses the coordinate boundary to sample an alternate-universe background.",
         shader: "shaders/wormhole.frag",
         position: new THREE.Vector3(-6, -1, 5),
         presets: {
@@ -66,23 +57,18 @@ const OBJECTS = {
         },
         themes: [
             { c1: '#ea00ff', c2: '#00e5ff', name: 'Nebula Portal', temp: '0' },
-            { c1: '#ffc000', c2: '#00ff66', name: 'Gold-Emerald Bridge', temp: '12' }
+            { c1: '#ffc000', c2: '#00ff66', name: 'Gold-Emerald', temp: '12' }
         ],
-        labels: {
-            rs: "Throat Radius (Rs)",
-            distortion: "Throat Bending",
-            outer: "Lensing Zone",
-            speed: "Chromatic Drift",
-            doppler: "Alternate Lumens"
-        }
+        labels: { rs: "Throat Radius (Rs)", distortion: "Throat Bending", outer: "Lensing Zone", speed: "Chromatic Drift", doppler: "Alternate Lumens" }
     },
     kepler: {
         name: "Kepler Dyson Sphere",
         class: "STELLAR MEGASTRUCTURE",
+        sector: "SECTOR 19-B",
         coords: "X: 3.00 / Y: -2.00 / Z: 7.00",
-        mass: "1.08 M☉ (Central Star)",
+        mass: "1.08 M☉ (Host Star)",
         rad: "THERMAL EMISSION",
-        desc: "A swarm of rotating geometric solar panels constructed around a star. Light escapes through the panel gaps, exposing flares and backlit mechanical plates.",
+        desc: "Swarm of rotating geometric solar collectors around a star. Light escapes through panel gaps, exposing flares and backlit plates.",
         shader: "shaders/dyson-sphere.frag",
         position: new THREE.Vector3(3, -2, 7),
         presets: {
@@ -93,105 +79,203 @@ const OBJECTS = {
             { c1: '#ff9d00', c2: '#ffcc00', name: 'Solar Gold', temp: '5780' },
             { c1: '#00e5ff', c2: '#ffffff', name: 'Sirius White-Blue', temp: '9940' }
         ],
-        labels: {
-            rs: "Star Diameter",
-            distortion: "Gravity Flex",
-            outer: "Shell Size",
-            speed: "Orbital Speed",
-            doppler: "Circuit Radiance"
-        }
+        labels: { rs: "Star Diameter", distortion: "Gravity Flex", outer: "Shell Size", speed: "Orbital Speed", doppler: "Circuit Radiance" }
     }
 };
 
-// Global App States: 'GALAXY' or 'ORBIT'
-let appState = 'GALAXY';
+// ===== State =====
+let appState = 'BOOT';
 let activeObjectId = 'gargantua';
 let activeThemeIdx = 0;
 let autoRotate = true;
 
-// UI Elements
-const uiContainer = document.getElementById('ui-container');
-const sidebar = document.getElementById('control-sidebar');
-const infoCard = document.getElementById('info-card');
-const btnBack = document.getElementById('btn-back-to-galaxy');
-const btnOrbit = document.getElementById('btn-enter-orbit');
-const btnAutopilot = document.getElementById('btn-camera');
+// ===== Boot Terminal =====
+const BOOT_LINES = [
+    { text: "> BIOS POST check ... ", cls: "line-dim", delay: 80 },
+    { text: "  Memory: 256 TB unified — OK", cls: "line-ok", delay: 50 },
+    { text: "  GPU cluster: 8x RTX-ASTRO — OK", cls: "line-ok", delay: 50 },
+    { text: "  Photon buffer: 4096 lanes — OK", cls: "line-ok", delay: 40 },
+    { text: "", cls: "line-dim", delay: 30 },
+    { text: "> Loading kernel ASTRO-NAV/x86_64 ...", cls: "line-info", delay: 120 },
+    { text: "  Module: gravitational_lens.ko — loaded", cls: "line-dim", delay: 60 },
+    { text: "  Module: schwarzschild_integrator.ko — loaded", cls: "line-dim", delay: 50 },
+    { text: "  Module: doppler_beaming.ko — loaded", cls: "line-dim", delay: 50 },
+    { text: "  Module: accretion_disk_volumetric.ko — loaded", cls: "line-dim", delay: 40 },
+    { text: "  Module: magnetosphere_dipole.ko — loaded", cls: "line-dim", delay: 50 },
+    { text: "  Module: wormhole_throat.ko — loaded", cls: "line-dim", delay: 40 },
+    { text: "", cls: "line-dim", delay: 20 },
+    { text: "> Initializing WebGL2 renderer ...", cls: "line-info", delay: 100 },
+    { text: "  Canvas: 1920x1080 @ 2x DPI", cls: "line-dim", delay: 40 },
+    { text: "  Shader compiler: GLSL 3.00 ES — ready", cls: "line-ok", delay: 50 },
+    { text: "  Fragment shader pipeline: 4 programs queued", cls: "line-dim", delay: 40 },
+    { text: "", cls: "line-dim", delay: 20 },
+    { text: "> Scanning deep space telemetry feeds ...", cls: "line-info", delay: 100 },
+    { text: "  [ANOMALY] Gargantua Singularity  — SECTOR 04-A — 4.3e6 M☉", cls: "line-warn", delay: 80 },
+    { text: "  [ANOMALY] Vela Pulsar             — SECTOR 12-C — 1.44 M☉", cls: "line-warn", delay: 70 },
+    { text: "  [ANOMALY] Cygnus Wormhole          — SECTOR 07-F — exotic", cls: "line-warn", delay: 70 },
+    { text: "  [ANOMALY] Kepler Dyson Sphere      — SECTOR 19-B — 1.08 M☉", cls: "line-warn", delay: 70 },
+    { text: "  Total anomalies registered: 4", cls: "line-dim", delay: 40 },
+    { text: "", cls: "line-dim", delay: 20 },
+    { text: "> Building galaxy particle field (10000 stars) ...", cls: "line-info", delay: 100 },
+    { text: "  Spiral arm algorithm: 2-arm log-distribution", cls: "line-dim", delay: 50 },
+    { text: "  Star texture: 16x16 radial gradient — cached", cls: "line-dim", delay: 40 },
+    { text: "", cls: "line-dim", delay: 20 },
+    { text: "> Calibrating OrbitControls ...", cls: "line-info", delay: 80 },
+    { text: "  Damping: 0.05 | FOV: 45° | Range: 3–50 AU", cls: "line-dim", delay: 40 },
+    { text: "", cls: "line-dim", delay: 20 },
+    { text: "> Running diagnostics ...", cls: "line-info", delay: 100 },
+    { text: "  Framebuffer integrity — PASS", cls: "line-ok", delay: 50 },
+    { text: "  Depth buffer precision — PASS", cls: "line-ok", delay: 40 },
+    { text: "  Raymarching pipeline — PASS", cls: "line-ok", delay: 50 },
+    { text: "  Tone mapping (Reinhard) — PASS", cls: "line-ok", delay: 40 },
+    { text: "", cls: "line-dim", delay: 30 },
+    { text: "> ALL SYSTEMS NOMINAL", cls: "line-ok", delay: 120 },
+    { text: "  Star chart ready for navigation.", cls: "line-info", delay: 80 },
+];
 
-// Slider Elements
-const sliders = {
-    rs: document.getElementById('slider-rs'),
-    distortion: document.getElementById('slider-distortion'),
-    outer: document.getElementById('slider-outer'),
-    speed: document.getElementById('slider-speed'),
-    doppler: document.getElementById('slider-doppler'),
-    stars: document.getElementById('slider-stars')
-};
+function bootClock() {
+    const el = document.getElementById('boot-clock');
+    if (!el) return;
+    const now = new Date();
+    el.textContent = now.toISOString().slice(11, 19) + ' UTC';
+}
 
-const displays = {
-    rs: document.getElementById('val-rs'),
-    distortion: document.getElementById('val-distortion'),
-    outer: document.getElementById('val-outer'),
-    speed: document.getElementById('val-speed'),
-    doppler: document.getElementById('val-doppler'),
-    stars: document.getElementById('val-stars')
-};
+async function runBootSequence() {
+    const terminal = document.getElementById('boot-terminal');
+    const progressWrap = document.getElementById('boot-progress-wrap');
+    const progressBar = document.getElementById('boot-progress-bar');
+    const progressPct = document.getElementById('boot-progress-pct');
+    const enterWrap = document.getElementById('boot-enter-wrap');
 
-const hudFps = document.getElementById('hud-fps');
-const hudSim = document.getElementById('hud-sim-speed');
-const hudTemp = document.getElementById('hud-temp');
+    bootClock();
+    const clockInterval = setInterval(bootClock, 1000);
 
-// Three.js variables
+    const total = BOOT_LINES.length;
+    // phase 1: print lines
+    for (let i = 0; i < total; i++) {
+        const { text, cls, delay } = BOOT_LINES[i];
+        const div = document.createElement('div');
+        div.className = `line ${cls}`;
+        div.textContent = text;
+        terminal.appendChild(div);
+        terminal.scrollTop = terminal.scrollHeight;
+
+        // update progress
+        if (i === 3) {
+            progressWrap.classList.remove('boot-hidden');
+        }
+        const pct = Math.min(100, Math.round(((i + 1) / total) * 100));
+        progressBar.style.setProperty('--pct', pct + '%');
+        progressPct.textContent = pct + '%';
+
+        await sleep(delay);
+    }
+
+    await sleep(300);
+    // show enter button
+    enterWrap.classList.remove('boot-hidden');
+    enterWrap.style.animation = 'fadeIn 0.4s forwards';
+
+    // wait for click or Enter key
+    await new Promise(resolve => {
+        const btn = document.getElementById('boot-enter-btn');
+        const handler = () => {
+            btn.removeEventListener('click', handler);
+            document.removeEventListener('keydown', keyHandler);
+            resolve();
+        };
+        const keyHandler = (e) => { if (e.key === 'Enter') handler(); };
+        btn.addEventListener('click', handler);
+        document.addEventListener('keydown', keyHandler);
+    });
+
+    clearInterval(clockInterval);
+
+    // fade out boot screen
+    const bootScreen = document.getElementById('boot-screen');
+    bootScreen.classList.add('boot-exit');
+
+    await sleep(800);
+    bootScreen.style.display = 'none';
+
+    // reveal main app
+    const appContainer = document.getElementById('app-container');
+    appContainer.classList.remove('app-hidden');
+    appContainer.style.animation = 'fadeIn 0.5s forwards';
+
+    appState = 'GALAXY';
+}
+
+function sleep(ms) {
+    return new Promise(r => setTimeout(r, ms));
+}
+
+// ===== DOM refs =====
+let sidebar, infoCard, btnBack, btnOrbit, btnAutopilot, btnHelp;
+
+// ===== Sliders =====
+const sliderIds = ['rs', 'distortion', 'outer', 'speed', 'doppler', 'stars'];
+let sliders = {};
+let displays = {};
+let hudFps, hudTemp;
+
+// ===== Three.js =====
 let renderer, scene, camera, controls, clock;
 let orthoCamera, orthoScene, shaderMaterial;
 let uniforms = {};
-
-// Galaxy view entities
 let galaxyParticles, systemNodes = [];
 let raycaster, mouse;
 let targetCameraPos = new THREE.Vector3();
 let targetLookAt = new THREE.Vector3();
 let currentLookAt = new THREE.Vector3();
-let transitionProgress = 1.0; // 1.0 = transition finished/idle
+let transitionProgress = 1.0;
 
-// Canvas dot texture for stars
 function createStarTexture() {
-    const canvas = document.createElement('canvas');
-    canvas.width = 16;
-    canvas.height = 16;
-    const ctx = canvas.getContext('2d');
-    const grad = ctx.createRadialGradient(8, 8, 0, 8, 8, 8);
-    grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
-    grad.addColorStop(0.25, 'rgba(255, 255, 255, 0.85)');
-    grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
-    ctx.fillStyle = grad;
+    const c = document.createElement('canvas');
+    c.width = 16; c.height = 16;
+    const ctx = c.getContext('2d');
+    const g = ctx.createRadialGradient(8, 8, 0, 8, 8, 8);
+    g.addColorStop(0, 'rgba(255,255,255,1)');
+    g.addColorStop(0.25, 'rgba(255,255,255,0.85)');
+    g.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = g;
     ctx.fillRect(0, 0, 16, 16);
-    return new THREE.CanvasTexture(canvas);
+    return new THREE.CanvasTexture(c);
 }
 
-// Create pulsing neon ring texture for clickable nodes
-function createNodeTexture(colorHex) {
-    const canvas = document.createElement('canvas');
-    canvas.width = 64;
-    canvas.height = 64;
-    const ctx = canvas.getContext('2d');
-    
-    // Glowing ring
-    ctx.strokeStyle = colorHex;
+function createNodeTexture(hex) {
+    const c = document.createElement('canvas');
+    c.width = 64; c.height = 64;
+    const ctx = c.getContext('2d');
+    ctx.strokeStyle = hex;
     ctx.lineWidth = 4;
     ctx.beginPath();
     ctx.arc(32, 32, 22, 0, Math.PI * 2);
     ctx.stroke();
-    
-    // Core dot
-    ctx.fillStyle = colorHex;
+    ctx.fillStyle = hex;
     ctx.beginPath();
     ctx.arc(32, 32, 8, 0, Math.PI * 2);
     ctx.fill();
-    
-    return new THREE.CanvasTexture(canvas);
+    return new THREE.CanvasTexture(c);
 }
 
-async function init() {
+async function initApp() {
+    // cache dom
+    sidebar = document.getElementById('control-sidebar');
+    infoCard = document.getElementById('info-card');
+    btnBack = document.getElementById('btn-back-to-galaxy');
+    btnOrbit = document.getElementById('btn-enter-orbit');
+    btnAutopilot = document.getElementById('btn-camera');
+    btnHelp = document.getElementById('btn-help');
+    hudFps = document.getElementById('hud-fps');
+    hudTemp = document.getElementById('hud-temp');
+
+    for (const k of sliderIds) {
+        sliders[k] = document.getElementById('slider-' + k);
+        displays[k] = document.getElementById('val-' + k);
+    }
+
+    // renderer
     const glCanvas = document.getElementById('webgl-canvas');
     renderer = new THREE.WebGLRenderer({ canvas: glCanvas, antialias: true, powerPreference: 'high-performance' });
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -199,10 +283,9 @@ async function init() {
 
     scene = new THREE.Scene();
     clock = new THREE.Clock();
-    
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 150);
     camera.position.set(0, 14, 25);
-    
+
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
@@ -212,14 +295,12 @@ async function init() {
     raycaster = new THREE.Raycaster();
     mouse = new THREE.Vector2();
 
-    // 1. Build Galaxy Map Scene
     buildGalaxyMap();
 
-    // 2. Setup Orthographic scene (for Close-up volumetric shaders)
+    // ortho scene for shaders
     orthoScene = new THREE.Scene();
     orthoCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
-    // Initial uniform definitions
     uniforms = {
         uCamPos: { value: new THREE.Vector3() },
         uInvProjection: { value: new THREE.Matrix4() },
@@ -239,22 +320,18 @@ async function init() {
         uColorTheme2: { value: new THREE.Color() }
     };
 
-    // UI Events
     setupUIEvents();
     window.addEventListener('resize', onWindowResize);
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('click', onMouseClick);
 
-    // Loop variables
-    let lastTime = 0;
-    let frames = 0;
+    let lastTime = 0, frames = 0;
 
-    function renderLoop(time) {
-        requestAnimationFrame(renderLoop);
-        
+    function loop(time) {
+        requestAnimationFrame(loop);
         frames++;
         if (time > lastTime + 1000) {
-            hudFps.textContent = Math.round((frames * 1000) / (time - lastTime));
+            if (hudFps) hudFps.textContent = Math.round((frames * 1000) / (time - lastTime));
             frames = 0;
             lastTime = time;
         }
@@ -262,14 +339,12 @@ async function init() {
         const delta = clock.getDelta();
         const elapsed = clock.getElapsedTime();
 
-        // State Transition Camera Lerp
         if (transitionProgress < 1.0) {
-            transitionProgress += delta * 1.5; // duration is approx 0.66 seconds
+            transitionProgress += delta * 1.5;
             if (transitionProgress >= 1.0) {
                 transitionProgress = 1.0;
                 onTransitionComplete();
             } else {
-                // S-curve interpolation
                 const t = Math.sin(transitionProgress * Math.PI / 2.0);
                 camera.position.lerpVectors(camera.position, targetCameraPos, t * 0.1);
                 currentLookAt.lerpVectors(currentLookAt, targetLookAt, t * 0.1);
@@ -278,173 +353,132 @@ async function init() {
         }
 
         if (appState === 'GALAXY') {
-            // Spin the galaxy particles
-            if (galaxyParticles) {
-                galaxyParticles.rotation.y = elapsed * 0.03;
-            }
-            
-            // Spin system nodes
+            if (galaxyParticles) galaxyParticles.rotation.y = elapsed * 0.03;
+
             systemNodes.forEach(node => {
                 node.rotation.y = -elapsed * 0.1;
-                // Subtle pulse size
                 const pulse = 1.0 + 0.08 * Math.sin(elapsed * 4.0 + node.position.x);
                 node.scale.set(pulse, pulse, pulse);
             });
 
-            // Auto orbit camera on galaxy map
             if (autoRotate && transitionProgress === 1.0) {
-                const mapTime = elapsed * 0.03;
+                const mt = elapsed * 0.03;
                 const radius = 25.0;
-                camera.position.x = radius * Math.cos(mapTime);
-                camera.position.z = radius * Math.sin(mapTime);
-                camera.position.y = 12.0 + 4.0 * Math.sin(mapTime * 0.5);
+                camera.position.x = radius * Math.cos(mt);
+                camera.position.z = radius * Math.sin(mt);
+                camera.position.y = 12.0 + 4.0 * Math.sin(mt * 0.5);
                 controls.target.set(0, 0, 0);
             }
 
             controls.update();
             renderer.render(scene, camera);
-        } else if (appState === 'ORBIT') {
-            // Orbital Sim state: render full-screen shader
-            if (controls && autoRotate) {
-                const mapTime = elapsed * 0.04;
-                const radius = 17.0;
-                camera.position.x = radius * Math.cos(mapTime);
-                camera.position.z = radius * Math.sin(mapTime);
-            }
-            
-            controls.update();
 
-            // Sync matrices to shader
+        } else if (appState === 'ORBIT') {
+            if (controls && autoRotate) {
+                const mt = elapsed * 0.04;
+                camera.position.x = 17.0 * Math.cos(mt);
+                camera.position.z = 17.0 * Math.sin(mt);
+            }
+
+            controls.update();
             uniforms.uCamPos.value.copy(camera.position);
             uniforms.uInvProjection.value.copy(camera.projectionMatrixInverse);
             uniforms.uCamWorld.value.copy(camera.matrixWorld);
             uniforms.uTime.value = elapsed;
-
             renderer.render(orthoScene, orthoCamera);
         }
     }
 
-    requestAnimationFrame(renderLoop);
+    requestAnimationFrame(loop);
 }
 
-// 3D Spiral Galaxy Generator (Three.js Particles)
 function buildGalaxyMap() {
-    const starCount = 10000;
-    const geometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(starCount * 3);
-    const colors = new Float32Array(starCount * 3);
-    
-    const colorCore = new THREE.Color('#ffe199');
-    const colorArm = new THREE.Color('#4d66ff');
-    const colorEdge = new THREE.Color('#03011c');
+    const count = 10000;
+    const geo = new THREE.BufferGeometry();
+    const pos = new Float32Array(count * 3);
+    const col = new Float32Array(count * 3);
 
-    for (let i = 0; i < starCount; i++) {
-        // Spiral equations
+    const cCore = new THREE.Color('#ffe199');
+    const cArm = new THREE.Color('#4d66ff');
+    const cEdge = new THREE.Color('#03011c');
+
+    for (let i = 0; i < count; i++) {
         const r = Math.pow(Math.random(), 2.5) * 16.0;
-        const arms = 2;
-        const armIndex = i % arms;
-        const theta = (armIndex * (2.0 * Math.PI / arms)) + (r * 0.45);
-        
-        // Arm dispersion / scattering
-        const scatterX = (Math.random() - 0.5) * (1.2 / (r * 0.1 + 0.5));
-        const scatterY = (Math.random() - 0.5) * (0.8 / (r * 0.15 + 0.5));
-        const scatterZ = (Math.random() - 0.5) * (1.2 / (r * 0.1 + 0.5));
-        
-        const x = r * Math.cos(theta) + scatterX;
-        const y = scatterY;
-        const z = r * Math.sin(theta) + scatterZ;
-        
-        positions[i * 3] = x;
-        positions[i * 3 + 1] = y;
-        positions[i * 3 + 2] = z;
+        const armIdx = i % 2;
+        const theta = (armIdx * Math.PI) + (r * 0.45);
+        const sx = (Math.random() - 0.5) * (1.2 / (r * 0.1 + 0.5));
+        const sy = (Math.random() - 0.5) * (0.8 / (r * 0.15 + 0.5));
+        const sz = (Math.random() - 0.5) * (1.2 / (r * 0.1 + 0.5));
 
-        // Particle colors based on radius
-        let mixedColor;
-        if (r < 3.0) {
-            mixedColor = colorCore.clone().lerp(colorArm, r / 3.0);
-        } else {
-            mixedColor = colorArm.clone().lerp(colorEdge, (r - 3.0) / 13.0);
-        }
-        
-        colors[i * 3] = mixedColor.r;
-        colors[i * 3 + 1] = mixedColor.g;
-        colors[i * 3 + 2] = mixedColor.b;
+        pos[i * 3]     = r * Math.cos(theta) + sx;
+        pos[i * 3 + 1] = sy;
+        pos[i * 3 + 2] = r * Math.sin(theta) + sz;
+
+        let mc;
+        if (r < 3.0) mc = cCore.clone().lerp(cArm, r / 3.0);
+        else mc = cArm.clone().lerp(cEdge, (r - 3.0) / 13.0);
+
+        col[i * 3]     = mc.r;
+        col[i * 3 + 1] = mc.g;
+        col[i * 3 + 2] = mc.b;
     }
 
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
 
-    const starTex = createStarTexture();
-    const material = new THREE.PointsMaterial({
+    const mat = new THREE.PointsMaterial({
         size: 0.14,
-        map: starTex,
+        map: createStarTexture(),
         vertexColors: true,
         transparent: true,
         blending: THREE.AdditiveBlending,
         depthWrite: false
     });
 
-    galaxyParticles = new THREE.Points(geometry, material);
+    galaxyParticles = new THREE.Points(geo, mat);
     scene.add(galaxyParticles);
 
-    // Build the clickable anomaly nodes
     const nodeGeom = new THREE.PlaneGeometry(1.6, 1.6);
-    
+    const nodeColors = { gargantua: '#ffaa00', vela: '#00ffff', cygnus: '#ff00ff', kepler: '#00ff66' };
+
     for (const key in OBJECTS) {
         const obj = OBJECTS[key];
-        
-        // Color mapping for node ring texture
-        let ringColor = '#ffaa00';
-        if (key === 'vela') ringColor = '#00ffff';
-        if (key === 'cygnus') ringColor = '#ff00ff';
-        if (key === 'kepler') ringColor = '#00ff66';
-        
         const nodeMat = new THREE.MeshBasicMaterial({
-            map: createNodeTexture(ringColor),
+            map: createNodeTexture(nodeColors[key] || '#ffffff'),
             transparent: true,
             blending: THREE.AdditiveBlending,
             depthWrite: false,
             side: THREE.DoubleSide
         });
-        
-        const nodeMesh = new THREE.Mesh(nodeGeom, nodeMat);
-        nodeMesh.position.copy(obj.position);
-        nodeMesh.userData = { id: key };
-        
-        scene.add(nodeMesh);
-        systemNodes.push(nodeMesh);
+        const mesh = new THREE.Mesh(nodeGeom, nodeMat);
+        mesh.position.copy(obj.position);
+        mesh.userData = { id: key };
+        scene.add(mesh);
+        systemNodes.push(mesh);
     }
 }
 
-// Raycasting (Hover checking in Galaxy Map)
-function onMouseMove(event) {
+// ===== Raycasting =====
+function onMouseMove(e) {
     if (appState !== 'GALAXY' || transitionProgress < 1.0) return;
-
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
+    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
     raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObjects(systemNodes);
-
-    if (intersects.length > 0) {
+    const hits = raycaster.intersectObjects(systemNodes);
+    if (hits.length > 0) {
         document.body.style.cursor = 'pointer';
-        const hoveredObjId = intersects[0].object.userData.id;
-        showInfoCard(hoveredObjId);
+        showInfoCard(hits[0].object.userData.id);
     } else {
         document.body.style.cursor = 'default';
     }
 }
 
-function onMouseClick(event) {
+function onMouseClick(e) {
     if (appState !== 'GALAXY' || transitionProgress < 1.0) return;
-
     raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObjects(systemNodes);
-
-    if (intersects.length > 0) {
-        const clickedObjId = intersects[0].object.userData.id;
-        showInfoCard(clickedObjId);
-        // Turn off auto orbit, focus camera on system
+    const hits = raycaster.intersectObjects(systemNodes);
+    if (hits.length > 0) {
+        showInfoCard(hits[0].object.userData.id);
         autoRotate = false;
         btnAutopilot.classList.remove('active');
     }
@@ -453,90 +487,70 @@ function onMouseClick(event) {
 function showInfoCard(id) {
     const obj = OBJECTS[id];
     if (!obj) return;
-    
     activeObjectId = id;
-    
+    document.getElementById('info-sector').textContent = obj.sector;
     document.getElementById('info-title').textContent = obj.name;
-    document.getElementById('info-class').textContent = `CLASS: ${obj.class}`;
+    document.getElementById('info-class').textContent = 'CLASS: ' + obj.class;
     document.getElementById('info-coords').textContent = obj.coords;
     document.getElementById('info-mass').textContent = obj.mass;
     document.getElementById('info-rad').textContent = obj.rad;
     document.getElementById('info-desc').textContent = obj.desc;
-    
     infoCard.classList.remove('hidden');
 }
 
-// Start Transition: Zoom to selected celestial system
-btnOrbit.addEventListener('click', () => {
+// ===== Transitions =====
+btnOrbit && document.getElementById('btn-enter-orbit').addEventListener('click', () => {
     const obj = OBJECTS[activeObjectId];
     if (!obj) return;
-
     appState = 'TRANSITION';
     transitionProgress = 0.0;
-    
-    // Zoom close to target node coordinates
-    const offset = new THREE.Vector3(0, 3, 7); // position camera offset relative to object
-    targetCameraPos.copy(obj.position).add(offset);
+    targetCameraPos.copy(obj.position).add(new THREE.Vector3(0, 3, 7));
     targetLookAt.copy(obj.position);
     currentLookAt.copy(controls.target);
-
-    // Hide galactic HUD panel elements
     infoCard.classList.add('hidden');
-    document.body.classList.add('fade-out-scene');
-    
     autoRotate = false;
-    btnAutopilot.classList.remove('active');
+    if (btnAutopilot) btnAutopilot.classList.remove('active');
 });
 
-// Transition ends: Swap scene content to full-screen shader
 async function onTransitionComplete() {
     const obj = OBJECTS[activeObjectId];
     if (!obj) return;
 
-    // Load fragment shader code
-    let shaderSource;
+    let shaderSrc;
     try {
-        const response = await fetch(obj.shader);
-        if (!response.ok) throw new Error('Failed to load shader');
-        shaderSource = await response.text();
+        const resp = await fetch(obj.shader);
+        if (!resp.ok) throw new Error('shader load failed');
+        shaderSrc = await resp.text();
     } catch (e) {
-        console.error('CORS blocked local file reading. Loading warning overlay.', e);
-        showShaderErrorOverlay();
+        console.error('Cannot fetch shader:', e);
         return;
     }
 
-    // Pass vertices to vertex shader
-    const vertexShaderSource = `
+    const vtx = `
         varying vec2 vUv;
-        void main() {
-            vUv = uv;
-            gl_Position = vec4(position, 1.0);
-        }
+        void main() { vUv = uv; gl_Position = vec4(position, 1.0); }
     `;
 
-    // Dynamic label changes
     document.getElementById('active-object-name').textContent = obj.name.split(' ')[0];
     document.getElementById('label-rs').innerHTML = obj.labels.rs;
     document.getElementById('label-outer').innerHTML = obj.labels.outer;
     document.getElementById('label-speed').innerHTML = obj.labels.speed;
     document.getElementById('label-doppler').innerHTML = obj.labels.doppler;
 
-    // Show/hide specific controller blocks based on object type
-    // Dyson Sphere doesn't use standard gravity bending/doppler controls
-    const distGroup = document.getElementById('group-distortion');
-    const dopGroup = document.getElementById('group-doppler');
-    
+    const distG = document.getElementById('group-distortion');
+    const dopG = document.getElementById('group-doppler');
+
     if (activeObjectId === 'kepler') {
-        distGroup.style.display = 'none';
-        dopGroup.style.display = 'none';
-        document.getElementById('accessory-title').innerHTML = '<i class="fas fa-cubes"></i> Panel Grid Details';
+        distG.style.display = 'none';
+        dopG.style.display = 'none';
+        document.getElementById('accessory-title').innerHTML = '<i class="fas fa-cubes"></i> Panel Grid';
     } else {
-        distGroup.style.display = 'block';
-        dopGroup.style.display = 'block';
-        document.getElementById('accessory-title').innerHTML = '<i class="fas fa-circle-notch"></i> Structure Details';
+        distG.style.display = 'block';
+        dopG.style.display = 'block';
+        document.getElementById('accessory-title').innerHTML = '<i class="fas fa-circle-notch"></i> Structure';
     }
 
-    // Set slider range boundaries
+    // slider bounds
     if (activeObjectId === 'vela') {
         sliders.rs.min = 0.2; sliders.rs.max = 1.6; sliders.rs.step = 0.05;
         sliders.outer.min = 6.0; sliders.outer.max = 20.0; sliders.outer.step = 0.2;
@@ -546,38 +560,27 @@ async function onTransitionComplete() {
     } else if (activeObjectId === 'kepler') {
         sliders.rs.min = 0.4; sliders.rs.max = 2.0; sliders.rs.step = 0.05;
         sliders.outer.min = 2.0; sliders.outer.max = 5.0; sliders.outer.step = 0.1;
-    } else { // black hole
+    } else {
         sliders.rs.min = 0.2; sliders.rs.max = 2.2; sliders.rs.step = 0.05;
         sliders.outer.min = 4.0; sliders.outer.max = 15.0; sliders.outer.step = 0.1;
     }
 
-    // Populates presets grid
     populatePresetsGrid(obj);
-    
-    // Populates color theme buttons
     populateThemesPicker(obj);
+    applyPresetConfig(obj, Object.keys(obj.presets)[0]);
 
-    // Apply default preset configuration
-    const defaultPreset = Object.keys(obj.presets)[0];
-    applyPresetConfig(obj, defaultPreset);
-
-    // Rebuild Shader Material
     shaderMaterial = new THREE.ShaderMaterial({
-        vertexShader: vertexShaderSource,
-        fragmentShader: shaderSource,
+        vertexShader: vtx,
+        fragmentShader: shaderSrc,
         uniforms: uniforms,
         depthWrite: false,
         depthTest: false,
         glslVersion: THREE.GLSL3
     });
 
-    // Re-attach plane geometry quad
     orthoScene.clear();
-    const plane = new THREE.PlaneGeometry(2, 2);
-    const quad = new THREE.Mesh(plane, shaderMaterial);
-    orthoScene.add(quad);
+    orthoScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), shaderMaterial));
 
-    // Align perspective camera coordinates
     camera.position.set(0, 5, 17);
     controls.target.set(0, 0, 0);
     controls.maxDistance = 35.0;
@@ -585,96 +588,85 @@ async function onTransitionComplete() {
     autoRotate = true;
     btnAutopilot.classList.add('active');
 
-    // State update
     appState = 'ORBIT';
-    
-    // Animate controls sidebar opening
     sidebar.classList.remove('collapsed');
     btnBack.classList.remove('hidden');
-    document.body.classList.remove('fade-out-scene');
 }
 
-// Exit Orbital Sim: return to spiral Galaxy overview
-btnBack.addEventListener('click', () => {
-    sidebar.classList.add('collapsed');
-    btnBack.classList.add('hidden');
-    document.body.classList.add('fade-out-scene');
+// back to galaxy
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('btn-back-to-galaxy').addEventListener('click', () => {
+        sidebar.classList.add('collapsed');
+        btnBack.classList.add('hidden');
 
-    setTimeout(() => {
-        appState = 'GALAXY';
-        camera.position.set(0, 14, 25);
-        controls.target.set(0, 0, 0);
-        controls.maxDistance = 50.0;
-        controls.minDistance = 6.0;
-        
-        autoRotate = true;
-        btnAutopilot.classList.remove('active');
-        
-        document.body.classList.remove('fade-out-scene');
-    }, 600);
+        setTimeout(() => {
+            appState = 'GALAXY';
+            camera.position.set(0, 14, 25);
+            controls.target.set(0, 0, 0);
+            controls.maxDistance = 50.0;
+            controls.minDistance = 6.0;
+            autoRotate = true;
+            btnAutopilot.classList.remove('active');
+        }, 500);
+    });
+
+    // help / guide
+    document.getElementById('btn-help').addEventListener('click', () => {
+        document.getElementById('guide-overlay').classList.remove('guide-hidden');
+    });
+    document.getElementById('guide-close').addEventListener('click', () => {
+        document.getElementById('guide-overlay').classList.add('guide-hidden');
+    });
 });
 
 function populatePresetsGrid(obj) {
     const grid = document.getElementById('preset-container');
     grid.innerHTML = '';
-    
-    let isFirst = true;
-    for (const presetKey in obj.presets) {
+    let first = true;
+    for (const pk in obj.presets) {
         const btn = document.createElement('button');
-        btn.className = `preset-btn ${isFirst ? 'active' : ''}`;
-        btn.setAttribute('data-preset', presetKey);
-        btn.textContent = presetKey.replace('-', ' ');
-        btn.addEventListener('click', (e) => {
-            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-            applyPresetConfig(obj, presetKey);
+        btn.className = 'preset-btn' + (first ? ' active' : '');
+        btn.textContent = pk.replace(/-/g, ' ');
+        btn.addEventListener('click', () => {
+            grid.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            applyPresetConfig(obj, pk);
         });
         grid.appendChild(btn);
-        isFirst = false;
+        first = false;
     }
 }
 
 function populateThemesPicker(obj) {
     const picker = document.getElementById('color-theme-picker');
     picker.innerHTML = '';
-    
-    obj.themes.forEach((theme, index) => {
+    obj.themes.forEach((t, i) => {
         const btn = document.createElement('button');
-        btn.className = `theme-btn ${index === 0 ? 'active' : ''}`;
-        btn.setAttribute('data-theme', index);
-        btn.style.background = `linear-gradient(135deg, ${theme.c1}, ${theme.c2})`;
-        btn.title = theme.name;
-        
-        btn.addEventListener('click', (e) => {
-            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+        btn.className = 'theme-btn' + (i === 0 ? ' active' : '');
+        btn.style.background = `linear-gradient(135deg, ${t.c1}, ${t.c2})`;
+        btn.title = t.name;
+        btn.addEventListener('click', () => {
+            picker.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            updateColorTheme(obj, index);
+            updateColorTheme(obj, i);
             document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
         });
         picker.appendChild(btn);
     });
-    
-    // Initial color setup
     updateColorTheme(obj, 0);
 }
 
-function applyPresetConfig(obj, presetKey) {
-    const config = obj.presets[presetKey];
-    if (!config) return;
-
-    sliders.rs.value = config.rs;
-    sliders.distortion.value = config.distortion;
-    sliders.outer.value = config.outer;
-    sliders.speed.value = config.speed;
-    sliders.doppler.value = config.doppler;
-    sliders.stars.value = config.stars;
-
-    updateColorTheme(obj, config.theme);
-    
-    document.querySelectorAll('.theme-btn').forEach((b, idx) => {
-        b.classList.toggle('active', idx === config.theme);
-    });
-
+function applyPresetConfig(obj, key) {
+    const cfg = obj.presets[key];
+    if (!cfg) return;
+    sliders.rs.value = cfg.rs;
+    sliders.distortion.value = cfg.distortion;
+    sliders.outer.value = cfg.outer;
+    sliders.speed.value = cfg.speed;
+    sliders.doppler.value = cfg.doppler;
+    sliders.stars.value = cfg.stars;
+    updateColorTheme(obj, cfg.theme);
+    document.querySelectorAll('.theme-btn').forEach((b, i) => b.classList.toggle('active', i === cfg.theme));
     syncUI();
 }
 
@@ -683,33 +675,26 @@ function updateColorTheme(obj, idx) {
     const theme = obj.themes[idx];
     uniforms.uColorTheme1.value.set(theme.c1);
     uniforms.uColorTheme2.value.set(theme.c2);
-    
-    // Sync HUD displays
-    hudTemp.textContent = theme.temp;
-    hudSim.textContent = (8.2 + idx * 1.4).toFixed(2);
+    if (hudTemp) hudTemp.textContent = theme.temp;
 }
 
 function syncUI() {
-    for (const key in sliders) {
-        displays[key].textContent = parseFloat(sliders[key].value).toFixed(2);
-        updateSliderFill(sliders[key]);
+    for (const k of sliderIds) {
+        if (displays[k] && sliders[k]) displays[k].textContent = parseFloat(sliders[k].value).toFixed(2);
     }
-    
-    // Dynamic boundary rules for slider dependencies
+
     const rs = parseFloat(sliders.rs.value);
-    
+
     if (activeObjectId === 'kepler') {
-        // Dyson outer shell cannot be smaller than central star
         sliders.outer.min = (rs * 1.6).toFixed(2);
         if (parseFloat(sliders.outer.value) < rs * 1.6) {
             sliders.outer.value = (rs * 1.6).toFixed(2);
             displays.outer.textContent = (rs * 1.6).toFixed(2);
         }
         uniforms.uRs.value = rs;
-        uniforms.uInnerRadius.value = rs * 0.9; // star core radius inside shader
-        uniforms.uOuterRadius.value = parseFloat(sliders.outer.value); // dyson sphere shell size
+        uniforms.uInnerRadius.value = rs * 0.9;
+        uniforms.uOuterRadius.value = parseFloat(sliders.outer.value);
     } else {
-        // Lensed disk/magnetosphere cannot intersect horizon/core
         sliders.outer.min = (rs * 2.2).toFixed(2);
         if (parseFloat(sliders.outer.value) < rs * 2.2) {
             sliders.outer.value = (rs * 2.2).toFixed(2);
@@ -724,26 +709,35 @@ function syncUI() {
     uniforms.uDopplerStrength.value = parseFloat(sliders.doppler.value);
     uniforms.uDistortion.value = parseFloat(sliders.distortion.value);
     uniforms.uStarDensity.value = parseFloat(sliders.stars.value);
+
+    // slider fill
+    for (const k of sliderIds) {
+        if (!sliders[k]) continue;
+        const s = sliders[k];
+        const pct = ((s.value - s.min) / (s.max - s.min)) * 100;
+        s.style.background = `linear-gradient(90deg, var(--accent) ${pct}%, rgba(255,255,255,0.1) ${pct}%)`;
+    }
 }
 
 function setupUIEvents() {
-    // Sliders input
-    for (const key in sliders) {
-        sliders[key].addEventListener('input', () => {
+    for (const k of sliderIds) {
+        if (!sliders[k]) continue;
+        sliders[k].addEventListener('input', () => {
             syncUI();
             document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
         });
     }
 
-    // Autopilot toggle
-    btnAutopilot.addEventListener('click', () => {
-        autoRotate = !autoRotate;
-        btnAutopilot.classList.toggle('active', autoRotate);
-    });
+    if (btnAutopilot) {
+        btnAutopilot.addEventListener('click', () => {
+            autoRotate = !autoRotate;
+            btnAutopilot.classList.toggle('active', autoRotate);
+        });
+    }
 
     controls.addEventListener('start', () => {
         autoRotate = false;
-        btnAutopilot.classList.remove('active');
+        if (btnAutopilot) btnAutopilot.classList.remove('active');
     });
 }
 
@@ -754,114 +748,8 @@ function onWindowResize() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 }
 
-function showShaderErrorOverlay() {
-    const overlay = document.createElement('div');
-    overlay.style.position = 'absolute';
-    overlay.style.top = '0';
-    overlay.style.left = '0';
-    overlay.style.width = '100%';
-    overlay.style.height = '100%';
-    overlay.style.background = 'rgba(8, 8, 16, 0.96)';
-    overlay.style.color = '#ff3366';
-    overlay.style.display = 'flex';
-    overlay.style.flexDirection = 'column';
-    overlay.style.justifyContent = 'center';
-    overlay.style.alignItems = 'center';
-    overlay.style.zIndex = '99999';
-    overlay.style.fontFamily = 'sans-serif';
-    overlay.style.padding = '40px';
-    overlay.style.textAlign = 'center';
-
-    overlay.innerHTML = `
-        <h2 style="font-size: 26px; font-weight: 800; font-family: 'Outfit', sans-serif; color: #fff; margin-bottom: 20px;">CORS SECURITY RESTRICTIONS DETECTED</h2>
-        <p style="color: #8c8cab; max-width: 600px; line-height: 1.6; margin-bottom: 30px;">
-            Browsers block AJAX/fetch requests when HTML files are opened directly via the <b>file://</b> protocol.
-        </p>
-        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 22px; text-align: left; font-family: 'Share Tech Mono', monospace; font-size: 13px; color: #00ffff; max-width: 500px;">
-            To run this application locally, serve files using a local server:<br><br>
-            # Option 1 (Python):<br>
-            python -m http.server 8000<br><br>
-            # Option 2 (Node):<br>
-            npx serve .
-        </div>
-        <p style="color: #ff9d00; margin-top: 30px; font-size: 14px; font-weight: 500;">
-            Note: This site will load automatically without errors when hosted online via GitHub Pages!
-        </p>
-    `;
-    document.body.appendChild(overlay);
-}
-
-window.onload = () => {
-    init();
-    initTutorial();
+// ===== Entry Point =====
+window.onload = async function() {
+    await runBootSequence();
+    await initApp();
 };
-
-// --- Tutorial Onboarding ---
-
-function initTutorial() {
-    const overlay = document.getElementById('tutorial-overlay');
-    if (!overlay) return;
-
-    const done = localStorage.getItem('stellar_tutorial_done');
-    if (done) {
-        overlay.classList.add('hidden');
-        return;
-    }
-
-    let currentStep = 0;
-    const steps = overlay.querySelectorAll('.tutorial-step');
-    const totalSteps = steps.length;
-    const btnNext = document.getElementById('btn-tutorial-next');
-    const btnSkip = document.getElementById('btn-tutorial-skip');
-
-    function goToStep(idx) {
-        steps.forEach((s, i) => {
-            s.classList.remove('active', 'exit-left');
-            if (i < idx) s.classList.add('exit-left');
-        });
-        steps[idx].classList.add('active');
-        currentStep = idx;
-
-        if (idx === totalSteps - 1) {
-            btnNext.innerHTML = 'Done <i class="fas fa-check"></i>';
-        } else {
-            btnNext.innerHTML = 'Next <i class="fas fa-arrow-right"></i>';
-        }
-    }
-
-    function dismiss() {
-        localStorage.setItem('stellar_tutorial_done', '1');
-        overlay.classList.add('hidden');
-    }
-
-    btnNext.addEventListener('click', () => {
-        if (currentStep < totalSteps - 1) {
-            goToStep(currentStep + 1);
-        } else {
-            dismiss();
-        }
-    });
-
-    btnSkip.addEventListener('click', dismiss);
-
-    // Help button re-opens the tutorial
-    const btnHelp = document.getElementById('btn-help');
-    if (btnHelp) {
-        btnHelp.addEventListener('click', () => {
-            overlay.classList.remove('hidden');
-            goToStep(0);
-        });
-    }
-
-    goToStep(0);
-}
-
-// --- Slider colored fill ---
-
-function updateSliderFill(slider) {
-    const min = parseFloat(slider.min);
-    const max = parseFloat(slider.max);
-    const val = parseFloat(slider.value);
-    const pct = ((val - min) / (max - min)) * 100;
-    slider.style.background = `linear-gradient(to right, var(--accent) 0%, var(--accent) ${pct}%, rgba(255,255,255,0.1) ${pct}%)`;
-}
