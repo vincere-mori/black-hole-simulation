@@ -1,117 +1,195 @@
-# 🌌 Stellar Cartography
+<div align="right">
+  <a href="README_EN.md">🇬🇧 English</a>
+</div>
 
-An interactive 3D Cosmic Map and real-time relativistic anomaly simulator. Explore intermediate and supermassive black holes, pulsars, wormholes, and megastructures directly in your browser or via a desktop application.
+<h1 align="center">🌌 Stellar Cartography</h1>
 
-* Live Web Application: [https://vincere-mori.github.io/stellar-cartography/](https://vincere-mori.github.io/stellar-cartography/)
-* Desktop Version: Powered by Python + PyOpenGL (real-time GLSL shader compilation)
+<p align="center">
+  Интерактивная 3D-карта галактики с релятивистскими симуляциями<br>
+  чёрных дыр, пульсаров, червоточин и мегаструктур прямо в браузере
+</p>
 
----
+<p align="center">
+  <b>7 уникальных аномалий</b> · 4 GLSL-шейдера на реймарчинге · 65 000 частиц галактики · полное досье по каждому объекту
+</p>
 
-## 🌟 Catalog of Anomalies
+<p align="center">
+  <img src="https://img.shields.io/badge/WebGL2-GLSL_3.00-e8943a?style=flat-square&logo=opengl" alt="WebGL2"/>
+  <img src="https://img.shields.io/badge/Three.js-r128-black?style=flat-square&logo=threedotjs" alt="Three.js"/>
+  <img src="https://img.shields.io/badge/JavaScript-ES2022-f7df1e?style=flat-square&logo=javascript&logoColor=black" alt="JavaScript"/>
+  <img src="https://img.shields.io/badge/GLSL-raymarching-38bdf8?style=flat-square" alt="GLSL"/>
+  <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT"/>
+</p>
 
-The map features 12 unique celestial objects, each located at specific galactic coordinates:
-
-| Key | Name | Classification | Coordinates | Core Characteristics |
-|---|---|---|---|---|
-| **1** | **Gargantua Singularity** | Schwarzschild Black Hole | X: -3.50, Y: 0.80, Z: -2.00 | Volumetric accretion disk, Keplerian velocity, Doppler lensing |
-| **2** | **Vela Pulsar** | Rotating Neutron Star | X: 5.00, Y: 1.00, Z: -4.00 | Conical relativistic radio jets, precessing magnetic dipole field |
-| **3** | **Cygnus Wormhole** | Morris-Thorne Bridge | X: -6.00, Y: -1.00, Z: 5.00 | Spacetime bridge, throat inversion to an alternate universe |
-| **4** | **Kepler Dyson Sphere** | Stellar Megastructure | X: 3.00, Y: -2.00, Z: 7.00 | Swarm of geometric solar panels, stellar flares, silhouettes |
-| **5** | **Sagittarius A*** | Supermassive Black Hole | X: 0.00, Y: 0.00, Z: 0.00 | Milky Way galactic core, extreme redshift, active plasma flow |
-| **6** | **Crab Pulsar** | High-Spin Neutron Star | X: -8.00, Y: 3.00, Z: -6.00 | Young pulsar, ultra-rapid rotation, Chandra X-ray pink theme |
-| **7** | **Andromeda Gateway** | Intergalactic Wormhole | X: 8.00, Y: -3.00, Z: -8.00 | Massive gateway bridge leading to the Andromeda galaxy |
-| **8** | **Solara Dyson Swarm** | Dense Megastructure | X: -2.00, Y: -4.00, Z: -5.00 | Solar energy collector plates with escaping coronal glare |
-| **9** | **Polaris Singularity** | Intermediate Black Hole | X: 1.00, Y: 6.00, Z: -7.00 | High-spin intermediate singularity, ultraviolet accretion disk |
-| **10** | **Aldebaran Bulge** | Stellar Core Flare | X: -4.00, Y: 5.00, Z: 3.00 | Hyperactive red giant star core, violent flares, magnetic clouds |
-| **11** | **SGR 1806-20 Magnetar** | Extreme Magnetar | X: -7.00, Y: -5.00, Z: 2.00 | Strongest magnetic field observed, precessing gamma-ray jets |
-| **12** | **Centauri Bridge** | Micro Wormhole | X: 4.00, Y: -3.00, Z: -2.00 | Quantum-stabilized micro-throat connecting Sol and Centauri |
-
----
-
-## 🔬 Physics & Mathematics
-
-The simulations run directly on the GPU using high-performance GLSL fragment shaders. The underlying physics models include:
-
-### Gravitational Spacetime Bending
-Light rays near black holes and wormholes are bent using Schwarzschild geodesics integrated step-by-step during raymarching:
-
-```text
-a = -1.5 * Rs * |L|² / (r⁵) * p
-```
-
-* **p**: Photon position vector
-* **a**: Bending acceleration vector
-* **Rs**: Schwarzschild horizon radius
-* **L**: Angular momentum vector (L = p × v)
-
-### Volumetric Accretion Disk
-Accretion disks are rendered as 3D participating media with density mapped inside a vertical Gaussian envelope:
-
-```text
-Density = Noise(r, θ) * exp(-y² / thickness²)
-```
-
-This produces realistic gas silhouettes from edge-on camera angles rather than flat 2D planes.
-
-### Relativistic Doppler Beaming & Redshift
-* **Doppler Shift**: Relativistic beaming shifts the color and brightness of the accretion disk depending on whether gas is moving towards or away from the camera:
-```text
-  D = 1 / (γ * (1 - β * cos(θ)))
-```
-* **Gravitational Redshift**: Light escaping from the gravity well shifts towards dark red/infrared near the event horizon:
-```text
-  z = 1 / sqrt(1 - Rs / r) - 1
-```
-
-### Morris-Thorne Throat Crossing
-When a ray penetrates the wormhole throat boundary (r < Rs), coordinates are inverted:
-
-```text
-p_new = -p * 1.01
-```
-
-The ray emerges in another coordinate space, sampling an alternate starfield background.
+<p align="center">
+  <a href="https://vincere-mori.github.io/stellar-cartography/">
+    <img src="https://img.shields.io/badge/▶%20Открыть%20демо-vincere--mori.github.io-e8943a?style=for-the-badge" alt="Live Demo"/>
+  </a>
+</p>
 
 ---
 
-## 💻 Running the Application
+<p align="center">
+  <img src="./assets/demo-galaxy.gif" alt="Galaxy Map — 3D навигация" width="100%"/>
+</p>
 
-### 1. Web Version (Local Development)
-Because browser security policies (CORS) restrict loading shader files directly from local storage, serve the directory using any local server:
+<p align="center">
+  <img src="./assets/demo-blackhole.gif" alt="Black Hole Orbit" width="49%"/>
+  <img src="./assets/demo-boot.gif" alt="JARVIS Boot Sequence" width="49%"/>
+</p>
+
+---
+
+## О проекте
+
+Это симулятор глубокого космоса, который работает прямо в браузере — без бэкенда, без сборщика, без сторонних движков. Один HTML-файл подгружает Three.js, четыре GLSL-шейдера с реймарчингом считают релятивистскую физику на GPU, а 65 000 частиц рисуют логарифмическую галактику с двумя рукавами и центральным балджем.
+
+На карте размещены 7 уникальных объектов — каждый отрисован своим шейдером, со своими пресетами, цветовыми темами и подробным научным досье. Клик по узлу — открывается карточка, ENTER ORBIT — переходишь в орбитальный режим с настройкой физики в реалтайме, DOSSIER — выпадает терминал с полным разбором: обзор, параметры, особенности рендера, интересные факты.
+
+---
+
+## Возможности
+
+- 🌀 **4 GLSL-шейдера** — реймарчинг по 90–130 шагов на пиксель, скомпилировано на GPU
+- ⚫ **Чёрные дыры** — геодезики Шварцшильда, объёмный аккреционный диск, релятивистский Доплер-биминг, гравитационное красное смещение
+- ⚡ **Пульсары / магнетары** — конические радиоджеты от магнитных полюсов, прецессирующая дипольная магнитосфера, пульсовая модуляция
+- 🕳️ **Червоточины** — переход горла Морриса–Торна, инверсия координат при r < Rs, независимая «альтернативная вселенная»
+- 🔮 **Сферы Дайсона** — геометрический рой коллекторов, корональные вспышки сквозь зазоры, тепловая ИК-эмиссия
+- 🌌 **Карта галактики** — 65 000 частиц (диск, балдж, туманность) + 10 800 фоновых звёзд + 800 ярких выделений
+- 🖥️ **JARVIS-загрузка** — трёхколоночный терминал: центральный лог + GRAV SCAN / PARTICLE FLUX / SYS RESOURCES / NAV CALIB
+- 📋 **Досье по объектам** — терминал-оверлей с обзором, физпараметрами, особенностями рендера и научными фактами
+- 🎨 **Полная кастомизация** — 2–3 цветовые темы и 2 пресета параметров на объект, 6 ползунков в реалтайм
+
+---
+
+## Каталог аномалий
+
+| # | Объект | Класс | Сектор | Особенность |
+|:-:|--------|-------|:------:|-------------|
+| 1 | **Sagittarius A\*** | Сверхмассивная ЧД | 00-CORE | Ядро Млечного Пути, 4.15×10⁶ M☉ |
+| 2 | **Gargantua Singularity** | Чёрная дыра Шварцшильда | 04-A | 4.3×10⁶ M☉, аккреционный диск с Доплером |
+| 3 | **Vela Pulsar** | Нейтронная звезда | 12-C | Конические радиоджеты, дипольное поле |
+| 4 | **SGR 1806-20 Magnetar** | Экстремальный магнетар | 18-F | Сильнейшее магнитное поле во вселенной (1.6×10¹⁵ Гс) |
+| 5 | **Cygnus Wormhole** | Мост Морриса–Торна | 07-F | Переход в альтернативную вселенную |
+| 6 | **Andromeda Gateway** | Межгалактическая ЧР | 99-Z | Стабилизированный мост к галактике Андромеды |
+| 7 | **Kepler Dyson Sphere** | Мегаструктура II типа | 19-B | Геометрический рой солнечных панелей |
+
+---
+
+## Физика
+
+### Искривление геодезических (Шварцшильд)
+```
+a = −1.5 × Rs × |L|² / r⁵ × p
+```
+Лучи света изгибаются пошагово в реймарчинге. **L = p × v** — угловой момент, **Rs** — горизонт событий.
+
+### Объёмный аккреционный диск
+```
+ρ(r, y) = Noise3D(r, θ) × exp(−y² / h²)
+```
+3D-участвующая среда: реалистичные силуэты под углом, а не плоский спрайт.
+
+### Доплеровское смещение
+```
+D = 1 / (γ × (1 − β · cos θ))
+```
+Газ к наблюдателю — ярче и синее; от наблюдателя — тусклее и краснее.
+
+### Червоточина (Моррис–Торн)
+```
+r < Rs  →  p_new = −p × 1.01
+```
+Луч пересекает горло и выходит в другое пространство с независимым звёздным фоном.
+
+---
+
+## Быстрый старт
 
 ```bash
-# Option A: Python (installed by default on most systems)
-python -m http.server 8080
+git clone https://github.com/vincere-mori/stellar-cartography.git
+cd stellar-cartography
 
-# Option B: Node.js / npm
-npx serve .
+# Нужен локальный сервер — браузер блокирует шейдеры с file://
+python -m http.server 7821
+# → http://localhost:7821
 ```
 
-Then open `http://localhost:8080` in your web browser.
-
-### 2. Desktop Version
-Run the simulation locally on your desktop using hardware-accelerated OpenGL:
+### Десктоп (OpenGL)
 
 ```bash
-# Install dependencies
 pip install -r requirements.txt
-
-# Run the app
 python main.py
 ```
 
-#### Keyboard & Mouse Controls (Desktop)
+<details>
+<summary>Управление (десктоп)</summary>
 
-| Control | Action |
+| Клавиша / мышь | Действие |
 |---|---|
-| **Mouse Drag** | Rotate / Orbit Camera |
-| **Mouse Scroll** | Zoom Camera In / Out |
-| **SPACE** | Toggle Camera Autopilot |
-| **1 – 9** | Switch to Gargantua, Vela, Cygnus, Kepler, Sgr A*, Crab, Andromeda, Solara, Polaris |
-| **0, -, =** | Switch to Aldebaran, SGR 1806-20, Centauri Bridge |
-| **Q / A** | Increase / Decrease Schwarzschild Radius (Rs) |
-| **W / S** | Increase / Decrease Spin / Orbital Speed |
-| **E / D** | Increase / Decrease Jet Glow / Telemetry Intensity |
-| **R / F** | Increase / Decrease Spacetime Lensing Warp |
-| **T** | Swap Theme Color Palette |
-| **ESC** | Close Desktop Window |
+| Перетащить | Вращение камеры |
+| Скролл | Зум |
+| `Space` | Автопилот |
+| `1`–`7` | Переключить объект |
+| `Q` / `A` | Радиус горизонта Rs |
+| `W` / `S` | Скорость вращения |
+| `E` / `D` | Интенсивность джетов |
+| `R` / `F` | Линзирование |
+| `T` | Тема |
+| `Esc` | Закрыть |
+
+</details>
+
+---
+
+## Стек
+
+| | |
+|---|---|
+| Рендер | Three.js r128 · WebGL2 · GLSL 3.00 ES |
+| Язык | Vanilla JavaScript ES2022 |
+| Десктоп | Python 3 · PyOpenGL · GLFW |
+| Сборка | Без бандлера — один HTML-файл |
+
+---
+
+<p align="center">
+  <code>webgl</code> &nbsp;
+  <code>webgl2</code> &nbsp;
+  <code>threejs</code> &nbsp;
+  <code>glsl</code> &nbsp;
+  <code>shader</code> &nbsp;
+  <code>raymarching</code> &nbsp;
+  <code>fragment-shader</code> &nbsp;
+  <code>real-time-rendering</code> &nbsp;
+  <code>black-hole</code> &nbsp;
+  <code>schwarzschild</code> &nbsp;
+  <code>accretion-disk</code> &nbsp;
+  <code>gravitational-lensing</code> &nbsp;
+  <code>wormhole</code> &nbsp;
+  <code>morris-thorne</code> &nbsp;
+  <code>pulsar</code> &nbsp;
+  <code>magnetar</code> &nbsp;
+  <code>neutron-star</code> &nbsp;
+  <code>dyson-sphere</code> &nbsp;
+  <code>megastructure</code> &nbsp;
+  <code>galaxy</code> &nbsp;
+  <code>milky-way</code> &nbsp;
+  <code>space</code> &nbsp;
+  <code>astronomy</code> &nbsp;
+  <code>astrophysics</code> &nbsp;
+  <code>relativity</code> &nbsp;
+  <code>general-relativity</code> &nbsp;
+  <code>physics-simulation</code> &nbsp;
+  <code>scientific-visualization</code> &nbsp;
+  <code>3d</code> &nbsp;
+  <code>interactive</code> &nbsp;
+  <code>web-app</code> &nbsp;
+  <code>javascript</code>
+</p>
+
+---
+
+<p align="center">
+  Сделано с ♥&nbsp;&nbsp;·&nbsp;&nbsp;<a href="https://vincere-mori.github.io/stellar-cartography/">🌐 Live Demo</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="README_EN.md">🇬🇧 English</a>
+</p>

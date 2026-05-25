@@ -1,3 +1,6 @@
+// ===== Inline Shaders (loaded from script tags, no fetch needed) =====
+const SHADERS = {};
+
 // ===== Object Catalog =====
 const OBJECTS = {
     gargantua: {
@@ -101,26 +104,6 @@ const OBJECTS = {
         ],
         labels: { rs: "Horizon Mass (Rs)", distortion: "Warp Lensing", outer: "Disk Outer Bound", speed: "Disk Rotation", doppler: "Doppler Beaming" }
     },
-    crab: {
-        name: "Crab Pulsar",
-        class: "HIGH-SPIN NEUTRON STAR",
-        sector: "SECTOR 05-B",
-        coords: "X: -8.00 / Y: 3.00 / Z: -6.00",
-        mass: "1.4 M☉",
-        rad: "RAPID BEAMING",
-        desc: "A young, rapidly spinning neutron star at the center of the Crab Nebula. Emits intense, highly-collimated electromagnetic jets and powers the surrounding glowing nebula filaments.",
-        shader: "shaders/pulsar.frag",
-        position: new THREE.Vector3(-8, 3, -6),
-        presets: {
-            "crab-rapid": { rs: 0.9, distortion: 1.2, outer: 14.0, speed: 3.5, doppler: 1.8, stars: 0.8, theme: 0 },
-            "crab-nebula": { rs: 0.7, distortion: 0.8, outer: 10.0, speed: 1.5, doppler: 1.0, stars: 1.2, theme: 1 }
-        },
-        themes: [
-            { c1: '#00aaff', c2: '#002288', name: 'Blue Nebula', temp: '3.2e8' },
-            { c1: '#ff0055', c2: '#5500ff', name: 'Chandra Pink', temp: '4.8e8' }
-        ],
-        labels: { rs: "Core Size (Rs)", distortion: "Magneto-Warp", outer: "Field Boundary", speed: "Spin Frequency", doppler: "Jet Intensity" }
-    },
     andromeda: {
         name: "Andromeda Gateway",
         class: "INTERGALACTIC WORMHOLE",
@@ -141,66 +124,6 @@ const OBJECTS = {
         ],
         labels: { rs: "Throat Radius (Rs)", distortion: "Throat Bending", outer: "Lensing Zone", speed: "Chromatic Drift", doppler: "Alternate Lumens" }
     },
-    dyson_swarm: {
-        name: "Solara Dyson Swarm",
-        class: "DENSE MEGASTRUCTURE",
-        sector: "SECTOR 15-D",
-        coords: "X: -2.00 / Y: -4.00 / Z: -5.00",
-        mass: "0.95 M☉ (Host Star)",
-        rad: "CLOSED COLLECTOR SHELL",
-        desc: "A dense swarm of solar collector plates surrounding the star Solara. Star flares escape through grid gaps, emitting high thermal radiation.",
-        shader: "shaders/dyson-sphere.frag",
-        position: new THREE.Vector3(-2, -4, -5),
-        presets: {
-            "full-collect": { rs: 0.85, distortion: 0.0, outer: 2.5, speed: 1.0, doppler: 1.2, stars: 0.9, theme: 0 },
-            "active-gaps": { rs: 1.1, distortion: 0.0, outer: 3.2, speed: 2.2, doppler: 2.0, stars: 1.1, theme: 1 }
-        },
-        themes: [
-            { c1: '#aaff00', c2: '#ffaa00', name: 'Solara Amber', temp: '4800' },
-            { c1: '#ff00ff', c2: '#ffffff', name: 'Nebular Violet', temp: '8500' }
-        ],
-        labels: { rs: "Star Diameter", distortion: "Gravity Flex", outer: "Shell Size", speed: "Orbital Speed", doppler: "Circuit Radiance" }
-    },
-    polaris: {
-        name: "Polaris Singularity",
-        class: "INTERMEDIATE BLACK HOLE",
-        sector: "SECTOR 02-B",
-        coords: "X: 1.00 / Y: 6.00 / Z: -7.00",
-        mass: "1.2e5 M☉",
-        rad: "STABLE HORIZON",
-        desc: "An intermediate-mass black hole located in the Polaris system. Features a highly warped accretion flow with extreme gravitational time dilation near the photon sphere.",
-        shader: "shaders/black-hole.frag",
-        position: new THREE.Vector3(1, 6, -7),
-        presets: {
-            "intermediate": { rs: 0.6, distortion: 0.8, outer: 6.5, speed: 2.0, doppler: 0.7, stars: 1.1, theme: 0 },
-            "high-spin": { rs: 0.9, distortion: 1.3, outer: 9.0, speed: 3.5, doppler: 1.5, stars: 0.8, theme: 1 }
-        },
-        themes: [
-            { c1: '#00ffff', c2: '#0055ff', name: 'Polar Blue', temp: '5.2e6' },
-            { c1: '#ff00ff', c2: '#660099', name: 'Ultraviolet Flare', temp: '7.8e6' }
-        ],
-        labels: { rs: "Horizon Mass (Rs)", distortion: "Warp Lensing", outer: "Disk Outer Bound", speed: "Disk Rotation", doppler: "Doppler Beaming" }
-    },
-    aldebaran: {
-        name: "Aldebaran Bulge",
-        class: "STELLAR CORE FLARE",
-        sector: "SECTOR 08-A",
-        coords: "X: -4.00 / Y: 5.00 / Z: 3.00",
-        mass: "1.7 M☉ (Host Core)",
-        rad: "CORONAL RADIATION",
-        desc: "The hyperactive glowing core of the Aldebaran supergiant star, surrounded by dynamic magnetic dust clouds and intense coronal loops.",
-        shader: "shaders/dyson-sphere.frag",
-        position: new THREE.Vector3(-4, 5, 3),
-        presets: {
-            "supergiant": { rs: 1.5, distortion: 0.0, outer: 3.8, speed: 0.8, doppler: 1.0, stars: 1.0, theme: 0 },
-            "hyper-flare": { rs: 1.8, distortion: 0.0, outer: 4.5, speed: 2.5, doppler: 2.0, stars: 1.2, theme: 1 }
-        },
-        themes: [
-            { c1: '#ff4400', c2: '#ffcc00', name: 'Aldebaran Fire', temp: '3910' },
-            { c1: '#ff0055', c2: '#ffaaee', name: 'Magenta Glow', temp: '4200' }
-        ],
-        labels: { rs: "Star Diameter", distortion: "Gravity Flex", outer: "Shell Size", speed: "Orbital Speed", doppler: "Circuit Radiance" }
-    },
     magnetar_1806: {
         name: "SGR 1806-20 Magnetar",
         class: "EXTREME MAGNETAR",
@@ -220,84 +143,274 @@ const OBJECTS = {
             { c1: '#00ffcc', c2: '#003366', name: 'Hyper-Gamma Cyan', temp: '6.5e8' }
         ],
         labels: { rs: "Core Size (Rs)", distortion: "Magneto-Warp", outer: "Field Boundary", speed: "Spin Frequency", doppler: "Jet Intensity" }
-    },
-    centauri: {
-        name: "Centauri Bridge",
-        class: "MICRO WORMHOLE",
-        sector: "SECTOR 01-C",
-        coords: "X: 4.00 / Y: -3.00 / Z: -2.00",
-        mass: "N/A (Microgateway)",
-        rad: "QUANTUM INTERCEPT",
-        desc: "A small wormhole stabilized by quantum fields. Acts as a high-speed communications gateway linking the Sol system and Centauri cluster.",
-        shader: "shaders/wormhole.frag",
-        position: new THREE.Vector3(4, -3, -2),
-        presets: {
-            "micro-link": { rs: 0.5, distortion: 1.2, outer: 7.5, speed: 1.2, doppler: 0.7, stars: 1.3, theme: 0 },
-            "quantum-drift": { rs: 0.35, distortion: 2.0, outer: 6.0, speed: 2.2, doppler: 1.5, stars: 1.5, theme: 1 }
-        },
-        themes: [
-            { c1: '#00ffff', c2: '#ea00ff', name: 'Quantum Portal', temp: '0' },
-            { c1: '#ffcc00', c2: '#ff3300', name: 'Solaris Gateway', temp: '9' }
-        ],
-        labels: { rs: "Throat Radius (Rs)", distortion: "Throat Bending", outer: "Lensing Zone", speed: "Chromatic Drift", doppler: "Alternate Lumens" }
     }
 };
-// ===== State ===== =====
+// ===== Dossier Data =====
+const OBJECT_DOSSIERS = {
+    gargantua: {
+        overview: `Gargantua Singularity is a Schwarzschild-class supermassive black hole catalogued in Sector 04-A. With a mass of 4.3 × 10⁶ solar masses it generates one of the strongest gravitational lensing fields in the registry, bending background starlight into a complete Einstein ring at observer approach.
+
+The surrounding accretion disk spans from 2.2 Rs to 9.5 Rs and rotates with Keplerian velocity profiles. Near the inner edge, gas reaches 0.42c, producing highly visible relativistic Doppler beaming — the approaching side appears blue-shifted and dramatically brighter, the receding side red and dim.`,
+        params: [
+            ['Mass',               '4.3 × 10⁶ M☉'],
+            ['Schwarzschild Radius','Rs ≈ 12.7 × 10⁹ km'],
+            ['Photon Sphere',       '1.5 Rs (unstable)'],
+            ['ISCO',               '3 Rs (innermost stable orbit)'],
+            ['Disk Temperature',    '8.4 × 10⁶ K (inner edge)'],
+            ['Hawking Temperature', '~10⁻¹⁴ K (effectively 0)'],
+            ['Sector',             '04-A  |  Coords: −3.50 / 0.80 / −2.00'],
+        ],
+        features: [
+            'Full Schwarzschild geodesic raymarching — 130 GPU steps per ray',
+            'Volumetric 3D accretion disk with Perlin fbm warp noise',
+            'Relativistic Doppler beaming: D = 1/(γ(1 − β·cosθ))³ per pixel',
+            'Gravitational redshift applied radially: √(1 − Rs/r)',
+            'Photon-ring glow halo at the event horizon boundary',
+            'Tone-mapped with Reinhard operator to handle HDR bloom',
+        ],
+        facts: [
+            'A clock at 1.1 Rs runs 3× slower than one at infinity — visible as color shift',
+            'The photon sphere at 1.5 Rs lets light orbit; any photon that grazes it spirals in',
+            'Hawking radiation at this mass would take 10⁸⁴ years to evaporate the black hole',
+            'The shadow diameter as seen from Earth would subtend ~52 μas — resolvable by EHT',
+            'Tidal forces at the horizon are gentle enough that a human would not feel the crossing',
+        ],
+    },
+    vela: {
+        overview: `Vela Pulsar is a rapidly rotating neutron star born from a core-collapse supernova approximately 11,000 years ago. Its spin axis is tilted 45° from the rotation plane, causing its relativistic radio jets to sweep a cone pattern — the lighthouse effect that produces periodic pulses detected across the galaxy.
+
+The precessing dipole magnetosphere visualised here follows actual field-line topology: field lines bow outward near the equator and converge at the magnetic poles where pair-production generates the jet beams.`,
+        params: [
+            ['Mass',             '1.44 M☉'],
+            ['Radius',           '~12 km'],
+            ['Spin Period',      '89 ms  (11.2 Hz)'],
+            ['Surface B-field',  '3.4 × 10¹² G'],
+            ['Jet Half-angle',   '7° (conical beam)'],
+            ['Surface Temp',     '~7 × 10⁵ K'],
+            ['Sector',           '12-C  |  Coords: 5.00 / 1.00 / −4.00'],
+        ],
+        features: [
+            'Precessing dipole magnetosphere with full field-line grid overlay',
+            'Conical relativistic jet from magnetic poles (GLSL raymarching, 90 steps)',
+            'Pulse modulation: glow intensity follows 1 + 0.3·sin(r·1.5 − t·12)',
+            'Surface hotspot aligned to magnetic axis (bolometric brightness peak)',
+            'Configurable jet opening half-angle via Beaming Scale slider',
+        ],
+        facts: [
+            'Neutron star matter is so dense that a teaspoon weighs ~10¹⁴ kg',
+            'The surface gravity is ~2 × 10¹¹ g — a feather dropped there hits at 0.6c',
+            'Vela pulses are used as a natural clock to test general relativity to 10⁻⁵ precision',
+            'Glitch events — sudden spin-ups — reveal superfluid neutron layers in the crust',
+            'The radio jet deposits so much energy it inflates a 250-light-year pulsar wind nebula',
+        ],
+    },
+    cygnus: {
+        overview: `Cygnus Wormhole is a stable Morris–Thorne traversable wormhole in Sector 07-F. Unlike a black hole, the throat does not have a singularity — spacetime is smooth at the crossing point, and a ray that penetrates to r < Rs experiences coordinate inversion, emerging into an independent alternate-universe coordinate space with its own stellar background.
+
+The throat must be threaded by exotic matter with negative energy density to remain open. The rendered ring glow represents the gravitational focusing of background photons around the throat.`,
+        params: [
+            ['Throat Radius',     'Rs (tunable: 0.35 – 1.2)'],
+            ['Exotic Matter',     'Required: ρ < 0 (Casimir-like)'],
+            ['Lensing Equation',  'Morris–Thorne metric, ℓ-coordinate'],
+            ['Throat Crossing',   'p_new = −p × 1.01 (coord inversion)'],
+            ['Ring Color Shift',  'Oscillates orange ↔ cyan at spin rate'],
+            ['Stability Class',   'STABLE GATEWAY (positive feedback null)'],
+            ['Sector',            '07-F  |  Coords: −6.00 / −1.00 / 5.00'],
+        ],
+        features: [
+            'Dual-universe starfields: our universe (blue nebula) vs alternate (warm gold-orange)',
+            'Smooth throat crossing — ray direction inverted and coordinates negated at r < Rs',
+            'Chromatic ring glow that cycles hue based on spin parameter',
+            'Alternate nebula brightness controlled by Doppler slider (alternate luminosity)',
+            'Independent 3D noise fbm for each universe\'s nebula texture',
+        ],
+        facts: [
+            'The Morris–Thorne paper (1988) was the first rigorous proof that GR permits wormholes',
+            'Exotic matter with ρ < 0 exists in the Casimir effect — but at negligible scale today',
+            'A wormhole could theoretically allow time travel if one mouth is accelerated relativistically',
+            'Passing through at c would take zero proper time regardless of how far the other end is',
+            'Hawking\'s chronology protection conjecture suggests quantum effects collapse them before use',
+        ],
+    },
+    kepler: {
+        overview: `Kepler Dyson Sphere is a Type II civilisation megastructure consisting of a rotating geometric swarm of solar collector panels surrounding a 1.08 M☉ host star. The panels are arranged in a geodesic grid pattern, leaving systematic gaps through which stellar flares and corona activity are visible.
+
+Unlike a solid shell (which would be dynamically unstable), this design uses orbital mechanics to maintain gap spacing. The inner surface converts incident starlight to usable energy; the outer surface radiates waste heat as thermal infrared.`,
+        params: [
+            ['Host Star Mass',   '1.08 M☉'],
+            ['Shell Radius',     '2.8 Rs (tunable)'],
+            ['Panel Coverage',   '~94% (6% gap fraction)'],
+            ['Host Temp',        '5780 K (solar-type)'],
+            ['Thermal Output',   'Full stellar luminosity intercepted'],
+            ['Structure Class',  'Kardashev Type II megastructure'],
+            ['Sector',           '19-B  |  Coords: 3.00 / −2.00 / 7.00'],
+        ],
+        features: [
+            'Analytic sphere intersection — no raymarching required for shell geometry',
+            'Procedural panel grid via fract(θ·freq) and fract(φ·freq) with gap threshold',
+            'Circuit-line detail rendered on each panel face (photovoltaic circuitry)',
+            'Star corona visible through gaps with exponential decay glow',
+            'Back-panel and through-gap parallax: shell inner surface visible behind gaps',
+        ],
+        facts: [
+            'A Dyson sphere at 1 AU would intercept all 3.8 × 10²⁶ watts of solar output',
+            'Freeman Dyson originally proposed the concept in 1960 as a SETI search target',
+            'The Tabby\'s Star (KIC 8462852) mystery was partly explained by megastructure hypotheses',
+            'Building one requires dismantling Jupiter — ~1.9 × 10²⁷ kg of material',
+            'Waste heat means it would glow in infrared at ~300 K — identifiable by telescopes',
+        ],
+    },
+    sgr_a: {
+        overview: `Sagittarius A* is the supermassive black hole at the gravitational centre of the Milky Way, residing in Sector 00-CORE at the galactic coordinate origin. First imaged by the Event Horizon Telescope in 2022, it is the second-ever black hole to be directly imaged, showing a characteristic shadow surrounded by a bright emission ring.
+
+The plasma accretion rate is low (a Seyfert-like quiescent phase), but near-infrared flares from infalling material are observed several times per day. Stars in the central parsec orbit it at up to 3% of the speed of light.`,
+        params: [
+            ['Mass',               '4.154 × 10⁶ M☉'],
+            ['Schwarzschild Radius','Rs = 1.23 × 10⁷ km'],
+            ['Shadow Diameter',    '52 μarcseconds (EHT measured)'],
+            ['Distance from Earth','~26,670 light-years (8.178 kpc)'],
+            ['Accretion Rate',     '~10⁻⁸ M☉/yr (radiatively inefficient)'],
+            ['Disk Temperature',   '1.5 × 10⁷ K (flare episodes)'],
+            ['Sector',             '00-CORE  |  Coords: 0.00 / 0.00 / 0.00'],
+        ],
+        features: [
+            'Same Schwarzschild shader as Gargantua but with higher mass / distortion preset',
+            'Placed at scene origin — all other objects orbit around this galactic centre',
+            'High-spin preset dramatically increases lensing and disk angular size',
+            '"Quiet horizon" preset mimics observed low accretion quiescent state',
+        ],
+        facts: [
+            'S2, the closest orbiting star, completes one orbit in just 16.0 years at 0.77% of c',
+            'Sgr A* was radio-silent until 1974 — it was so faint astronomers assumed it was background noise',
+            'Its mass was proven by stellar orbits long before direct imaging confirmed the silhouette',
+            'A photon released from just outside the event horizon takes 40 seconds to escape 1 Rs',
+            'In ~5 billion years it will merge with the Andromeda galaxy\'s central black hole',
+        ],
+    },
+    andromeda: {
+        overview: `Andromeda Gateway is a hypothetical Class-M artificially-stabilised wormhole connecting our Local Group to the Andromeda Galaxy (M31) at 2.537 million light-years. The alternate starfield visible through the throat shows the denser stellar population of Andromeda's galactic core with a characteristic warm-orange tinge from its older stellar population.
+
+The throat is maintained by exotic matter seeded at the boundary, and the large-scale gravitational lens produces a distorted, warped view of the Andromeda side even before crossing.`,
+        params: [
+            ['Connection Target', 'M31 — Andromeda Galaxy'],
+            ['Distance Bridged',  '2.537 × 10⁶ light-years'],
+            ['Throat Radius',     'Rs ≈ 1.2 (tunable)'],
+            ['Transit Time',      '~0 proper time (instantaneous at c)'],
+            ['Alternate Density', '1.4× our starfield (older population)'],
+            ['Stability Class',   'STABLE ALIEN BRIDGE (Type-X)'],
+            ['Sector',            '99-Z  |  Coords: 8.00 / −3.00 / −8.00'],
+        ],
+        features: [
+            'Alternate-universe starfield uses distinct hash offset (+100) for different star positions',
+            'Gold-orange star colour bias reflects Andromeda\'s older, redder stellar population',
+            'Larger-than-average distortion preset creates more dramatic lensing before threshold',
+            '"Void Gate" preset opens a narrower, more unstable looking throat with extreme bending',
+        ],
+        facts: [
+            'M31 and the Milky Way are on a collision course — merger expected in ~4.5 billion years',
+            'Andromeda contains ~1 trillion stars vs our ~300 billion — 3× more massive',
+            'Its central black hole (M31*) masses ~1.1 × 10⁸ M☉ — 26× larger than Sgr A*',
+            'Andromeda is the most distant object visible to the naked eye on a dark night',
+            'The merger will reshape both galaxies into a giant elliptical — most stars won\'t collide',
+        ],
+    },
+    magnetar_1806: {
+        overview: `SGR 1806-20 is the most extreme magnetar ever detected. On December 27, 2004, it emitted a magnetar flare that briefly outshone the full Moon in gamma rays — the brightest transient event ever observed from outside the Solar System. The pulse lasted only 0.2 seconds but deposited more energy than the Sun radiates in 250,000 years.
+
+The simulated pulsar jets represent the polar emission cones, while the dipole field lines visualise the record-setting 1.6 × 10¹⁵ G magnetic field — strong enough to distort the electron orbitals of hydrogen atoms.`,
+        params: [
+            ['Mass',           '2.1 M☉'],
+            ['Radius',         '~11 km'],
+            ['Spin Period',    '7.56 s  (slow magnetar rotation)'],
+            ['B-field',        '1.6 × 10¹⁵ G  (strongest known)'],
+            ['Distance',       '~50,000 light-years (Galactic far side)'],
+            ['Flare Energy',   '~10⁴⁶ erg (2004 giant flare)'],
+            ['Sector',         '18-F  |  Coords: −7.00 / −5.00 / 2.00'],
+        ],
+        features: [
+            'Magnetar-Burst preset: max distortion 2.5, spin 4.2, doppler 2.4 — violent field lines',
+            'Magnetic Red-Violet palette: red for thermal X-ray + purple for hard gamma emission',
+            'Dipole field line density at maximum — 16 azimuthal slices visible',
+            'Rest-state preset shows quieter inter-burst phase with calmer field topology',
+        ],
+        facts: [
+            'The 2004 flare ionised Earth\'s upper ionosphere from 50,000 light-years away',
+            'If SGR 1806-20 were within 10 light-years, the flare would have caused mass extinction',
+            'The field is so strong it bends X-ray photon paths — a phenomenon called vacuum birefringence',
+            'At 1.6 × 10¹⁵ G, quantum effects dominate — B > B_QED (4.4 × 10¹³ G)',
+            'Magnetar fields decay on timescales of ~10,000 years — they are cosmically short-lived',
+        ],
+    },
+};
+
+// ===== State =====
 let appState = 'BOOT';
+let nodeLabels = {};
 let activeObjectId = 'gargantua';
 let activeThemeIdx = 0;
 let autoRotate = true;
 
 // ===== Boot Terminal =====
+// entry types: plain (default), 'scan' (animated bar fill), 'typewriter' (char-by-char)
 const BOOT_LINES = [
-    { text: "> BIOS POST check ... ", cls: "line-dim", delay: 80 },
-    { text: "  Memory: 256 TB unified — OK", cls: "line-ok", delay: 50 },
-    { text: "  GPU cluster: 8x RTX-ASTRO — OK", cls: "line-ok", delay: 50 },
-    { text: "  Photon buffer: 4096 lanes — OK", cls: "line-ok", delay: 40 },
-    { text: "", cls: "line-dim", delay: 30 },
-    { text: "> Loading kernel ASTRO-NAV/x86_64 ...", cls: "line-info", delay: 120 },
-    { text: "  Module: gravitational_lens.ko — loaded", cls: "line-dim", delay: 60 },
-    { text: "  Module: schwarzschild_integrator.ko — loaded", cls: "line-dim", delay: 50 },
-    { text: "  Module: doppler_beaming.ko — loaded", cls: "line-dim", delay: 50 },
-    { text: "  Module: accretion_disk_volumetric.ko — loaded", cls: "line-dim", delay: 40 },
-    { text: "  Module: magnetosphere_dipole.ko — loaded", cls: "line-dim", delay: 50 },
-    { text: "  Module: wormhole_throat.ko — loaded", cls: "line-dim", delay: 40 },
+    { text: "> BIOS POST sequence initiated ...", cls: "line-info", delay: 90 },
+    { text: "  [MEM ] 256 TB unified ................... OK", cls: "line-ok", delay: 50 },
+    { text: "  [GPU ] 8x RTX-ASTRO cluster ............. OK", cls: "line-ok", delay: 50 },
+    { text: "  [PHT ] 4096-lane photon buffer .......... OK", cls: "line-ok", delay: 50 },
+    { text: "  [QENT] Quantum entangler ................ OK", cls: "line-ok", delay: 50 },
+    { text: "", cls: "line-dim", delay: 20 },
+    { text: "> Loading ASTRO-NAV/x86_64 kernel ...", cls: "line-info", delay: 100 },
+    { text: "  gravitational_lens.ko ........... [  OK  ]", cls: "line-dim", delay: 50 },
+    { text: "  schwarzschild_integrator.ko ..... [  OK  ]", cls: "line-dim", delay: 50 },
+    { text: "  doppler_beaming.ko .............. [  OK  ]", cls: "line-dim", delay: 40 },
+    { text: "  accretion_disk_volumetric.ko .... [  OK  ]", cls: "line-dim", delay: 50 },
+    { text: "  magnetosphere_dipole.ko ......... [  OK  ]", cls: "line-dim", delay: 50 },
+    { text: "  wormhole_throat.ko .............. [  OK  ]", cls: "line-dim", delay: 40 },
+    { text: "", cls: "line-dim", delay: 20 },
+    { text: "> Hardware diagnostics:", cls: "line-info", delay: 80 },
+    { text: "  CPU_LOAD  [██████████░░░░░░]  67%  NOMINAL", cls: "line-dim", delay: 35 },
+    { text: "  MEM_UTIL  [████████████░░░░]  76%  NOMINAL", cls: "line-dim", delay: 35 },
+    { text: "  GPU_VRAM  [██████████████░░]  89%  NOMINAL", cls: "line-dim", delay: 35 },
+    { text: "  THRML_SY  [█████████░░░░░░░]  58°C NOMINAL", cls: "line-dim", delay: 35 },
+    { text: "  NET_SYNC  [███████████░░░░░]  71%  NOMINAL", cls: "line-dim", delay: 35 },
     { text: "", cls: "line-dim", delay: 20 },
     { text: "> Initializing WebGL2 renderer ...", cls: "line-info", delay: 100 },
-    { text: "  Canvas: 1920x1080 @ 2x DPI", cls: "line-dim", delay: 40 },
-    { text: "  Shader compiler: GLSL 3.00 ES — ready", cls: "line-ok", delay: 50 },
-    { text: "  Fragment shader pipeline: 4 programs queued", cls: "line-dim", delay: 40 },
+    { text: "  Canvas: 1920x1080 @ 2x DPI ............. OK", cls: "line-dim", delay: 40 },
+    { text: "  GLSL 3.00 ES compiler .............. READY", cls: "line-ok", delay: 50 },
+    { text: "  Fragment pipeline: 4 shaders queued ... OK", cls: "line-dim", delay: 40 },
     { text: "", cls: "line-dim", delay: 20 },
-    { text: "> Scanning deep space telemetry feeds ...", cls: "line-info", delay: 100 },
-    { text: "  [ANOMALY] Gargantua Singularity  — SEC_04-A — 4.3e6 M☉", cls: "line-warn", delay: 30 },
-    { text: "  [ANOMALY] Vela Pulsar             — SEC_12-C — 1.44 M☉", cls: "line-warn", delay: 30 },
-    { text: "  [ANOMALY] Cygnus Wormhole          — SEC_07-F — exotic", cls: "line-warn", delay: 30 },
-    { text: "  [ANOMALY] Kepler Dyson Sphere      — SEC_19-B — megastruct", cls: "line-warn", delay: 30 },
-    { text: "  [ANOMALY] Sagittarius A*          — SEC_00-C — 4.15e6 M☉", cls: "line-warn", delay: 30 },
-    { text: "  [ANOMALY] Crab Pulsar             — SEC_05-B — 1.40 M☉", cls: "line-warn", delay: 30 },
-    { text: "  [ANOMALY] Andromeda Gateway       — SEC_99-Z — bridge", cls: "line-warn", delay: 30 },
-    { text: "  [ANOMALY] Solara Dyson Swarm      — SEC_15-D — megastruct", cls: "line-warn", delay: 30 },
-    { text: "  [ANOMALY] Polaris Singularity     — SEC_02-B — 1.2e5 M☉", cls: "line-warn", delay: 30 },
-    { text: "  [ANOMALY] Aldebaran Bulge         — SEC_08-A — active core", cls: "line-warn", delay: 30 },
-    { text: "  [ANOMALY] SGR 1806-20 Magnetar    — SEC_18-F — extreme", cls: "line-warn", delay: 30 },
-    { text: "  [ANOMALY] Centauri Bridge         — SEC_01-C — quantum", cls: "line-warn", delay: 30 },
-    { text: "  Total anomalies registered: 12", cls: "line-dim", delay: 40 },
+    { text: "> Decoding raw telemetry stream ...", cls: "line-info", delay: 100 },
+    { text: "  0x4A2F FF91 04B7 338E  0x11CC 75D0 52AE F90B", cls: "line-warn", delay: 25 },
+    { text: "  0x671A 4488 BB36 E25D  0xC3F0 1B82 9D4E A7C1", cls: "line-warn", delay: 25 },
+    { text: "  0x08F5 3A61 77BE D294  0x5E19 AB4C 2D83 F6E0", cls: "line-warn", delay: 25 },
+    { text: "> Carrier signal analysis:", cls: "line-info", delay: 80 },
+    { text: "  ◁▁▂▃▅▇██▇▅▃▂▁▁▂▃▅▇██▇▅▃▂▁▂▄▆▇██▇▆▄▂▷", cls: "line-ok", delay: 30 },
+    { text: "  FREQ: 1.420405 GHz  SNR: 34.7 dB  LOCK: ACQ", cls: "line-dim", delay: 40 },
     { text: "", cls: "line-dim", delay: 20 },
-    { text: "> Building galaxy particle field (10000 stars) ...", cls: "line-info", delay: 100 },
-    { text: "  Spiral arm algorithm: 2-arm log-distribution", cls: "line-dim", delay: 50 },
-    { text: "  Star texture: 16x16 radial gradient — cached", cls: "line-dim", delay: 40 },
+    { type: "scan", label: "> Sector authentication", cls: "line-ok", result: "GRANTED", delay: 0 },
     { text: "", cls: "line-dim", delay: 20 },
-    { text: "> Calibrating OrbitControls ...", cls: "line-info", delay: 80 },
-    { text: "  Damping: 0.05 | FOV: 45° | Range: 3–50 AU", cls: "line-dim", delay: 40 },
+    { text: "> Scanning deep-space anomaly registry ...", cls: "line-info", delay: 100 },
+    { text: "  [ANOMALY] Sagittarius A*         — SEC_00-C — 4.15e6 M☉", cls: "line-warn", delay: 32 },
+    { text: "  [ANOMALY] Gargantua Singularity  — SEC_04-A — 4.3e6 M☉",  cls: "line-warn", delay: 32 },
+    { text: "  [ANOMALY] Vela Pulsar            — SEC_12-C — 1.44 M☉",   cls: "line-warn", delay: 32 },
+    { text: "  [ANOMALY] SGR 1806-20 Magnetar   — SEC_18-F — extreme",   cls: "line-warn", delay: 32 },
+    { text: "  [ANOMALY] Cygnus Wormhole        — SEC_07-F — exotic",    cls: "line-warn", delay: 32 },
+    { text: "  [ANOMALY] Andromeda Gateway      — SEC_99-Z — bridge",    cls: "line-warn", delay: 32 },
+    { text: "  [ANOMALY] Kepler Dyson Sphere    — SEC_19-B — megastruct",cls: "line-warn", delay: 32 },
+    { text: "  CATALOG: 7 / 7 anomalies — COMPLETE", cls: "line-dim", delay: 40 },
     { text: "", cls: "line-dim", delay: 20 },
-    { text: "> Running diagnostics ...", cls: "line-info", delay: 100 },
-    { text: "  Framebuffer integrity — PASS", cls: "line-ok", delay: 50 },
-    { text: "  Depth buffer precision — PASS", cls: "line-ok", delay: 40 },
-    { text: "  Raymarching pipeline — PASS", cls: "line-ok", delay: 50 },
-    { text: "  Tone mapping (Reinhard) — PASS", cls: "line-ok", delay: 40 },
+    { text: "> Building galaxy particle simulation ...", cls: "line-info", delay: 80 },
+    { text: "  Background: 10,000 stars — spherical shell", cls: "line-dim", delay: 40 },
+    { text: "  Disk:       40,000 stars — 2-arm log-spiral", cls: "line-dim", delay: 40 },
+    { text: "  Nebula:     15,000 pts   — volumetric dust", cls: "line-dim", delay: 40 },
+    { text: "", cls: "line-dim", delay: 20 },
+    { text: "> Running diagnostics ...", cls: "line-info", delay: 80 },
+    { text: "  Framebuffer integrity ............. PASS", cls: "line-ok", delay: 50 },
+    { text: "  Depth buffer precision ............ PASS", cls: "line-ok", delay: 40 },
+    { text: "  Raymarching pipeline .............. PASS", cls: "line-ok", delay: 50 },
+    { text: "  Tone mapping (Reinhard) ........... PASS", cls: "line-ok", delay: 40 },
     { text: "", cls: "line-dim", delay: 30 },
-    { text: "> ALL SYSTEMS NOMINAL", cls: "line-ok", delay: 120 },
-    { text: "  Star chart ready for navigation.", cls: "line-info", delay: 80 },
+    { type: "typewriter", text: "> ALL SYSTEMS NOMINAL — STAR CHART READY", cls: "line-ok", charDelay: 32, delay: 180 },
 ];
 
 function bootClock() {
@@ -320,22 +433,51 @@ async function runBootSequence() {
     const total = BOOT_LINES.length;
     // phase 1: print lines
     for (let i = 0; i < total; i++) {
-        const { text, cls, delay } = BOOT_LINES[i];
-        const div = document.createElement('div');
-        div.className = `line ${cls}`;
-        div.textContent = text;
-        terminal.appendChild(div);
-        terminal.scrollTop = terminal.scrollHeight;
+        const entry = BOOT_LINES[i];
 
         // update progress
-        if (i === 3) {
-            progressWrap.classList.remove('boot-hidden');
-        }
+        if (i === 3) progressWrap.classList.remove('boot-hidden');
         const pct = Math.min(100, Math.round(((i + 1) / total) * 100));
         progressBar.style.setProperty('--pct', pct + '%');
         progressPct.textContent = pct + '%';
 
-        await sleep(delay);
+        if (entry.type === 'scan') {
+            // Animated fill bar
+            const div = document.createElement('div');
+            div.className = `line ${entry.cls}`;
+            terminal.appendChild(div);
+            terminal.scrollTop = terminal.scrollHeight;
+            const barLen = 18;
+            for (let b = 0; b <= barLen; b++) {
+                const bar = '█'.repeat(b) + '░'.repeat(barLen - b);
+                div.textContent = `${entry.label} [${bar}]`;
+                await sleep(28);
+            }
+            div.textContent = `${entry.label} [${'█'.repeat(barLen)}] ${entry.result}`;
+            await sleep(entry.delay || 200);
+
+        } else if (entry.type === 'typewriter') {
+            // Character-by-character typing
+            const div = document.createElement('div');
+            div.className = `line ${entry.cls}`;
+            div.textContent = '';
+            terminal.appendChild(div);
+            terminal.scrollTop = terminal.scrollHeight;
+            for (const ch of entry.text) {
+                div.textContent += ch;
+                terminal.scrollTop = terminal.scrollHeight;
+                await sleep(entry.charDelay || 50);
+            }
+            await sleep(entry.delay || 100);
+
+        } else {
+            const div = document.createElement('div');
+            div.className = `line ${entry.cls}`;
+            div.textContent = entry.text;
+            terminal.appendChild(div);
+            terminal.scrollTop = terminal.scrollHeight;
+            await sleep(entry.delay);
+        }
     }
 
     await sleep(300);
@@ -410,43 +552,182 @@ function createStarTexture() {
     return new THREE.CanvasTexture(c);
 }
 
-function createNodeTexture(hex) {
+function createNodeTexture(hex, type) {
+    const S = 192;
     const c = document.createElement('canvas');
-    c.width = 128; c.height = 128;
+    c.width = S; c.height = S;
     const ctx = c.getContext('2d');
-    
-    ctx.clearRect(0, 0, 128, 128);
-    ctx.shadowColor = hex;
-    ctx.shadowBlur = 10;
-    
-    ctx.strokeStyle = hex;
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    for (let i = 0; i < 6; i++) {
-        const angle = i * Math.PI / 3;
-        const x = 64 + 48 * Math.cos(angle);
-        const y = 64 + 48 * Math.sin(angle);
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
+    ctx.clearRect(0, 0, S, S);
+    const cx = S / 2, cy = S / 2, R = S / 2;
+
+    if (type === 'blackhole') {
+        // ── Mini black hole: tilted accretion disk + dark event horizon ──
+        const dR = R * 0.50;  // disk radius
+        const dY = R * 0.10;  // disk vertical compression (3D tilt)
+
+        // Diffuse outer halo
+        const halo = ctx.createRadialGradient(cx, cy, dR * 0.6, cx, cy, R * 0.96);
+        halo.addColorStop(0, hex + '22'); halo.addColorStop(0.5, hex + '18'); halo.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = halo; ctx.beginPath(); ctx.arc(cx, cy, R * 0.96, 0, Math.PI * 2); ctx.fill();
+
+        // Back half of disk (dimmer, behind horizon)
+        ctx.shadowColor = hex; ctx.shadowBlur = 14;
+        const back = ctx.createLinearGradient(cx - dR, cy, cx + dR, cy);
+        back.addColorStop(0, 'rgba(255,100,0,0.55)');
+        back.addColorStop(0.45, hex + 'bb');
+        back.addColorStop(1, 'rgba(255,200,50,0.2)');
+        ctx.strokeStyle = back; ctx.lineWidth = 11;
+        ctx.beginPath(); ctx.ellipse(cx, cy, dR, dY, 0, Math.PI, 0); ctx.stroke();
+
+        // Event horizon (solid black circle)
+        ctx.shadowBlur = 0;
+        const hor = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.30);
+        hor.addColorStop(0, '#000000'); hor.addColorStop(0.88, '#000000'); hor.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = hor; ctx.beginPath(); ctx.arc(cx, cy, R * 0.31, 0, Math.PI * 2); ctx.fill();
+
+        // Front half of disk (bright, Doppler-shifted)
+        ctx.shadowColor = hex; ctx.shadowBlur = 28;
+        const front = ctx.createLinearGradient(cx - dR, cy, cx + dR, cy);
+        front.addColorStop(0, 'rgba(255,230,80,1.0)');   // approaching = blue-shifted = bright
+        front.addColorStop(0.35, hex + 'ff');
+        front.addColorStop(0.7, hex + 'cc');
+        front.addColorStop(1, 'rgba(200,40,0,0.5)');     // receding = red-shifted = dim
+        ctx.strokeStyle = front; ctx.lineWidth = 14;
+        ctx.beginPath(); ctx.ellipse(cx, cy, dR, dY, 0, 0, Math.PI); ctx.stroke();
+
+        // Photon sphere glow (gravitational lensing ring)
+        ctx.shadowBlur = 10; ctx.strokeStyle = 'rgba(255,210,120,0.5)'; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.arc(cx, cy, R * 0.36, 0, Math.PI * 2); ctx.stroke();
+
+    } else if (type === 'pulsar') {
+        // ── Mini pulsar: neutron star + relativistic jets + magnetosphere rings ──
+        const jLen = R * 0.86;
+
+        // Faint magnetosphere rings
+        ctx.shadowColor = hex; ctx.shadowBlur = 6; ctx.strokeStyle = hex + '28'; ctx.lineWidth = 1;
+        [R*0.38, R*0.58, R*0.78].forEach(r => { ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke(); });
+
+        // Jet beams (top + bottom)
+        ctx.shadowBlur = 22;
+        [[cy - 7, cy - jLen], [cy + 7, cy + jLen]].forEach(([y0, y1]) => {
+            const g = ctx.createLinearGradient(cx, y0, cx, y1);
+            g.addColorStop(0, hex + 'ff'); g.addColorStop(0.4, hex + 'cc'); g.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.strokeStyle = g; ctx.lineWidth = 9;
+            ctx.beginPath(); ctx.moveTo(cx, y0); ctx.lineTo(cx, y1); ctx.stroke();
+            // bright inner core of jet
+            ctx.lineWidth = 2.5; ctx.strokeStyle = '#ffffffbb';
+            ctx.beginPath(); ctx.moveTo(cx, y0); ctx.lineTo(cx, y0 + (y1 - y0) * 0.45); ctx.stroke();
+        });
+
+        // Cross-ticks along jets
+        ctx.shadowBlur = 4; ctx.strokeStyle = hex + 'aa'; ctx.lineWidth = 1.5;
+        for (let t = 1; t <= 5; t++) {
+            const w = Math.max(2, 10 - t * 1.8);
+            ctx.beginPath(); ctx.moveTo(cx - w, cy - t * 14); ctx.lineTo(cx + w, cy - t * 14); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(cx - w, cy + t * 14); ctx.lineTo(cx + w, cy + t * 14); ctx.stroke();
+        }
+
+        // Neutron star core
+        ctx.shadowBlur = 30;
+        const core = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.21);
+        core.addColorStop(0, '#ffffff'); core.addColorStop(0.2, '#ddf4ff');
+        core.addColorStop(0.55, hex); core.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = core; ctx.beginPath(); ctx.arc(cx, cy, R * 0.21, 0, Math.PI * 2); ctx.fill();
+
+    } else if (type === 'wormhole') {
+        // ── Mini wormhole: portal with alternate-universe interior ──
+
+        // Dark space background around portal
+        const bg = ctx.createRadialGradient(cx, cy, R * 0.28, cx, cy, R * 0.90);
+        bg.addColorStop(0, 'rgba(0,0,0,0)'); bg.addColorStop(1, 'rgba(0,5,20,0.5)');
+        ctx.fillStyle = bg; ctx.beginPath(); ctx.arc(cx, cy, R * 0.90, 0, Math.PI * 2); ctx.fill();
+
+        // Alternate universe glow inside portal
+        const portal = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.40);
+        portal.addColorStop(0, hex + 'ff'); portal.addColorStop(0.45, hex + 'cc');
+        portal.addColorStop(0.8, hex + '55'); portal.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = portal; ctx.beginPath(); ctx.arc(cx, cy, R * 0.40, 0, Math.PI * 2); ctx.fill();
+
+        // Stars visible through the portal (other universe)
+        ctx.shadowBlur = 0; ctx.fillStyle = '#ffffff';
+        const rng = s => { let x = Math.sin(s * 9301 + 49297) * 43758; return x - Math.floor(x); };
+        for (let i = 0; i < 14; i++) {
+            const ang = rng(i * 3.14) * Math.PI * 2;
+            const dist = rng(i * 1.61) * R * 0.30;
+            const sr = 0.7 + rng(i * 2.71) * 1.8;
+            ctx.globalAlpha = 0.6 + rng(i * 0.5) * 0.4;
+            ctx.beginPath(); ctx.arc(cx + Math.cos(ang) * dist, cy + Math.sin(ang) * dist, sr, 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+
+        // Einstein ring (dashed bright)
+        ctx.shadowColor = hex; ctx.shadowBlur = 20; ctx.strokeStyle = hex; ctx.lineWidth = 5;
+        const segs = 10;
+        for (let a = 0; a < segs; a++) {
+            const s = (a / segs) * Math.PI * 2, e = s + (Math.PI * 2 / segs) - 0.26;
+            ctx.beginPath(); ctx.arc(cx, cy, R * 0.50, s, e); ctx.stroke();
+        }
+        // Fine lensing halo
+        ctx.shadowBlur = 6; ctx.strokeStyle = '#ffffff55'; ctx.lineWidth = 1.2;
+        ctx.beginPath(); ctx.arc(cx, cy, R * 0.52, 0, Math.PI * 2); ctx.stroke();
+
+    } else if (type === 'dyson') {
+        // ── Mini Dyson sphere: star peeking through metallic grid cage ──
+        const RG = R * 0.60;
+
+        // Star background glow
+        const sg = ctx.createRadialGradient(cx, cy, 0, cx, cy, RG * 0.9);
+        sg.addColorStop(0, hex + 'ee'); sg.addColorStop(0.35, hex + 'aa');
+        sg.addColorStop(0.65, hex + '44'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = sg; ctx.beginPath(); ctx.arc(cx, cy, RG * 0.9, 0, Math.PI * 2); ctx.fill();
+
+        // Dark panel coverage (sphere blocks most of the star)
+        ctx.shadowBlur = 0;
+        const panels = ctx.createRadialGradient(cx, cy, RG * 0.18, cx, cy, RG);
+        panels.addColorStop(0, 'rgba(2,4,10,0)'); panels.addColorStop(0.5, 'rgba(2,4,10,0.55)');
+        panels.addColorStop(0.88, 'rgba(2,4,10,0.88)'); panels.addColorStop(1, 'rgba(2,4,10,0)');
+        ctx.fillStyle = panels; ctx.beginPath(); ctx.arc(cx, cy, RG, 0, Math.PI * 2); ctx.fill();
+
+        // Latitude ellipses (structural rings)
+        ctx.shadowColor = hex; ctx.shadowBlur = 10; ctx.strokeStyle = hex + 'bb'; ctx.lineWidth = 1.5;
+        [-R*0.28, -R*0.15, 0, R*0.15, R*0.28].forEach(yo => {
+            const rx = Math.sqrt(Math.max(0, RG * RG - yo * yo));
+            ctx.beginPath(); ctx.ellipse(cx, cy + yo, rx, rx * 0.18, 0, 0, Math.PI * 2); ctx.stroke();
+        });
+
+        // Longitude arcs (6 great circles)
+        for (let i = 0; i < 6; i++) {
+            ctx.save(); ctx.translate(cx, cy); ctx.rotate(i * Math.PI / 6);
+            ctx.beginPath(); ctx.ellipse(0, 0, RG * 0.22, RG, 0, 0, Math.PI * 2);
+            ctx.stroke(); ctx.restore();
+        }
+
+        // Outer shell circle
+        ctx.lineWidth = 2.5; ctx.strokeStyle = hex; ctx.shadowBlur = 16;
+        ctx.beginPath(); ctx.arc(cx, cy, RG, 0, Math.PI * 2); ctx.stroke();
+
+        // Central star (shows through gaps)
+        ctx.shadowBlur = 24;
+        const sc = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.18);
+        sc.addColorStop(0, '#ffffff'); sc.addColorStop(0.3, hex);
+        sc.addColorStop(0.8, hex + '88'); sc.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = sc; ctx.beginPath(); ctx.arc(cx, cy, R * 0.18, 0, Math.PI * 2); ctx.fill();
+
+    } else {
+        // Generic fallback (hexagon)
+        ctx.shadowColor = hex; ctx.shadowBlur = 12; ctx.strokeStyle = hex; ctx.lineWidth = 3;
+        ctx.beginPath();
+        for (let i = 0; i < 6; i++) {
+            const a = i * Math.PI / 3;
+            i === 0 ? ctx.moveTo(cx + R*0.75*Math.cos(a), cy + R*0.75*Math.sin(a))
+                    : ctx.lineTo(cx + R*0.75*Math.cos(a), cy + R*0.75*Math.sin(a));
+        }
+        ctx.closePath(); ctx.stroke();
+        const g = ctx.createRadialGradient(cx, cy, 2, cx, cy, R * 0.3);
+        g.addColorStop(0, '#ffffff'); g.addColorStop(0.4, hex); g.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R * 0.3, 0, Math.PI * 2); ctx.fill();
     }
-    ctx.closePath();
-    ctx.stroke();
-    
-    ctx.lineWidth = 1.5;
-    ctx.beginPath(); ctx.moveTo(64, 24); ctx.lineTo(64, 40); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(64, 104); ctx.lineTo(64, 88); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(24, 64); ctx.lineTo(40, 64); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(104, 64); ctx.lineTo(88, 64); ctx.stroke();
-    
-    const gradient = ctx.createRadialGradient(64, 64, 2, 64, 64, 20);
-    gradient.addColorStop(0, '#ffffff');
-    gradient.addColorStop(0.4, hex);
-    gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-    ctx.fillStyle = gradient;
-    ctx.beginPath();
-    ctx.arc(64, 64, 20, 0, Math.PI * 2);
-    ctx.fill();
-    
+
     return new THREE.CanvasTexture(c);
 }
 
@@ -479,6 +760,20 @@ function createCoreGlowTexture() {
 }
 
 async function initApp() {
+    // Load shaders from inline script tags (works on file:// protocol, no fetch needed)
+    // Strip #version and precision directives — Three.js r128 injects its own preamble
+    function loadShader(id) {
+        return document.getElementById(id).textContent
+            .split('\n')
+            .filter(l => !/^\s*#version\b|^\s*precision\s+(lowp|mediump|highp)/.test(l))
+            .join('\n')
+            .trim();
+    }
+    SHADERS['shaders/black-hole.frag']  = loadShader('shader-black-hole');
+    SHADERS['shaders/pulsar.frag']      = loadShader('shader-pulsar');
+    SHADERS['shaders/wormhole.frag']    = loadShader('shader-wormhole');
+    SHADERS['shaders/dyson-sphere.frag']= loadShader('shader-dyson');
+
     // cache dom
     sidebar = document.getElementById('control-sidebar');
     infoCard = document.getElementById('info-card');
@@ -576,7 +871,7 @@ async function initApp() {
             if (galaxyDust) galaxyDust.rotation.y = elapsed * 0.03;
 
             systemNodes.forEach(node => {
-                const pulse = 1.8 + 0.15 * Math.sin(elapsed * 4.0 + node.position.x);
+                const pulse = 2.0 + 0.18 * Math.sin(elapsed * 4.0 + node.position.x);
                 node.scale.set(pulse, pulse, 1.0);
             });
 
@@ -591,6 +886,28 @@ async function initApp() {
 
             controls.update();
             renderer.render(scene, camera);
+
+            // Update floating node labels (project 3D → 2D)
+            if (appState === 'GALAXY') {
+                const hw = window.innerWidth * 0.5, hh = window.innerHeight * 0.5;
+                systemNodes.forEach(node => {
+                    const key = node.userData.id;
+                    const lbl = nodeLabels[key];
+                    if (!lbl) return;
+                    const pos = node.position.clone().project(camera);
+                    if (pos.z < 1.0) {
+                        const sx = pos.x * hw + hw + 18;
+                        const sy = -pos.y * hh + hh - 6;
+                        lbl.style.transform = `translate(${sx}px,${sy}px)`;
+                        lbl.classList.add('visible');
+                    } else {
+                        lbl.classList.remove('visible');
+                    }
+                });
+            } else {
+                // Hide labels during transition
+                Object.values(nodeLabels).forEach(l => l.classList.remove('visible'));
+            }
 
         } else if (appState === 'ORBIT') {
             if (controls && autoRotate) {
@@ -628,7 +945,7 @@ async function initApp() {
 
 function buildGalaxyMap() {
     // 1. Distant background starfield
-    const bgCount = 6000;
+    const bgCount = 10000;
     const bgGeo = new THREE.BufferGeometry();
     const bgPos = new Float32Array(bgCount * 3);
     const bgCol = new Float32Array(bgCount * 3);
@@ -637,29 +954,72 @@ function buildGalaxyMap() {
         const u = Math.random() * 2.0 - 1.0;
         const phi = Math.random() * Math.PI * 2.0;
         const theta = Math.acos(u);
-        
+
         bgPos[i * 3]     = r * Math.sin(theta) * Math.cos(phi);
-        bgPos[i * 3 + 1] = r * Math.sin(theta) * Math.sin(phi);
-        bgPos[i * 3 + 2] = r * Math.cos(theta);
-        
-        const brightness = 0.4 + Math.random() * 0.6;
-        bgCol[i * 3]     = brightness;
-        bgCol[i * 3 + 1] = brightness * (0.9 + Math.random() * 0.1);
-        bgCol[i * 3 + 2] = brightness * (0.8 + Math.random() * 0.2);
+        bgPos[i * 3 + 1] = r * Math.cos(theta);
+        bgPos[i * 3 + 2] = r * Math.sin(theta) * Math.sin(phi);
+
+        const brightness = 0.72 + Math.random() * 0.28;
+        // Slight color variation: warm whites, blue-whites, orange tints
+        const tint = Math.random();
+        if (tint < 0.15) {
+            bgCol[i * 3] = brightness; bgCol[i * 3 + 1] = brightness * 0.78; bgCol[i * 3 + 2] = brightness * 0.55; // orange
+        } else if (tint < 0.35) {
+            bgCol[i * 3] = brightness * 0.78; bgCol[i * 3 + 1] = brightness * 0.88; bgCol[i * 3 + 2] = brightness; // blue-white
+        } else {
+            bgCol[i * 3] = brightness; bgCol[i * 3 + 1] = brightness; bgCol[i * 3 + 2] = brightness; // white
+        }
     }
     bgGeo.setAttribute('position', new THREE.BufferAttribute(bgPos, 3));
     bgGeo.setAttribute('color', new THREE.BufferAttribute(bgCol, 3));
     const bgMat = new THREE.PointsMaterial({
-        size: 0.09,
+        size: 2.2,
+        sizeAttenuation: false,
         map: createStarTexture(),
         vertexColors: true,
         transparent: true,
-        opacity: 0.6,
+        opacity: 1.0,
         blending: THREE.AdditiveBlending,
         depthWrite: false
     });
     const bgStars = new THREE.Points(bgGeo, bgMat);
     scene.add(bgStars);
+
+    // Extra bright-star highlights (~800 larger stars scattered in background)
+    const brightCount = 800;
+    const brightGeo = new THREE.BufferGeometry();
+    const brightPos = new Float32Array(brightCount * 3);
+    const brightCol = new Float32Array(brightCount * 3);
+    for (let i = 0; i < brightCount; i++) {
+        const r = 88.0 + Math.random() * 42.0;
+        const u = Math.random() * 2.0 - 1.0;
+        const phi = Math.random() * Math.PI * 2.0;
+        const theta = Math.acos(u);
+        brightPos[i * 3]     = r * Math.sin(theta) * Math.cos(phi);
+        brightPos[i * 3 + 1] = r * Math.cos(theta);
+        brightPos[i * 3 + 2] = r * Math.sin(theta) * Math.sin(phi);
+        const t = Math.random();
+        if (t < 0.2) { // orange giant
+            brightCol[i * 3] = 1.0; brightCol[i * 3 + 1] = 0.72; brightCol[i * 3 + 2] = 0.42;
+        } else if (t < 0.45) { // blue-white O/B
+            brightCol[i * 3] = 0.72; brightCol[i * 3 + 1] = 0.88; brightCol[i * 3 + 2] = 1.0;
+        } else { // pure white
+            brightCol[i * 3] = 1.0; brightCol[i * 3 + 1] = 1.0; brightCol[i * 3 + 2] = 1.0;
+        }
+    }
+    brightGeo.setAttribute('position', new THREE.BufferAttribute(brightPos, 3));
+    brightGeo.setAttribute('color', new THREE.BufferAttribute(brightCol, 3));
+    const brightMat = new THREE.PointsMaterial({
+        size: 4.0,
+        sizeAttenuation: false,
+        map: createStarTexture(),
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.95,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+    });
+    scene.add(new THREE.Points(brightGeo, brightMat));
 
     // 2. Bright stars of the galaxy (40000 particles)
     const count = 40000;
@@ -772,37 +1132,54 @@ function buildGalaxyMap() {
     coreSprite.scale.set(7.0, 7.0, 1.0);
     scene.add(coreSprite);
 
-    // 5. System Nodes (rendered as sprites, facing camera)
+    // 5. System Nodes (type-specific sprites, facing camera)
     const nodeColors = {
         gargantua: '#f0a030',
         vela: '#00ffff',
         cygnus: '#ff00ff',
-        kepler: '#00ff66',
+        kepler: '#ffcc00',
         sgr_a: '#ff4500',
-        crab: '#38bdf8',
         andromeda: '#bf55ec',
-        dyson_swarm: '#c5eff7',
-        polaris: '#48929b',
-        aldebaran: '#ff6b6b',
-        magnetar_1806: '#d2527f',
-        centauri: '#673ab7'
+        magnetar_1806: '#ff3366'
+    };
+
+    const objectTypes = {
+        gargantua: 'blackhole', sgr_a: 'blackhole',
+        vela: 'pulsar', magnetar_1806: 'pulsar',
+        cygnus: 'wormhole', andromeda: 'wormhole',
+        kepler: 'dyson'
     };
 
     for (const key in OBJECTS) {
         const obj = OBJECTS[key];
         const spriteMat = new THREE.SpriteMaterial({
-            map: createNodeTexture(nodeColors[key] || '#ffffff'),
+            map: createNodeTexture(nodeColors[key] || '#ffffff', objectTypes[key] || 'generic'),
             transparent: true,
             blending: THREE.AdditiveBlending,
             depthWrite: false
         });
         const sprite = new THREE.Sprite(spriteMat);
         sprite.position.copy(obj.position).multiplyScalar(2.5);
-        sprite.scale.set(2.4, 2.4, 1.0);
+        sprite.scale.set(2.8, 2.8, 1.0);
         sprite.renderOrder = 999;
         sprite.userData = { id: key };
         scene.add(sprite);
         systemNodes.push(sprite);
+    }
+
+    // Build floating name labels for galaxy map
+    const labelContainer = document.getElementById('node-labels');
+    if (labelContainer) {
+        for (const key in OBJECTS) {
+            const lbl = document.createElement('div');
+            lbl.className = 'node-label';
+            // Short display: first 2 words of name
+            const words = OBJECTS[key].name.split(' ');
+            lbl.textContent = words.slice(0, 2).join(' ').toUpperCase();
+            lbl.dataset.key = key;
+            labelContainer.appendChild(lbl);
+            nodeLabels[key] = lbl;
+        }
     }
 }
 
@@ -849,17 +1226,13 @@ function showInfoCard(id) {
 
 // ===== Transitions =====
 
-async function onTransitionComplete() {
+function onTransitionComplete() {
     const obj = OBJECTS[activeObjectId];
     if (!obj) return;
 
-    let shaderSrc;
-    try {
-        const resp = await fetch(obj.shader);
-        if (!resp.ok) throw new Error('shader load failed');
-        shaderSrc = await resp.text();
-    } catch (e) {
-        console.error('Cannot fetch shader:', e);
+    const shaderSrc = SHADERS[obj.shader];
+    if (!shaderSrc) {
+        console.error('Shader not found in SHADERS map:', obj.shader);
         return;
     }
 
@@ -877,7 +1250,7 @@ async function onTransitionComplete() {
     const distG = document.getElementById('group-distortion');
     const dopG = document.getElementById('group-doppler');
 
-    if (activeObjectId === 'kepler' || activeObjectId === 'dyson_swarm' || activeObjectId === 'aldebaran') {
+    if (activeObjectId === 'kepler') {
         distG.style.display = 'none';
         dopG.style.display = 'none';
         document.getElementById('accessory-title').innerHTML = '<i class="fas fa-cubes"></i> Panel Grid';
@@ -888,13 +1261,13 @@ async function onTransitionComplete() {
     }
 
     // slider bounds
-    if (activeObjectId === 'vela' || activeObjectId === 'crab' || activeObjectId === 'magnetar_1806') {
+    if (activeObjectId === 'vela' || activeObjectId === 'magnetar_1806') {
         sliders.rs.min = 0.2; sliders.rs.max = 1.6; sliders.rs.step = 0.05;
         sliders.outer.min = 6.0; sliders.outer.max = 20.0; sliders.outer.step = 0.2;
-    } else if (activeObjectId === 'cygnus' || activeObjectId === 'andromeda' || activeObjectId === 'centauri') {
+    } else if (activeObjectId === 'cygnus' || activeObjectId === 'andromeda') {
         sliders.rs.min = 0.3; sliders.rs.max = 1.8; sliders.rs.step = 0.05;
         sliders.outer.min = 6.0; sliders.outer.max = 15.0; sliders.outer.step = 0.1;
-    } else if (activeObjectId === 'kepler' || activeObjectId === 'dyson_swarm' || activeObjectId === 'aldebaran') {
+    } else if (activeObjectId === 'kepler') {
         sliders.rs.min = 0.4; sliders.rs.max = 2.0; sliders.rs.step = 0.05;
         sliders.outer.min = 2.0; sliders.outer.max = 5.0; sliders.outer.step = 0.1;
     } else {
@@ -929,6 +1302,9 @@ async function onTransitionComplete() {
     appState = 'ORBIT';
     sidebar.classList.remove('collapsed');
     btnBack.classList.remove('hidden');
+
+    // Hide galaxy labels in orbit mode
+    Object.values(nodeLabels).forEach(l => l.classList.remove('visible'));
 }
 
 // back to galaxy
@@ -1023,7 +1399,7 @@ function syncUI() {
 
     const rs = parseFloat(sliders.rs.value);
 
-    if (activeObjectId === 'kepler' || activeObjectId === 'dyson_swarm' || activeObjectId === 'aldebaran') {
+    if (activeObjectId === 'kepler') {
         sliders.outer.min = (rs * 1.6).toFixed(2);
         if (parseFloat(sliders.outer.value) < rs * 1.6) {
             sliders.outer.value = (rs * 1.6).toFixed(2);
@@ -1102,8 +1478,230 @@ function onWindowResize() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 }
 
+// ===== Side Panel Animations =====
+function runSidePanels() {
+    const gravEl = document.getElementById('bp-grav');
+    const fluxEl = document.getElementById('bp-flux');
+    const sysEl  = document.getElementById('bp-sys');
+    const navEl  = document.getElementById('bp-nav');
+    if (!gravEl) return;
+
+    const alive = () => appState === 'BOOT';
+
+    // ── GRAV FIELD SCANNER ──
+    const gravSectors = ['SΩ-001','SΩ-002','SΩ-003','SΩ-004','SΩ-005','SΩ-006','SΩ-007','SΩ-008'];
+    let gravVals = gravSectors.map(() => 25 + Math.random() * 65);
+    function tickGrav() {
+        if (!alive()) return;
+        gravVals = gravVals.map(v => Math.max(4, Math.min(99, v + (Math.random() * 14 - 7))));
+        const lines = gravVals.map((v, i) => {
+            const pct = Math.round(v);
+            const f   = Math.round(pct / 10);
+            return `${gravSectors[i]}  ${'█'.repeat(f)}${'░'.repeat(10 - f)}  ${String(pct).padStart(3)}%`;
+        });
+        const active  = gravVals.filter(v => v > 20).length;
+        const avgPct  = (gravVals.reduce((a, b) => a + b, 0) / gravVals.length).toFixed(1);
+        gravEl.textContent = lines.join('\n') + `\n──────────────────\nGRID: ${active}/8   AVG: ${avgPct}%`;
+        setTimeout(tickGrav, 520);
+    }
+
+    // ── PARTICLE FLUX + TEXT WAVEFORM ──
+    const fluxKinds = ['neutrino','photon  ','tachyon ','grav-wav','dark-mat','positron','muon    ','axion   '];
+    let fluxHistory = [];
+    let waveHistory = Array.from({length: 20}, () => Math.random());
+    function tickFlux() {
+        if (!alive()) return;
+        const v    = (Math.random() * 9998 - 4999).toExponential(3);
+        const sign = parseFloat(v) >= 0 ? '+' : '';
+        const k    = fluxKinds[Math.floor(Math.random() * fluxKinds.length)];
+        fluxHistory.push(`${sign}${v}  ${k}`);
+        if (fluxHistory.length > 5) fluxHistory.shift();
+
+        waveHistory.push(Math.random());
+        if (waveHistory.length > 20) waveHistory.shift();
+        const blocks = '▁▂▃▄▅▆▇█';
+        const wave   = waveHistory.map(h => blocks[Math.min(7, Math.floor(h * 8))]).join('');
+
+        const flux = (Math.random() * 28 - 4).toFixed(2);
+        fluxEl.textContent =
+            fluxHistory.join('\n') +
+            '\n──────────────────\n' +
+            wave + '\n' +
+            `FLUX: ${flux >= 0 ? '+' : ''}${flux} μSv/h`;
+        setTimeout(tickFlux, 290);
+    }
+
+    // ── SYSTEM RESOURCES ──
+    const resLabels = ['CPU ','MEM ','GPU ','NET ','DISK'];
+    let resVals = [38, 51, 24, 17, 45];
+    let cpuTemp = 45.5;
+    function tickSys() {
+        if (!alive()) return;
+        resVals = resVals.map(v => Math.max(4, Math.min(98, v + (Math.random() - 0.47) * 9)));
+        cpuTemp = Math.max(38, Math.min(85, cpuTemp + (Math.random() - 0.5) * 1.4));
+        const lines = resLabels.map((n, i) => {
+            const pct  = Math.round(resVals[i]);
+            const f    = Math.round(pct / 10);
+            const flag = pct > 85 ? ' !' : pct > 65 ? ' ~' : '  ';
+            return `${n}  ${'█'.repeat(f)}${'░'.repeat(10 - f)}  ${String(pct).padStart(2)}%${flag}`;
+        });
+        const tStatus = cpuTemp > 72 ? 'WARN' : 'OK';
+        sysEl.textContent = lines.join('\n') + `\n──────────────────\nTEMP: ${cpuTemp.toFixed(1)}°C  [${tStatus}]`;
+        setTimeout(tickSys, 370);
+    }
+
+    // ── NAV CALIBRATION ──
+    let navTick = 0;
+    function tickNav() {
+        if (!alive()) return;
+        navTick++;
+        const ra_s   = (43.091 + Math.sin(navTick * 0.09) * 0.06).toFixed(3);
+        const dec_s  = (41.287 + Math.cos(navTick * 0.07) * 0.04).toFixed(3);
+        const dist   = (8.1780 + Math.sin(navTick * 0.05) * 0.0009).toFixed(4);
+        const gyroP  = Math.min(100, navTick * 5);
+        const starP  = Math.min(100, Math.max(0, (navTick - 5) * 6));
+        const gF     = Math.round(gyroP / 10);
+        const sF     = Math.round(starP / 10);
+        const gBar   = '█'.repeat(gF) + '░'.repeat(10 - gF);
+        const sBar   = '█'.repeat(sF) + '░'.repeat(10 - sF);
+        const gLbl   = gyroP >= 100 ? 'LOCKED ✓' : `SYNC  ${gyroP}%`;
+        const sLbl   = starP >= 100 ? 'LOCKED ✓' : `SYNC  ${starP}%`;
+        const now    = new Date();
+        const epoch  = 'J' + (2026 + now.getMonth() / 12).toFixed(2);
+        navEl.textContent =
+            `RA   14h 29m ${ra_s}s\n` +
+            `DEC  -62° 28' ${dec_s}"\n` +
+            `DIST ${dist} kpc\n` +
+            `EPOCH: ${epoch}\n` +
+            `──────────────────\n` +
+            `GYRO ${gBar}\n` +
+            `     ${gLbl}\n` +
+            `STAR ${sBar}\n` +
+            `     ${sLbl}`;
+        setTimeout(tickNav, 240);
+    }
+
+    setTimeout(tickGrav,  80);
+    setTimeout(tickFlux, 170);
+    setTimeout(tickSys,  120);
+    setTimeout(tickNav,   40);
+}
+
+// ===== Dossier Functions =====
+function buildDossierHTML(id) {
+    const obj = OBJECTS[id];
+    const d   = OBJECT_DOSSIERS[id];
+    if (!obj || !d) return '<p class="dossier-text">No dossier available.</p>';
+
+    const paramsRows = d.params.map(([k, v]) =>
+        `<span class="dossier-param-key">${k}</span><span class="dossier-param-val">${v}</span>`
+    ).join('');
+
+    const featureItems = d.features.map(f => `<li>${f}</li>`).join('');
+    const factItems    = d.facts.map(f => `<li>${f}</li>`).join('');
+
+    return `
+<div class="dossier-object-name">${obj.name}</div>
+<div class="dossier-object-class">${obj.class}</div>
+
+<div class="dossier-section">
+    <div class="dossier-section-title">▸ OVERVIEW</div>
+    <p class="dossier-text">${d.overview}</p>
+</div>
+
+<hr class="dossier-divider">
+
+<div class="dossier-section">
+    <div class="dossier-section-title">▸ PHYSICS PARAMETERS</div>
+    <div class="dossier-param-grid">${paramsRows}</div>
+</div>
+
+<hr class="dossier-divider">
+
+<div class="dossier-section">
+    <div class="dossier-section-title">▸ RENDER FEATURES</div>
+    <ul class="dossier-list">${featureItems}</ul>
+</div>
+
+<hr class="dossier-divider">
+
+<div class="dossier-section">
+    <div class="dossier-section-title">▸ INTERESTING FACTS</div>
+    <ul class="dossier-list">${factItems}</ul>
+</div>`;
+}
+
+function openDossier(id) {
+    const overlay = document.getElementById('dossier-overlay');
+    const body    = document.getElementById('dossier-body');
+    const title   = document.getElementById('dossier-title');
+    const pct     = document.getElementById('dossier-scroll-pct');
+    if (!overlay || !body) return;
+
+    const obj = OBJECTS[id];
+    title.textContent = `ANOMALY DOSSIER — ${obj ? obj.sector : 'CLASSIFIED'}`;
+    body.innerHTML = buildDossierHTML(id);
+    body.scrollTop = 0;
+    pct.textContent = '0%';
+
+    body.onscroll = () => {
+        const max = body.scrollHeight - body.clientHeight;
+        const p   = max > 0 ? Math.round((body.scrollTop / max) * 100) : 100;
+        pct.textContent = p + '%';
+    };
+
+    overlay.classList.remove('dossier-hidden');
+}
+
+function closeDossier() {
+    const overlay = document.getElementById('dossier-overlay');
+    if (overlay) overlay.classList.add('dossier-hidden');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Dossier close button
+    const dossierClose = document.getElementById('dossier-close');
+    if (dossierClose) dossierClose.addEventListener('click', closeDossier);
+
+    // Dossier backdrop click
+    const dossierOverlay = document.getElementById('dossier-overlay');
+    if (dossierOverlay) {
+        dossierOverlay.addEventListener('click', e => {
+            if (e.target === dossierOverlay) closeDossier();
+        });
+    }
+
+    // Dossier info-card button
+    const btnDossierInfo = document.getElementById('btn-dossier-info');
+    if (btnDossierInfo) {
+        btnDossierInfo.addEventListener('click', () => openDossier(activeObjectId));
+    }
+
+    // Dossier orbit sidebar button
+    const btnDossierOrbit = document.getElementById('btn-dossier-orbit');
+    if (btnDossierOrbit) {
+        btnDossierOrbit.addEventListener('click', () => openDossier(activeObjectId));
+    }
+
+    // ESC key closes dossier (or guide)
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+            const dos = document.getElementById('dossier-overlay');
+            if (dos && !dos.classList.contains('dossier-hidden')) {
+                closeDossier();
+                return;
+            }
+            const guide = document.getElementById('guide-overlay');
+            if (guide && !guide.classList.contains('guide-hidden')) {
+                guide.classList.add('guide-hidden');
+            }
+        }
+    });
+});
+
 // ===== Entry Point =====
 window.onload = async function() {
+    runSidePanels();
     await runBootSequence();
     await initApp();
 };
