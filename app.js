@@ -7,12 +7,12 @@ const OBJECTS = {
         name: "Gargantua Singularity",
         class: "SCHWARZSCHILD BLACK HOLE",
         sector: "SECTOR 04-A",
-        coords: "X: -3.50 / Y: 0.80 / Z: -2.00",
+        coords: "X: -1.00 / Y: 0.60 / Z: 3.90",
         mass: "4.3e6 M☉",
         rad: "STABLE CORE",
         desc: "Supermassive singularity at galactic center. Accretion disk with Keplerian velocity profiles, relativistic Doppler beaming, and gravitational lensing geodesics.",
         shader: "shaders/black-hole.frag",
-        position: new THREE.Vector3(-3.5, 0.8, -2),
+        position: new THREE.Vector3(-1.0, 0.6, 3.9),
         presets: {
             "gargantua": { rs: 1.0, distortion: 1.0, outer: 9.5, speed: 1.6, doppler: 1.0, stars: 1.0, theme: 0 },
             "supermassive": { rs: 1.8, distortion: 0.7, outer: 14.5, speed: 0.8, doppler: 0.5, stars: 1.2, theme: 1 }
@@ -28,12 +28,12 @@ const OBJECTS = {
         name: "Vela Pulsar",
         class: "ROTATING NEUTRON STAR",
         sector: "SECTOR 12-C",
-        coords: "X: 5.00 / Y: 1.00 / Z: -4.00",
+        coords: "X: 0.90 / Y: 0.50 / Z: -3.90",
         mass: "1.44 M☉",
         rad: "EXTREME PULSATION",
         desc: "Highly magnetized neutron star. Precessing radio jet cones from magnetic poles, dipole magnetosphere field-line grid.",
         shader: "shaders/pulsar.frag",
-        position: new THREE.Vector3(5, 1, -4),
+        position: new THREE.Vector3(0.9, 0.5, -3.9),
         presets: {
             "vela": { rs: 0.8, distortion: 1.0, outer: 12.0, speed: 2.0, doppler: 1.0, stars: 1.0, theme: 0 },
             "magnetar": { rs: 1.2, distortion: 1.8, outer: 16.0, speed: 0.6, doppler: 2.2, stars: 0.5, theme: 1 }
@@ -48,12 +48,12 @@ const OBJECTS = {
         name: "Cygnus Wormhole",
         class: "MORRIS-THORNE BRIDGE",
         sector: "SECTOR 07-F",
-        coords: "X: -6.00 / Y: -1.00 / Z: 5.00",
+        coords: "X: 5.40 / Y: -0.80 / Z: -2.50",
         mass: "N/A (Exotic)",
         rad: "STABLE GATEWAY",
         desc: "Topological shortcut through curved spacetime. Light crosses the coordinate boundary to sample an alternate-universe background.",
         shader: "shaders/wormhole.frag",
-        position: new THREE.Vector3(-6, -1, 5),
+        position: new THREE.Vector3(5.4, -0.8, -2.5),
         presets: {
             "stable-gate": { rs: 1.0, distortion: 1.0, outer: 10.0, speed: 1.0, doppler: 1.0, stars: 1.0, theme: 0 },
             "einstein-rosen": { rs: 0.65, distortion: 2.2, outer: 12.0, speed: 2.5, doppler: 1.8, stars: 1.2, theme: 1 }
@@ -68,12 +68,12 @@ const OBJECTS = {
         name: "Kepler Dyson Sphere",
         class: "STELLAR MEGASTRUCTURE",
         sector: "SECTOR 19-B",
-        coords: "X: 3.00 / Y: -2.00 / Z: 7.00",
+        coords: "X: 7.00 / Y: 1.00 / Z: 0.50",
         mass: "1.08 M☉ (Host Star)",
         rad: "THERMAL EMISSION",
         desc: "Swarm of rotating geometric solar collectors around a star. Light escapes through panel gaps, exposing flares and backlit plates.",
         shader: "shaders/dyson-sphere.frag",
-        position: new THREE.Vector3(3, -2, 7),
+        position: new THREE.Vector3(7.0, 1.0, 0.5),
         presets: {
             "dyson-orbit": { rs: 0.9, distortion: 0.0, outer: 2.8, speed: 1.5, doppler: 1.8, stars: 1.0, theme: 0 },
             "closed-swarm": { rs: 1.15, distortion: 0.0, outer: 2.8, speed: 0.7, doppler: 0.9, stars: 1.2, theme: 1 }
@@ -108,12 +108,12 @@ const OBJECTS = {
         name: "Andromeda Gateway",
         class: "INTERGALACTIC WORMHOLE",
         sector: "SECTOR 99-Z",
-        coords: "X: 8.00 / Y: -3.00 / Z: -8.00",
+        coords: "X: -7.20 / Y: 2.50 / Z: -3.50",
         mass: "N/A (Exotic Matter)",
         rad: "STABLE ALIEN BRIDGE",
         desc: "A massive, artificially-stabilized Morris-Thorne wormhole connecting our galaxy to the Andromeda galaxy. Gravitational lensing warps our view of the Andromeda starfield inside the throat.",
         shader: "shaders/wormhole.frag",
-        position: new THREE.Vector3(8, -3, -8),
+        position: new THREE.Vector3(-7.2, 2.5, -3.5),
         presets: {
             "intergalactic": { rs: 1.2, distortion: 1.5, outer: 11.5, speed: 1.8, doppler: 1.4, stars: 1.0, theme: 0 },
             "void-gate": { rs: 0.7, distortion: 2.5, outer: 9.0, speed: 0.5, doppler: 0.8, stars: 1.5, theme: 1 }
@@ -128,12 +128,12 @@ const OBJECTS = {
         name: "SGR 1806-20 Magnetar",
         class: "EXTREME MAGNETAR",
         sector: "SECTOR 18-F",
-        coords: "X: -7.00 / Y: -5.00 / Z: 2.00",
+        coords: "X: -5.40 / Y: -1.20 / Z: 2.50",
         mass: "2.1 M☉",
         rad: "MAGNETIC FIELD BURST",
         desc: "An ultradense magnetosphere generator. The strongest magnetic field observed in the universe, distorting the surrounding space and emitting violent gamma-ray flares.",
         shader: "shaders/pulsar.frag",
-        position: new THREE.Vector3(-7, -5, 2),
+        position: new THREE.Vector3(-5.4, -1.2, 2.5),
         presets: {
             "magnetar-burst": { rs: 0.8, distortion: 2.5, outer: 16.0, speed: 4.2, doppler: 2.4, stars: 0.7, theme: 0 },
             "rest-state": { rs: 0.6, distortion: 1.5, outer: 11.0, speed: 1.2, doppler: 1.0, stars: 1.1, theme: 1 }
@@ -145,8 +145,8 @@ const OBJECTS = {
         labels: { rs: "Core Size (Rs)", distortion: "Magneto-Warp", outer: "Field Boundary", speed: "Spin Frequency", doppler: "Jet Intensity" }
     }
 };
-// ===== Dossier Data =====
-const OBJECT_DOSSIERS = {
+// ===== Dossier Data (English) =====
+const OBJECT_DOSSIERS_EN = {
     gargantua: {
         overview: `Gargantua Singularity is a Schwarzschild-class supermassive black hole catalogued in Sector 04-A. With a mass of 4.3 × 10⁶ solar masses it generates one of the strongest gravitational lensing fields in the registry, bending background starlight into a complete Einstein ring at observer approach.
 
@@ -341,6 +341,211 @@ The simulated pulsar jets represent the polar emission cones, while the dipole f
             'Magnetar fields decay on timescales of ~10,000 years — they are cosmically short-lived',
         ],
     },
+};
+
+// ===== Dossier Data (Russian) =====
+const OBJECT_DOSSIERS_RU = {
+    gargantua: {
+        overview: `Сингулярность Гаргантюа — сверхмассивная чёрная дыра шварцшильдовского класса в секторе 04-A. С массой 4.3 × 10⁶ солнечных она создаёт одно из самых мощных гравитационных линзирований в каталоге, искривляя свет фоновых звёзд в полное эйнштейновское кольцо при сближении.
+
+Окружающий аккреционный диск простирается от 2.2 Rs до 9.5 Rs и вращается с кеплеровским профилем скоростей. У внутреннего края газ достигает 0.42c — заметен релятивистский Доплер-биминг: приближающаяся сторона выглядит ярче и голубее, удаляющаяся — тусклее и краснее.`,
+        params: [
+            ['Масса',               '4.3 × 10⁶ M☉'],
+            ['Радиус Шварцшильда',  'Rs ≈ 12.7 × 10⁹ км'],
+            ['Фотонная сфера',      '1.5 Rs (нестабильная)'],
+            ['ISCO',                '3 Rs (мин. стабильная орбита)'],
+            ['Температура диска',   '8.4 × 10⁶ K (внутр. край)'],
+            ['Температура Хокинга', '~10⁻¹⁴ K (≈ 0)'],
+            ['Сектор',              '04-A  |  Координаты: −1.00 / 0.60 / 3.90'],
+        ],
+        features: [
+            'Полный реймарчинг геодезик Шварцшильда — 130 шагов GPU на луч',
+            'Объёмный 3D аккреционный диск с искажающим fbm-шумом Перлина',
+            'Релятивистский Доплер-биминг: D = 1/(γ(1 − β·cosθ))³ по пикселю',
+            'Гравитационное красное смещение по радиусу: √(1 − Rs/r)',
+            'Свечение фотонного кольца у границы горизонта событий',
+            'Тонмаппинг Рейнхарда для HDR-блюма',
+        ],
+        facts: [
+            'Часы на 1.1 Rs идут в 3 раза медленнее, чем на бесконечности — видно как цветовой сдвиг',
+            'Фотонная сфера на 1.5 Rs ловит свет на орбиту — задевший её фотон сваливается внутрь',
+            'Излучение Хокинга при такой массе испарит дыру за 10⁸⁴ лет',
+            'С Земли тень такой дыры была бы ~52 мкс — разрешается телескопом EHT',
+            'Приливные силы у горизонта так слабы, что человек не почувствовал бы пересечения',
+        ],
+    },
+    vela: {
+        overview: `Пульсар Vela — быстро вращающаяся нейтронная звезда, рождённая в коллапсе сверхновой ~11 000 лет назад. Ось вращения наклонена на 45° относительно магнитной оси, поэтому релятивистские радиоджеты заметают пространство конусом — эффект маяка, дающий периодические импульсы, регистрируемые по всей галактике.
+
+Прецессирующая дипольная магнитосфера здесь отрисована по реальной топологии силовых линий: они выгибаются у экватора и сходятся к магнитным полюсам, где парное рождение электронов и позитронов порождает джеты.`,
+        params: [
+            ['Масса',                '1.44 M☉'],
+            ['Радиус',               '~12 км'],
+            ['Период вращения',      '89 мс  (11.2 Гц)'],
+            ['Поверхностное B-поле', '3.4 × 10¹² Гс'],
+            ['Полуугол джета',       '7° (конический пучок)'],
+            ['Температура поверхн.', '~7 × 10⁵ K'],
+            ['Сектор',               '12-C  |  Координаты: 0.90 / 0.50 / −3.90'],
+        ],
+        features: [
+            'Прецессирующая дипольная магнитосфера с сеткой силовых линий',
+            'Конический релятивистский джет от полюсов (GLSL реймарчинг, 90 шагов)',
+            'Импульсная модуляция: яркость следует 1 + 0.3·sin(r·1.5 − t·12)',
+            'Магнитное «горячее пятно» на поверхности (пик яркости)',
+            'Настраиваемый полуугол джета через слайдер Beaming Scale',
+        ],
+        facts: [
+            'Вещество нейтронной звезды настолько плотное, что чайная ложка весит ~10¹⁴ кг',
+            'Сила тяжести на поверхности ~2 × 10¹¹ g — упавшее перо разгоняется до 0.6c',
+            'Импульсы Vela — естественные часы для проверки ОТО с точностью 10⁻⁵',
+            '«Глитчи» — внезапные ускорения вращения — выдают сверхтекучий слой в коре',
+            'Звёздный ветер раздул туманность пульсара протяжённостью ~250 световых лет',
+        ],
+    },
+    cygnus: {
+        overview: `Червоточина Cygnus — стабильная проходимая Морриса–Торна в секторе 07-F. В отличие от чёрной дыры, горло не содержит сингулярности — пространство-время гладкое в точке перехода, а луч, проникший в r < Rs, испытывает инверсию координат и выходит в независимое пространство альтернативной вселенной с собственным звёздным фоном.
+
+Горло поддерживается экзотической материей с отрицательной плотностью энергии. Светящееся кольцо — гравитационная фокусировка фотонов фона вокруг горла.`,
+        params: [
+            ['Радиус горла',         'Rs (настраивается: 0.35 – 1.2)'],
+            ['Экзотическая материя', 'Требуется: ρ < 0 (типа Казимира)'],
+            ['Уравнение линзы',      'Метрика Морриса–Торна, ℓ-координата'],
+            ['Переход горла',        'p_new = −p × 1.01 (инверсия)'],
+            ['Цветовой сдвиг',       'Кольцо: оранж ↔ циан по скорости'],
+            ['Класс стабильности',   'STABLE GATEWAY (без отриц. обр. связи)'],
+            ['Сектор',               '07-F  |  Координаты: 5.40 / −0.80 / −2.50'],
+        ],
+        features: [
+            'Два звёздных фона: наша вселенная (синяя туманность) и альтернативная (тёплое золото)',
+            'Гладкий переход горла — инверсия направления и координат при r < Rs',
+            'Хроматическое кольцо вокруг горла, цикл оттенков по spin-параметру',
+            'Яркость альтернативной туманности — слайдер Doppler',
+            'Независимый 3D fbm-шум для текстуры каждой вселенной',
+        ],
+        facts: [
+            'Статья Морриса–Торна (1988) — первое строгое доказательство, что ОТО допускает червоточины',
+            'Экзотическая материя с ρ < 0 существует в эффекте Казимира, но в ничтожном масштабе',
+            'Червоточина теоретически позволяет путешествия во времени при релятивистском разгоне одного устья',
+            'Прохождение со скоростью c заняло бы нулевое собственное время независимо от расстояния',
+            'Гипотеза защиты хронологии Хокинга: квантовые эффекты схлопывают такие червоточины до использования',
+        ],
+    },
+    kepler: {
+        overview: `Сфера Дайсона Kepler — мегаструктура цивилизации II типа: вращающийся геометрический рой солнечных коллекторов вокруг звезды массой 1.08 M☉. Панели образуют геодезическую сетку с систематическими зазорами, через которые видны вспышки звезды и активность короны.
+
+В отличие от сплошной оболочки (которая была бы динамически нестабильной), рой использует орбитальную механику для поддержания зазоров. Внутренняя поверхность превращает свет в энергию, внешняя излучает отходное тепло в ИК.`,
+        params: [
+            ['Масса звезды-хозяина',   '1.08 M☉'],
+            ['Радиус оболочки',        '2.8 Rs (настраивается)'],
+            ['Покрытие панелями',      '~94% (зазоры — 6%)'],
+            ['Температура звезды',     '5780 K (солнечный тип)'],
+            ['Тепловой выход',         'Полная светимость звезды перехвачена'],
+            ['Класс структуры',        'Кардашев II типа'],
+            ['Сектор',                 '19-B  |  Координаты: 7.00 / 1.00 / 0.50'],
+        ],
+        features: [
+            'Аналитическое пересечение сферы — без реймарчинга для оболочки',
+            'Процедурная сетка панелей через fract(θ·freq) и fract(φ·freq) с порогом зазора',
+            'Детали схем на каждой панели (фотовольтаика)',
+            'Корона звезды видна сквозь зазоры с экспоненциальным затуханием',
+            'Параллакс задней панели и щелей: видна внутренняя поверхность сквозь зазоры',
+        ],
+        facts: [
+            'Сфера Дайсона на 1 а.е. перехватывала бы все 3.8 × 10²⁶ Вт солнечного выхода',
+            'Фримен Дайсон предложил концепцию в 1960 как цель поиска SETI',
+            'Тайна «звезды Табби» (KIC 8462852) частично объяснялась гипотезой мегаструктуры',
+            'Для постройки нужно разобрать Юпитер — ~1.9 × 10²⁷ кг материала',
+            'Отходное тепло заставит её светиться в ИК при ~300 K — обнаружимо телескопами',
+        ],
+    },
+    sgr_a: {
+        overview: `Стрелец A* — сверхмассивная чёрная дыра в гравитационном центре Млечного Пути, в секторе 00-CORE на галактическом начале координат. Впервые сфотографирована телескопом EHT в 2022 году — вторая в истории прямо снятая ЧД, с характерной тенью и ярким эмиссионным кольцом.
+
+Темп аккреции плазмы низкий (тихая фаза, как у Сейфертов), но ИК-вспышки от падающего вещества наблюдаются по несколько раз в день. Звёзды в центральном парсеке вращаются вокруг неё со скоростью до 3% от скорости света.`,
+        params: [
+            ['Масса',               '4.154 × 10⁶ M☉'],
+            ['Радиус Шварцшильда',  'Rs = 1.23 × 10⁷ км'],
+            ['Диаметр тени',        '52 мкс (измерение EHT)'],
+            ['Расстояние от Земли', '~26 670 св. лет (8.178 кпк)'],
+            ['Темп аккреции',       '~10⁻⁸ M☉/год (низкоэффективный)'],
+            ['Температура диска',   '1.5 × 10⁷ K (эпизоды вспышек)'],
+            ['Сектор',              '00-CORE  |  Координаты: 0.00 / 0.00 / 0.00'],
+        ],
+        features: [
+            'Тот же Шварцшильдовский шейдер, что у Гаргантюа, но с пресетом большей массы / искажения',
+            'Помещён в начало сцены — все другие объекты вращаются вокруг этого центра',
+            'Пресет «high-spin» резко усиливает линзирование и угловой размер диска',
+            'Пресет «quiet horizon» имитирует наблюдаемое состояние тихой аккреции',
+        ],
+        facts: [
+            'S2 — ближайшая звезда — обходит её за 16 лет на 0.77% от c',
+            'Sgr A* был радиомолчалив до 1974 — настолько тусклый, что его считали шумом',
+            'Массу доказали по орбитам звёзд задолго до прямого снимка силуэта',
+            'Фотон, испущенный сразу за горизонтом, выходит на 1 Rs за 40 секунд',
+            'Через ~5 млрд лет сольётся с центральной ЧД Андромеды',
+        ],
+    },
+    andromeda: {
+        overview: `Шлюз Андромеды — гипотетическая искусственно стабилизированная червоточина класса M, соединяющая нашу Местную группу с галактикой Андромеда (M31) на расстоянии 2.537 млн световых лет. Альтернативный звёздный фон через горло показывает плотную звёздную популяцию галактического ядра Андромеды с характерным тёплым оранжевым оттенком от старых звёзд.
+
+Горло удерживается экзотической материей, посеянной на границе, и крупномасштабная гравитационная линза создаёт искажённый вид со стороны Андромеды ещё до пересечения.`,
+        params: [
+            ['Цель соединения',     'M31 — галактика Андромеда'],
+            ['Перекрытое расст.',   '2.537 × 10⁶ св. лет'],
+            ['Радиус горла',        'Rs ≈ 1.2 (настраивается)'],
+            ['Время прохождения',   '~0 собств. времени (на скорости c)'],
+            ['Плотность альт.',     '1.4× нашего звёздного фона (старая поп.)'],
+            ['Класс стабильности',  'STABLE ALIEN BRIDGE (Тип-X)'],
+            ['Сектор',              '99-Z  |  Координаты: −7.20 / 2.50 / −3.50'],
+        ],
+        features: [
+            'Звёздный фон альт. вселенной использует hash-сдвиг (+100) — другие позиции звёзд',
+            'Золотисто-оранжевый цвет звёзд отражает старую красную популяцию Андромеды',
+            'Увеличенный пресет distortion создаёт более драматичное линзирование до перехода',
+            'Пресет «Void Gate» — узкое нестабильное горло с экстремальным искривлением',
+        ],
+        facts: [
+            'M31 и Млечный Путь летят навстречу — слияние через ~4.5 млрд лет',
+            'В Андромеде ~1 трлн звёзд против наших ~300 млрд — в 3 раза массивнее',
+            'Её центральная ЧД (M31*) массой ~1.1 × 10⁸ M☉ — в 26 раз больше Sgr A*',
+            'Андромеда — самый далёкий объект, видимый невооружённым глазом в тёмную ночь',
+            'Слияние превратит обе галактики в гигантский эллипс — большинство звёзд не столкнутся',
+        ],
+    },
+    magnetar_1806: {
+        overview: `SGR 1806-20 — самый экстремальный магнетар из когда-либо обнаруженных. 27 декабря 2004 года он испустил вспышку, которая ненадолго затмила полную Луну в гамма-диапазоне — ярчайшее транзиентное событие, наблюдаемое вне Солнечной системы. Импульс длился 0.2 секунды, но выделил больше энергии, чем Солнце излучает за 250 000 лет.
+
+Смоделированные джеты — полярные эмиссионные конусы, а дипольные линии визуализируют рекордное магнитное поле 1.6 × 10¹⁵ Гс — достаточное, чтобы исказить орбитали электронов в атомах водорода.`,
+        params: [
+            ['Масса',           '2.1 M☉'],
+            ['Радиус',          '~11 км'],
+            ['Период вращения', '7.56 с  (медленный магнетар)'],
+            ['B-поле',          '1.6 × 10¹⁵ Гс  (рекордное)'],
+            ['Расстояние',      '~50 000 св. лет (дальняя сторона Галактики)'],
+            ['Энергия вспышки', '~10⁴⁶ эрг (гигантская вспышка 2004)'],
+            ['Сектор',          '18-F  |  Координаты: −5.40 / −1.20 / 2.50'],
+        ],
+        features: [
+            'Пресет «Magnetar-Burst»: distortion 2.5, spin 4.2, doppler 2.4 — буйные линии поля',
+            'Палитра Red-Violet: красный для теплового X-ray + фиолет для жёсткого гамма',
+            'Максимальная плотность дипольных линий — 16 азимутальных секторов',
+            'Пресет «rest-state» — спокойная межвспышечная фаза',
+        ],
+        facts: [
+            'Вспышка 2004 ионизировала верхнюю ионосферу Земли с 50 000 св. лет',
+            'Будь SGR 1806-20 ближе 10 св. лет — вспышка вызвала бы массовое вымирание',
+            'Поле так сильно, что искривляет пути X-ray фотонов — вакуумное двулучепреломление',
+            'При 1.6 × 10¹⁵ Гс квантовые эффекты доминируют — B > B_QED (4.4 × 10¹³ Гс)',
+            'Магнетарные поля распадаются за ~10 000 лет — космически короткоживущие',
+        ],
+    },
+};
+
+// Active language (default: Russian, swap via toggle)
+let dossierLang = 'ru';
+const DOSSIER_LABELS = {
+    en: { overview: 'OVERVIEW', params: 'PHYSICS PARAMETERS', features: 'RENDER FEATURES', facts: 'INTERESTING FACTS', title: 'ANOMALY DOSSIER', esc: 'ESC to close' },
+    ru: { overview: 'ОБЗОР',    params: 'ФИЗИЧЕСКИЕ ПАРАМЕТРЫ', features: 'ОСОБЕННОСТИ РЕНДЕРА', facts: 'ИНТЕРЕСНЫЕ ФАКТЫ', title: 'ДОСЬЕ АНОМАЛИИ', esc: 'ESC чтобы закрыть' }
 };
 
 // ===== State =====
@@ -1588,9 +1793,14 @@ function runSidePanels() {
 }
 
 // ===== Dossier Functions =====
+function getDossiers() {
+    return dossierLang === 'ru' ? OBJECT_DOSSIERS_RU : OBJECT_DOSSIERS_EN;
+}
+
 function buildDossierHTML(id) {
     const obj = OBJECTS[id];
-    const d   = OBJECT_DOSSIERS[id];
+    const d   = getDossiers()[id];
+    const L   = DOSSIER_LABELS[dossierLang];
     if (!obj || !d) return '<p class="dossier-text">No dossier available.</p>';
 
     const paramsRows = d.params.map(([k, v]) =>
@@ -1605,30 +1815,39 @@ function buildDossierHTML(id) {
 <div class="dossier-object-class">${obj.class}</div>
 
 <div class="dossier-section">
-    <div class="dossier-section-title">▸ OVERVIEW</div>
+    <div class="dossier-section-title">▸ ${L.overview}</div>
     <p class="dossier-text">${d.overview}</p>
 </div>
 
 <hr class="dossier-divider">
 
 <div class="dossier-section">
-    <div class="dossier-section-title">▸ PHYSICS PARAMETERS</div>
+    <div class="dossier-section-title">▸ ${L.params}</div>
     <div class="dossier-param-grid">${paramsRows}</div>
 </div>
 
 <hr class="dossier-divider">
 
 <div class="dossier-section">
-    <div class="dossier-section-title">▸ RENDER FEATURES</div>
+    <div class="dossier-section-title">▸ ${L.features}</div>
     <ul class="dossier-list">${featureItems}</ul>
 </div>
 
 <hr class="dossier-divider">
 
 <div class="dossier-section">
-    <div class="dossier-section-title">▸ INTERESTING FACTS</div>
+    <div class="dossier-section-title">▸ ${L.facts}</div>
     <ul class="dossier-list">${factItems}</ul>
 </div>`;
+}
+
+function refreshDossierLangBtn() {
+    const btn = document.getElementById('dossier-lang');
+    if (!btn) return;
+    btn.textContent = dossierLang === 'ru' ? 'EN' : 'RU';
+    btn.title = dossierLang === 'ru' ? 'Switch to English' : 'Переключить на русский';
+    const esc = document.getElementById('dossier-esc');
+    if (esc) esc.textContent = DOSSIER_LABELS[dossierLang].esc;
 }
 
 function openDossier(id) {
@@ -1639,10 +1858,12 @@ function openDossier(id) {
     if (!overlay || !body) return;
 
     const obj = OBJECTS[id];
-    title.textContent = `ANOMALY DOSSIER — ${obj ? obj.sector : 'CLASSIFIED'}`;
+    const L   = DOSSIER_LABELS[dossierLang];
+    title.textContent = `${L.title} — ${obj ? obj.sector : 'CLASSIFIED'}`;
     body.innerHTML = buildDossierHTML(id);
     body.scrollTop = 0;
     pct.textContent = '0%';
+    refreshDossierLangBtn();
 
     body.onscroll = () => {
         const max = body.scrollHeight - body.clientHeight;
@@ -1650,7 +1871,19 @@ function openDossier(id) {
         pct.textContent = p + '%';
     };
 
+    overlay.dataset.activeId = id;
     overlay.classList.remove('dossier-hidden');
+}
+
+function toggleDossierLang() {
+    dossierLang = dossierLang === 'ru' ? 'en' : 'ru';
+    const overlay = document.getElementById('dossier-overlay');
+    const activeId = overlay && overlay.dataset.activeId;
+    if (activeId && !overlay.classList.contains('dossier-hidden')) {
+        openDossier(activeId);
+    } else {
+        refreshDossierLangBtn();
+    }
 }
 
 function closeDossier() {
@@ -1662,6 +1895,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Dossier close button
     const dossierClose = document.getElementById('dossier-close');
     if (dossierClose) dossierClose.addEventListener('click', closeDossier);
+
+    // Dossier language toggle
+    const dossierLangBtn = document.getElementById('dossier-lang');
+    if (dossierLangBtn) {
+        dossierLangBtn.addEventListener('click', toggleDossierLang);
+        refreshDossierLangBtn();
+    }
 
     // Dossier backdrop click
     const dossierOverlay = document.getElementById('dossier-overlay');

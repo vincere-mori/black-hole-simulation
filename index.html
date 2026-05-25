@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="stylesheet" href="style.css?v=5">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 </head>
@@ -248,12 +248,13 @@
                 <span class="dossier-dot red"></span>
                 <span class="dossier-dot yellow"></span>
                 <span class="dossier-dot green"></span>
-                <span id="dossier-title">ANOMALY DOSSIER — CLASSIFIED</span>
+                <span id="dossier-title">ДОСЬЕ АНОМАЛИИ — CLASSIFIED</span>
+                <button id="dossier-lang" title="Switch language">EN</button>
                 <button id="dossier-close">✕</button>
             </div>
             <div id="dossier-body"></div>
             <div id="dossier-footer">
-                <span>ESC to close</span>
+                <span id="dossier-esc">ESC чтобы закрыть</span>
                 <span id="dossier-scroll-pct">0%</span>
                 <span>STELLAR CARTOGRAPHY v4.7.2-rc1</span>
             </div>
@@ -901,6 +902,6 @@ void main() {
 }
     </script>
 
-    <script src="app.js?v=9"></script>
+    <script src="app.js?v=10"></script>
 </body>
 </html>

@@ -744,18 +744,30 @@ input[type="range"]::-webkit-slider-thumb:hover {
     color: rgba(56, 255, 128, 0.55);
 }
 
-#dossier-close {
+#dossier-close, #dossier-lang {
     background: none;
-    border: none;
+    border: 1px solid transparent;
     color: rgba(56, 255, 128, 0.4);
     cursor: pointer;
-    font-size: 14px;
+    font-size: 11px;
     line-height: 1;
-    padding: 2px 4px;
-    transition: color 0.15s;
+    padding: 3px 6px;
+    transition: all 0.15s;
     font-family: var(--font-mono);
+    letter-spacing: 1px;
+    border-radius: 3px;
 }
-#dossier-close:hover { color: #38ff80; }
+#dossier-close { font-size: 14px; padding: 2px 4px; }
+#dossier-lang {
+    border-color: rgba(56, 255, 128, 0.18);
+    margin-right: 4px;
+    min-width: 28px;
+}
+#dossier-close:hover, #dossier-lang:hover {
+    color: #38ff80;
+    border-color: rgba(56, 255, 128, 0.4);
+    background: rgba(56, 255, 128, 0.06);
+}
 
 #dossier-body {
     flex: 1;
