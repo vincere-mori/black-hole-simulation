@@ -3,46 +3,105 @@ const SHADERS = {};
 
 // ===== Object Catalog =====
 const OBJECTS = {
-    gargantua: {
-        name: "Gargantua Singularity",
-        class: "SCHWARZSCHILD BLACK HOLE",
-        sector: "SECTOR 04-A",
-        coords: "X: -1.00 / Y: 0.60 / Z: 3.90",
-        mass: "4.3e6 M☉",
-        rad: "STABLE CORE",
-        desc: "Supermassive singularity at galactic center. Accretion disk with Keplerian velocity profiles, relativistic Doppler beaming, and gravitational lensing geodesics.",
+    sgr_a: {
+        name: "Sagittarius A*",
+        class: "SUPERMASSIVE BLACK HOLE",
+        sector: "SECTOR 00-CORE",
+        coords: "X: 0.00 / Y: 0.00 / Z: 0.00",
+        mass: "4.15e6 M☉",
+        rad: "EVENT HORIZON STABLE",
+        desc: "Сверхмассивная чёрная дыра в центре Млечного Пути. Аккреционный диск, мягкое гравитационное линзирование и спокойное вращение плазмы вокруг горизонта.",
         shader: "shaders/black-hole.frag",
-        position: new THREE.Vector3(-1.0, 0.6, 3.9),
+        position: new THREE.Vector3(0, 0, 0),
         presets: {
-            "gargantua": { rs: 1.0, distortion: 1.0, outer: 9.5, speed: 1.6, doppler: 1.0, stars: 1.0, theme: 0 },
-            "supermassive": { rs: 1.8, distortion: 0.7, outer: 14.5, speed: 0.8, doppler: 0.5, stars: 1.2, theme: 1 }
+            "tranquil-core": { rs: 1.1, distortion: 0.9, outer: 9.0, speed: 0.7, doppler: 0.55, stars: 1.0, theme: 0 },
+            "deep-horizon":  { rs: 1.6, distortion: 1.1, outer: 12.0, speed: 0.45, doppler: 0.35, stars: 1.1, theme: 1 }
         },
         themes: [
-            { c1: '#ffc000', c2: '#ff2200', name: 'Gargantua Orange', temp: '8.4e6' },
-            { c1: '#00f0ff', c2: '#0011ff', name: 'Cosmic Cyan', temp: '1.2e7' },
-            { c1: '#ea00ff', c2: '#5100ff', name: 'Quantum Purple', temp: '9.8e6' }
+            { c1: '#ff7a2e', c2: '#ffb86b', name: 'Warm Amber', temp: '8.4e6' },
+            { c1: '#7ec8ff', c2: '#2a4cff', name: 'Cool Cobalt', temp: '1.1e7' }
         ],
         labels: { rs: "Horizon Mass (Rs)", distortion: "Warp Lensing", outer: "Disk Outer Bound", speed: "Disk Rotation", doppler: "Doppler Beaming" }
     },
-    vela: {
-        name: "Vela Pulsar",
-        class: "ROTATING NEUTRON STAR",
-        sector: "SECTOR 12-C",
-        coords: "X: 0.90 / Y: 0.50 / Z: -3.90",
-        mass: "1.44 M☉",
-        rad: "EXTREME PULSATION",
-        desc: "Highly magnetized neutron star. Precessing radio jet cones from magnetic poles, dipole magnetosphere field-line grid.",
-        shader: "shaders/pulsar.frag",
-        position: new THREE.Vector3(0.9, 0.5, -3.9),
+    orion_nebula: {
+        name: "Orion Nebula M42",
+        class: "EMISSION NEBULA",
+        sector: "SECTOR 03-O",
+        coords: "X: -4.20 / Y: 0.80 / Z: 3.40",
+        mass: "~2000 M☉",
+        rad: "Hα EMISSION",
+        desc: "Один из самых ярких звёздных питомников в небе. Огромное облако водорода и пыли, подсвеченное молодыми голубыми звёздами в центре.",
+        shader: "shaders/nebula.frag",
+        position: new THREE.Vector3(-4.2, 0.8, 3.4),
         presets: {
-            "vela": { rs: 0.8, distortion: 1.0, outer: 12.0, speed: 2.0, doppler: 1.0, stars: 1.0, theme: 0 },
-            "magnetar": { rs: 1.2, distortion: 1.8, outer: 16.0, speed: 0.6, doppler: 2.2, stars: 0.5, theme: 1 }
+            "ha-glow":   { rs: 1.4, distortion: 0.6, outer: 11.0, speed: 0.25, doppler: 1.0, stars: 1.0, theme: 0 },
+            "deep-cloud":{ rs: 2.0, distortion: 0.4, outer: 13.5, speed: 0.15, doppler: 0.8, stars: 1.2, theme: 1 }
         },
         themes: [
-            { c1: '#00e5ff', c2: '#5100ff', name: 'Gamma Blue', temp: '2.5e8' },
-            { c1: '#ff4040', c2: '#ea00ff', name: 'Magnetar Purple', temp: '4.1e8' }
+            { c1: '#ff5f8b', c2: '#5d3acc', name: 'Hydrogen Pink', temp: '1.0e4' },
+            { c1: '#ff9a6b', c2: '#2e6fff', name: 'Trapezium Blue', temp: '1.5e4' }
         ],
-        labels: { rs: "Core Size (Rs)", distortion: "Magneto-Warp", outer: "Field Boundary", speed: "Spin Frequency", doppler: "Jet Intensity" }
+        labels: { rs: "Core Density", distortion: "Cloud Shape", outer: "Cloud Extent", speed: "Drift Speed", doppler: "Emission Strength" }
+    },
+    horsehead: {
+        name: "Horsehead Nebula",
+        class: "DARK NEBULA (B33)",
+        sector: "SECTOR 03-H",
+        coords: "X: -3.10 / Y: -0.40 / Z: 4.80",
+        mass: "~300 M☉",
+        rad: "BACKLIT SILHOUETTE",
+        desc: "Тёмное облако пыли в созвездии Ориона, подсвеченное сзади красным сиянием IC 434. Силуэт напоминает голову лошади.",
+        shader: "shaders/nebula.frag",
+        position: new THREE.Vector3(-3.1, -0.4, 4.8),
+        presets: {
+            "silhouette":{ rs: 1.0, distortion: 1.6, outer: 9.0, speed: 0.18, doppler: 0.9, stars: 1.1, theme: 0 },
+            "deep-dust": { rs: 1.4, distortion: 1.2, outer: 11.0, speed: 0.12, doppler: 0.7, stars: 1.3, theme: 1 }
+        },
+        themes: [
+            { c1: '#ff6a3a', c2: '#1a1f4a', name: 'Backlit Ember', temp: '7.5e3' },
+            { c1: '#d04a2a', c2: '#0a0e2a', name: 'Coal & Rust', temp: '6.0e3' }
+        ],
+        labels: { rs: "Dust Density", distortion: "Silhouette Shape", outer: "Cloud Extent", speed: "Drift Speed", doppler: "Backlight Glow" }
+    },
+    crab_nebula: {
+        name: "Crab Nebula M1",
+        class: "SUPERNOVA REMNANT",
+        sector: "SECTOR 12-T",
+        coords: "X: 5.40 / Y: 0.50 / Z: 2.20",
+        mass: "~5 M☉",
+        rad: "SYNCHROTRON EMISSION",
+        desc: "Остаток сверхновой 1054 года. Расширяющееся облако филаментов, в центре - пульсар, который подпитывает свечение синхротронным излучением.",
+        shader: "shaders/nebula.frag",
+        position: new THREE.Vector3(5.4, 0.5, 2.2),
+        presets: {
+            "filaments":  { rs: 1.2, distortion: 0.5, outer: 10.0, speed: 0.3, doppler: 1.0, stars: 1.0, theme: 0 },
+            "expanding":  { rs: 1.6, distortion: 0.3, outer: 12.5, speed: 0.18, doppler: 0.85, stars: 1.1, theme: 1 }
+        },
+        themes: [
+            { c1: '#b14eff', c2: '#00e0ff', name: 'Synchrotron Violet', temp: '1.5e4' },
+            { c1: '#ff5b8a', c2: '#3affe5', name: 'Crab Filaments', temp: '1.2e4' }
+        ],
+        labels: { rs: "Core Density", distortion: "Filament Shape", outer: "Remnant Radius", speed: "Expansion Drift", doppler: "Synchrotron Glow" }
+    },
+    pleiades: {
+        name: "Pleiades M45",
+        class: "OPEN STAR CLUSTER",
+        sector: "SECTOR 06-S",
+        coords: "X: 4.10 / Y: 1.20 / Z: -3.60",
+        mass: "~800 M☉",
+        rad: "REFLECTION NEBULA",
+        desc: "Молодое звёздное скопление в созвездии Тельца. Семь ярких голубых звёзд погружены в нежную отражательную туманность.",
+        shader: "shaders/nebula.frag",
+        position: new THREE.Vector3(4.1, 1.2, -3.6),
+        presets: {
+            "seven-sisters":{ rs: 1.6, distortion: 0.3, outer: 10.5, speed: 0.2, doppler: 0.7, stars: 1.2, theme: 0 },
+            "soft-veil":    { rs: 2.0, distortion: 0.2, outer: 12.0, speed: 0.12, doppler: 0.55, stars: 1.4, theme: 1 }
+        },
+        themes: [
+            { c1: '#a8c8ff', c2: '#ffffff', name: 'Reflection Blue', temp: '1.0e4' },
+            { c1: '#bcd6ff', c2: '#fff2c8', name: 'Starlight Cream', temp: '9.5e3' }
+        ],
+        labels: { rs: "Cluster Core", distortion: "Halo Shape", outer: "Halo Radius", speed: "Drift Speed", doppler: "Nebula Glow" }
     },
     cygnus: {
         name: "Cygnus Wormhole",
@@ -51,16 +110,16 @@ const OBJECTS = {
         coords: "X: 5.40 / Y: -0.80 / Z: -2.50",
         mass: "N/A (Exotic)",
         rad: "STABLE GATEWAY",
-        desc: "Topological shortcut through curved spacetime. Light crosses the coordinate boundary to sample an alternate-universe background.",
+        desc: "Топологический мост через искривлённое пространство. Через горло видна звёздная панорама другой вселенной.",
         shader: "shaders/wormhole.frag",
         position: new THREE.Vector3(5.4, -0.8, -2.5),
         presets: {
-            "stable-gate": { rs: 1.0, distortion: 1.0, outer: 10.0, speed: 1.0, doppler: 1.0, stars: 1.0, theme: 0 },
-            "einstein-rosen": { rs: 0.65, distortion: 2.2, outer: 12.0, speed: 2.5, doppler: 1.8, stars: 1.2, theme: 1 }
+            "stable-gate":   { rs: 1.1, distortion: 0.8, outer: 10.0, speed: 0.5, doppler: 0.9, stars: 1.0, theme: 0 },
+            "einstein-rosen":{ rs: 0.8, distortion: 1.4, outer: 11.5, speed: 0.9, doppler: 1.1, stars: 1.2, theme: 1 }
         },
         themes: [
-            { c1: '#ea00ff', c2: '#00e5ff', name: 'Nebula Portal', temp: '0' },
-            { c1: '#ffc000', c2: '#00ff66', name: 'Gold-Emerald', temp: '12' }
+            { c1: '#b56cff', c2: '#5ce0ff', name: 'Aurora Portal', temp: '0' },
+            { c1: '#ffb86b', c2: '#5cffaa', name: 'Gold-Emerald', temp: '12' }
         ],
         labels: { rs: "Throat Radius (Rs)", distortion: "Throat Bending", outer: "Lensing Zone", speed: "Chromatic Drift", doppler: "Alternate Lumens" }
     },
@@ -71,472 +130,376 @@ const OBJECTS = {
         coords: "X: 7.00 / Y: 1.00 / Z: 0.50",
         mass: "1.08 M☉ (Host Star)",
         rad: "THERMAL EMISSION",
-        desc: "Swarm of rotating geometric solar collectors around a star. Light escapes through panel gaps, exposing flares and backlit plates.",
+        desc: "Рой геометрических солнечных коллекторов, окружающих звезду. Свет пробивается через зазоры между панелями, обрисовывая силуэт мегаструктуры.",
         shader: "shaders/dyson-sphere.frag",
         position: new THREE.Vector3(7.0, 1.0, 0.5),
         presets: {
-            "dyson-orbit": { rs: 0.9, distortion: 0.0, outer: 2.8, speed: 1.5, doppler: 1.8, stars: 1.0, theme: 0 },
-            "closed-swarm": { rs: 1.15, distortion: 0.0, outer: 2.8, speed: 0.7, doppler: 0.9, stars: 1.2, theme: 1 }
+            "dyson-orbit": { rs: 0.9, distortion: 0.0, outer: 2.8, speed: 0.7, doppler: 1.1, stars: 1.0, theme: 0 },
+            "closed-swarm":{ rs: 1.15, distortion: 0.0, outer: 2.8, speed: 0.4, doppler: 0.7, stars: 1.2, theme: 1 }
         },
         themes: [
             { c1: '#ff9d00', c2: '#ffcc00', name: 'Solar Gold', temp: '5780' },
-            { c1: '#00e5ff', c2: '#ffffff', name: 'Sirius White-Blue', temp: '9940' }
+            { c1: '#7ed8ff', c2: '#ffffff', name: 'Sirius White-Blue', temp: '9940' }
         ],
         labels: { rs: "Star Diameter", distortion: "Gravity Flex", outer: "Shell Size", speed: "Orbital Speed", doppler: "Circuit Radiance" }
-    },
-    sgr_a: {
-        name: "Sagittarius A*",
-        class: "SUPERMASSIVE BLACK HOLE",
-        sector: "SECTOR 00-CORE",
-        coords: "X: 0.00 / Y: 0.00 / Z: 0.00",
-        mass: "4.15e6 M☉",
-        rad: "EVENT HORIZON DETECTED",
-        desc: "The supermassive black hole at the center of the Milky Way. Creates intense gravitational lensing of background stars and features a highly energetic plasma accretion flow.",
-        shader: "shaders/black-hole.frag",
-        position: new THREE.Vector3(0, 0, 0),
-        presets: {
-            "core-singularity": { rs: 1.5, distortion: 1.4, outer: 11.0, speed: 2.2, doppler: 1.3, stars: 1.2, theme: 0 },
-            "quiet-horizon": { rs: 0.8, distortion: 0.8, outer: 8.0, speed: 1.2, doppler: 0.8, stars: 1.0, theme: 1 }
-        },
-        themes: [
-            { c1: '#ff3300', c2: '#ff9900', name: 'Plasma Flare', temp: '1.5e7' },
-            { c1: '#00ffcc', c2: '#0055ff', name: 'Core Cyan', temp: '8.9e6' }
-        ],
-        labels: { rs: "Horizon Mass (Rs)", distortion: "Warp Lensing", outer: "Disk Outer Bound", speed: "Disk Rotation", doppler: "Doppler Beaming" }
-    },
-    andromeda: {
-        name: "Andromeda Gateway",
-        class: "INTERGALACTIC WORMHOLE",
-        sector: "SECTOR 99-Z",
-        coords: "X: -7.20 / Y: 2.50 / Z: -3.50",
-        mass: "N/A (Exotic Matter)",
-        rad: "STABLE ALIEN BRIDGE",
-        desc: "A massive, artificially-stabilized Morris-Thorne wormhole connecting our galaxy to the Andromeda galaxy. Gravitational lensing warps our view of the Andromeda starfield inside the throat.",
-        shader: "shaders/wormhole.frag",
-        position: new THREE.Vector3(-7.2, 2.5, -3.5),
-        presets: {
-            "intergalactic": { rs: 1.2, distortion: 1.5, outer: 11.5, speed: 1.8, doppler: 1.4, stars: 1.0, theme: 0 },
-            "void-gate": { rs: 0.7, distortion: 2.5, outer: 9.0, speed: 0.5, doppler: 0.8, stars: 1.5, theme: 1 }
-        },
-        themes: [
-            { c1: '#cc00ff', c2: '#330066', name: 'Andromeda Magenta', temp: '0' },
-            { c1: '#00ffaa', c2: '#003311', name: 'Bio-Green Portal', temp: '6' }
-        ],
-        labels: { rs: "Throat Radius (Rs)", distortion: "Throat Bending", outer: "Lensing Zone", speed: "Chromatic Drift", doppler: "Alternate Lumens" }
-    },
-    magnetar_1806: {
-        name: "SGR 1806-20 Magnetar",
-        class: "EXTREME MAGNETAR",
-        sector: "SECTOR 18-F",
-        coords: "X: -5.40 / Y: -1.20 / Z: 2.50",
-        mass: "2.1 M☉",
-        rad: "MAGNETIC FIELD BURST",
-        desc: "An ultradense magnetosphere generator. The strongest magnetic field observed in the universe, distorting the surrounding space and emitting violent gamma-ray flares.",
-        shader: "shaders/pulsar.frag",
-        position: new THREE.Vector3(-5.4, -1.2, 2.5),
-        presets: {
-            "magnetar-burst": { rs: 0.8, distortion: 2.5, outer: 16.0, speed: 4.2, doppler: 2.4, stars: 0.7, theme: 0 },
-            "rest-state": { rs: 0.6, distortion: 1.5, outer: 11.0, speed: 1.2, doppler: 1.0, stars: 1.1, theme: 1 }
-        },
-        themes: [
-            { c1: '#ff3300', c2: '#5500ff', name: 'Magnetic Red-Violet', temp: '5.2e8' },
-            { c1: '#00ffcc', c2: '#003366', name: 'Hyper-Gamma Cyan', temp: '6.5e8' }
-        ],
-        labels: { rs: "Core Size (Rs)", distortion: "Magneto-Warp", outer: "Field Boundary", speed: "Spin Frequency", doppler: "Jet Intensity" }
     }
 };
 // ===== Dossier Data (English) =====
 const OBJECT_DOSSIERS_EN = {
-    gargantua: {
-        overview: `Gargantua Singularity is a Schwarzschild-class supermassive black hole catalogued in Sector 04-A. With a mass of 4.3 × 10⁶ solar masses it generates one of the strongest gravitational lensing fields in the registry, bending background starlight into a complete Einstein ring at observer approach.
+    sgr_a: {
+        overview: `Sagittarius A* is the supermassive black hole at the heart of the Milky Way, about 26,000 light-years from Earth. With a mass of 4.15 × 10⁶ M☉ it anchors the gravitational structure of the entire galactic core.
 
-The surrounding accretion disk spans from 2.2 Rs to 9.5 Rs and rotates with Keplerian velocity profiles. Near the inner edge, gas reaches 0.42c, producing highly visible relativistic Doppler beaming — the approaching side appears blue-shifted and dramatically brighter, the receding side red and dim.`,
+In this scene the disk rotates slowly and the lensing of background stars is gentle — the goal is to show the quiet majesty of a horizon, not a violent flare.`,
         params: [
-            ['Mass',               '4.3 × 10⁶ M☉'],
-            ['Schwarzschild Radius','Rs ≈ 12.7 × 10⁹ km'],
+            ['Mass',                '4.15 × 10⁶ M☉'],
+            ['Schwarzschild Radius','Rs ≈ 12.3 × 10⁹ km'],
+            ['Distance from Earth', '~26,000 ly'],
+            ['Disk Temperature',    '~10⁷ K (inner edge)'],
             ['Photon Sphere',       '1.5 Rs (unstable)'],
-            ['ISCO',               '3 Rs (innermost stable orbit)'],
-            ['Disk Temperature',    '8.4 × 10⁶ K (inner edge)'],
-            ['Hawking Temperature', '~10⁻¹⁴ K (effectively 0)'],
-            ['Sector',             '04-A  |  Coords: −3.50 / 0.80 / −2.00'],
+            ['ISCO',                '3 Rs'],
+            ['Hawking Temperature', '~10⁻¹⁴ K'],
         ],
         features: [
-            'Full Schwarzschild geodesic raymarching — 130 GPU steps per ray',
-            'Volumetric 3D accretion disk with Perlin fbm warp noise',
-            'Relativistic Doppler beaming: D = 1/(γ(1 − β·cosθ))³ per pixel',
-            'Gravitational redshift applied radially: √(1 − Rs/r)',
-            'Photon-ring glow halo at the event horizon boundary',
-            'Tone-mapped with Reinhard operator to handle HDR bloom',
+            'Schwarzschild geodesic raymarching with smooth gravitational lensing',
+            'Volumetric accretion disk — Keplerian rotation, soft Doppler beaming',
+            'Calmed presets (slow rotation, low beaming amplitude) for relaxed viewing',
+            'Two color themes: warm amber, cool cobalt',
         ],
         facts: [
-            'A clock at 1.1 Rs runs 3× slower than one at infinity — visible as color shift',
-            'The photon sphere at 1.5 Rs lets light orbit; any photon that grazes it spirals in',
-            'Hawking radiation at this mass would take 10⁸⁴ years to evaporate the black hole',
-            'The shadow diameter as seen from Earth would subtend ~52 μas — resolvable by EHT',
-            'Tidal forces at the horizon are gentle enough that a human would not feel the crossing',
+            'Imaged by the Event Horizon Telescope collaboration in 2022',
+            'Despite its mass, its angular size on the sky is smaller than 50 microarcseconds',
+            'The S2 star orbits it at up to 7,650 km/s — confirming general relativity in strong fields',
+            'A photon at the photon sphere can orbit the black hole multiple times before escaping',
         ],
     },
-    vela: {
-        overview: `Vela Pulsar is a rapidly rotating neutron star born from a core-collapse supernova approximately 11,000 years ago. Its spin axis is tilted 45° from the rotation plane, causing its relativistic radio jets to sweep a cone pattern — the lighthouse effect that produces periodic pulses detected across the galaxy.
+    orion_nebula: {
+        overview: `The Orion Nebula (M42) is one of the brightest and most studied stellar nurseries visible from Earth, lying about 1,344 light-years away in the constellation Orion. Inside this glowing cloud of hydrogen and dust, thousands of young stars are being born right now.
 
-The precessing dipole magnetosphere visualised here follows actual field-line topology: field lines bow outward near the equator and converge at the magnetic poles where pair-production generates the jet beams.`,
+Its pink and violet glow comes from hot young stars in the Trapezium cluster ionising the surrounding hydrogen — emission and reflection blending into one of the most photogenic objects in the sky.`,
         params: [
-            ['Mass',             '1.44 M☉'],
-            ['Radius',           '~12 km'],
-            ['Spin Period',      '89 ms  (11.2 Hz)'],
-            ['Surface B-field',  '3.4 × 10¹² G'],
-            ['Jet Half-angle',   '7° (conical beam)'],
-            ['Surface Temp',     '~7 × 10⁵ K'],
-            ['Sector',           '12-C  |  Coords: 5.00 / 1.00 / −4.00'],
+            ['Distance',      '1,344 ly'],
+            ['Diameter',      '~24 ly'],
+            ['Total Mass',    '~2,000 M☉'],
+            ['Age',           '~3 million years'],
+            ['Visible Stars', '~700 (forming)'],
+            ['Apparent Mag.', '+4.0 (naked-eye)'],
         ],
         features: [
-            'Precessing dipole magnetosphere with full field-line grid overlay',
-            'Conical relativistic jet from magnetic poles (GLSL raymarching, 90 steps)',
-            'Pulse modulation: glow intensity follows 1 + 0.3·sin(r·1.5 − t·12)',
-            'Surface hotspot aligned to magnetic axis (bolometric brightness peak)',
-            'Configurable jet opening half-angle via Beaming Scale slider',
+            'Volumetric raymarched cloud with soft fbm noise, slow drift',
+            'Two-tone color gradient: Hα pink core to violet outer wisps',
+            'No pulsing or flashing — meditative, calm look',
+            'Background starfield blends naturally with cloud edges',
         ],
         facts: [
-            'Neutron star matter is so dense that a teaspoon weighs ~10¹⁴ kg',
-            'The surface gravity is ~2 × 10¹¹ g — a feather dropped there hits at 0.6c',
-            'Vela pulses are used as a natural clock to test general relativity to 10⁻⁵ precision',
-            'Glitch events — sudden spin-ups — reveal superfluid neutron layers in the crust',
-            'The radio jet deposits so much energy it inflates a 250-light-year pulsar wind nebula',
+            'Discovered by Nicolas-Claude Fabri de Peiresc in 1610',
+            'You can see it with the naked eye as the "sword" of Orion',
+            'Hubble has imaged hundreds of protoplanetary disks (proplyds) inside it',
+            'Light leaving M42 in 681 AD is arriving at Earth right now',
+        ],
+    },
+    horsehead: {
+        overview: `Barnard 33 — the Horsehead Nebula — is a dense cloud of cold gas and dust silhouetted against the bright red emission nebula IC 434 in Orion. The iconic horse-head shape is pure shadow, the cloud blocking the glow behind it.
+
+It is one of the most recognisable shapes in the night sky and a classic example of a dark nebula seen in absorption rather than emission.`,
+        params: [
+            ['Distance',      '~1,375 ly'],
+            ['Diameter',      '~3.5 ly'],
+            ['Mass',          '~300 M☉'],
+            ['Constellation', 'Orion'],
+            ['Type',          'Dark molecular cloud'],
+            ['Backlight',     'IC 434 (Hα emission)'],
+        ],
+        features: [
+            'High distortion uniform shapes the dark silhouette',
+            'Warm red-orange backlight bleeds through the cloud edges',
+            'Almost static — extremely slow drift, no flicker',
+            'Two themes: bright backlit ember, deep coal & rust',
+        ],
+        facts: [
+            'First photographed by Williamina Fleming in 1888',
+            'The dust cloud will eventually dissipate — in cosmic terms, it is short-lived',
+            'New stars are still forming inside the densest knots',
+            'Visible only with long exposure or large telescopes',
+        ],
+    },
+    crab_nebula: {
+        overview: `Messier 1, the Crab Nebula, is the expanding remnant of a supernova that Chinese astronomers recorded in 1054 AD. It contains a fast-spinning pulsar at its heart that lights up the surrounding gas through synchrotron radiation.
+
+The result is a wispy, filament-rich cloud of purple and cyan, expanding outwards at roughly 1,500 km/s.`,
+        params: [
+            ['Distance',         '~6,500 ly'],
+            ['Diameter',         '~11 ly'],
+            ['Mass',             '~4.6 M☉'],
+            ['Expansion Speed',  '~1,500 km/s'],
+            ['Age',              '~970 years'],
+            ['Central Pulsar',   '33 ms spin period'],
+        ],
+        features: [
+            'Volumetric cloud with wisp-detail layer for filaments',
+            'Synchrotron color palette — violet core, cyan filaments',
+            'Slow outward drift simulates expansion',
+            'Soft halo around centre suggests embedded pulsar',
+        ],
+        facts: [
+            'The 1054 supernova was bright enough to be visible in daylight for 23 days',
+            'Recorded by Chinese, Japanese, and Arab astronomers',
+            'The central pulsar (PSR B0531+21) rotates 30 times a second',
+            'Charles Messier catalogued it first — it became Messier 1',
+        ],
+    },
+    pleiades: {
+        overview: `Messier 45 — the Pleiades, or Seven Sisters — is the most famous open cluster in the sky. About 444 light-years away in Taurus, it consists of hot, young, blue stars wrapped in a delicate reflection nebula.
+
+Many cultures across history have included the Pleiades in myth — they are visible to the naked eye and unmistakable on a clear winter night.`,
+        params: [
+            ['Distance',     '~444 ly'],
+            ['Total Mass',   '~800 M☉'],
+            ['Age',          '~100 million years'],
+            ['Bright Stars', '7 visible to naked eye'],
+            ['Total Stars',  '~1,000 (gravitationally bound)'],
+            ['Diameter',     '~17 ly'],
+        ],
+        features: [
+            'Cluster mode active — 7 embedded bright stars rendered inside the cloud',
+            'Soft reflection-nebula colour palette: blue cloud, white-cream stars',
+            'Minimal motion — the cluster feels peaceful and still',
+            'Two themes: classic reflection blue, warmer starlight cream',
+        ],
+        facts: [
+            'Named after the Seven Sisters of Greek mythology',
+            'Featured on the Subaru car logo (Subaru = "Pleiades" in Japanese)',
+            'The reflection nebula is unrelated dust the cluster is currently passing through',
+            'In ~250 million years the cluster will disperse and stop being a cluster',
         ],
     },
     cygnus: {
-        overview: `Cygnus Wormhole is a stable Morris–Thorne traversable wormhole in Sector 07-F. Unlike a black hole, the throat does not have a singularity — spacetime is smooth at the crossing point, and a ray that penetrates to r < Rs experiences coordinate inversion, emerging into an independent alternate-universe coordinate space with its own stellar background.
+        overview: `Cygnus Wormhole is a topological shortcut through curved spacetime — a Morris-Thorne bridge. Looking into the throat you see the starfield of an entirely different universe, blended with gravitational lensing of our own.
 
-The throat must be threaded by exotic matter with negative energy density to remain open. The rendered ring glow represents the gravitational focusing of background photons around the throat.`,
+In this scene the throat is stable and the colour drift is slow, allowing you to study the geometry rather than be overwhelmed by motion.`,
         params: [
-            ['Throat Radius',     'Rs (tunable: 0.35 – 1.2)'],
-            ['Exotic Matter',     'Required: ρ < 0 (Casimir-like)'],
-            ['Lensing Equation',  'Morris–Thorne metric, ℓ-coordinate'],
-            ['Throat Crossing',   'p_new = −p × 1.01 (coord inversion)'],
-            ['Ring Color Shift',  'Oscillates orange ↔ cyan at spin rate'],
-            ['Stability Class',   'STABLE GATEWAY (positive feedback null)'],
-            ['Sector',            '07-F  |  Coords: −6.00 / −1.00 / 5.00'],
+            ['Throat Radius',     'Rs ≈ 1.1 (configurable)'],
+            ['Mass-Energy Type',  'Exotic / Negative'],
+            ['Stability',         'Stabilised'],
+            ['Bridge Length',     'Theoretically negligible'],
+            ['Tidal Forces',      'Walkable (large throat)'],
+            ['Observable Colour', 'Mixed alternate spectrum'],
         ],
         features: [
-            'Dual-universe starfields: our universe (blue nebula) vs alternate (warm gold-orange)',
-            'Smooth throat crossing — ray direction inverted and coordinates negated at r < Rs',
-            'Chromatic ring glow that cycles hue based on spin parameter',
-            'Alternate nebula brightness controlled by Doppler slider (alternate luminosity)',
-            'Independent 3D noise fbm for each universe\'s nebula texture',
+            'Coordinate inversion at r < Rs — the ray enters the alternate universe',
+            'Independent starfield rendered through the throat',
+            'Einstein-ring lensing around the boundary',
+            'Slow chromatic drift — no aggressive colour cycling',
         ],
         facts: [
-            'The Morris–Thorne paper (1988) was the first rigorous proof that GR permits wormholes',
-            'Exotic matter with ρ < 0 exists in the Casimir effect — but at negligible scale today',
-            'A wormhole could theoretically allow time travel if one mouth is accelerated relativistically',
-            'Passing through at c would take zero proper time regardless of how far the other end is',
-            'Hawking\'s chronology protection conjecture suggests quantum effects collapse them before use',
+            'Theoretically proposed by Morris and Thorne in 1988',
+            'Requires exotic matter with negative energy density to remain open',
+            'Quantum field theory permits negative energy in small amounts (Casimir effect)',
+            'No wormholes have been observed — they remain mathematical solutions to GR',
         ],
     },
     kepler: {
-        overview: `Kepler Dyson Sphere is a Type II civilisation megastructure consisting of a rotating geometric swarm of solar collector panels surrounding a 1.08 M☉ host star. The panels are arranged in a geodesic grid pattern, leaving systematic gaps through which stellar flares and corona activity are visible.
+        overview: `Kepler Dyson Sphere is a Type-II Kardashev megastructure — a swarm of geometric solar collectors enclosing a Sun-like star. Light escapes through the gaps in the panel grid, sketching the silhouette of an artificial world.
 
-Unlike a solid shell (which would be dynamically unstable), this design uses orbital mechanics to maintain gap spacing. The inner surface converts incident starlight to usable energy; the outer surface radiates waste heat as thermal infrared.`,
+It represents what an advanced civilisation could build to harvest the total energy output of its star.`,
         params: [
-            ['Host Star Mass',   '1.08 M☉'],
-            ['Shell Radius',     '2.8 Rs (tunable)'],
-            ['Panel Coverage',   '~94% (6% gap fraction)'],
-            ['Host Temp',        '5780 K (solar-type)'],
-            ['Thermal Output',   'Full stellar luminosity intercepted'],
-            ['Structure Class',  'Kardashev Type II megastructure'],
-            ['Sector',           '19-B  |  Coords: 3.00 / −2.00 / 7.00'],
+            ['Host Star',        '1.08 M☉ (G-type)'],
+            ['Shell Radius',     '~1 AU'],
+            ['Surface Area',     '~2.8 × 10²³ m²'],
+            ['Energy Captured',  '~3.8 × 10²⁶ W'],
+            ['Civilisation',     'Kardashev Type II'],
+            ['Construction',     'Hypothetical'],
         ],
         features: [
-            'Analytic sphere intersection — no raymarching required for shell geometry',
-            'Procedural panel grid via fract(θ·freq) and fract(φ·freq) with gap threshold',
-            'Circuit-line detail rendered on each panel face (photovoltaic circuitry)',
-            'Star corona visible through gaps with exponential decay glow',
-            'Back-panel and through-gap parallax: shell inner surface visible behind gaps',
+            'Analytic ray-sphere intersection — pure geometry, very fast',
+            'Panel grid drawn from latitude/longitude lines',
+            'Gentle thermal emission from the panels',
+            'Two themes: Solar gold, Sirius white-blue',
         ],
         facts: [
-            'A Dyson sphere at 1 AU would intercept all 3.8 × 10²⁶ watts of solar output',
-            'Freeman Dyson originally proposed the concept in 1960 as a SETI search target',
-            'The Tabby\'s Star (KIC 8462852) mystery was partly explained by megastructure hypotheses',
-            'Building one requires dismantling Jupiter — ~1.9 × 10²⁷ kg of material',
-            'Waste heat means it would glow in infrared at ~300 K — identifiable by telescopes',
-        ],
-    },
-    sgr_a: {
-        overview: `Sagittarius A* is the supermassive black hole at the gravitational centre of the Milky Way, residing in Sector 00-CORE at the galactic coordinate origin. First imaged by the Event Horizon Telescope in 2022, it is the second-ever black hole to be directly imaged, showing a characteristic shadow surrounded by a bright emission ring.
-
-The plasma accretion rate is low (a Seyfert-like quiescent phase), but near-infrared flares from infalling material are observed several times per day. Stars in the central parsec orbit it at up to 3% of the speed of light.`,
-        params: [
-            ['Mass',               '4.154 × 10⁶ M☉'],
-            ['Schwarzschild Radius','Rs = 1.23 × 10⁷ km'],
-            ['Shadow Diameter',    '52 μarcseconds (EHT measured)'],
-            ['Distance from Earth','~26,670 light-years (8.178 kpc)'],
-            ['Accretion Rate',     '~10⁻⁸ M☉/yr (radiatively inefficient)'],
-            ['Disk Temperature',   '1.5 × 10⁷ K (flare episodes)'],
-            ['Sector',             '00-CORE  |  Coords: 0.00 / 0.00 / 0.00'],
-        ],
-        features: [
-            'Same Schwarzschild shader as Gargantua but with higher mass / distortion preset',
-            'Placed at scene origin — all other objects orbit around this galactic centre',
-            'High-spin preset dramatically increases lensing and disk angular size',
-            '"Quiet horizon" preset mimics observed low accretion quiescent state',
-        ],
-        facts: [
-            'S2, the closest orbiting star, completes one orbit in just 16.0 years at 0.77% of c',
-            'Sgr A* was radio-silent until 1974 — it was so faint astronomers assumed it was background noise',
-            'Its mass was proven by stellar orbits long before direct imaging confirmed the silhouette',
-            'A photon released from just outside the event horizon takes 40 seconds to escape 1 Rs',
-            'In ~5 billion years it will merge with the Andromeda galaxy\'s central black hole',
-        ],
-    },
-    andromeda: {
-        overview: `Andromeda Gateway is a hypothetical Class-M artificially-stabilised wormhole connecting our Local Group to the Andromeda Galaxy (M31) at 2.537 million light-years. The alternate starfield visible through the throat shows the denser stellar population of Andromeda's galactic core with a characteristic warm-orange tinge from its older stellar population.
-
-The throat is maintained by exotic matter seeded at the boundary, and the large-scale gravitational lens produces a distorted, warped view of the Andromeda side even before crossing.`,
-        params: [
-            ['Connection Target', 'M31 — Andromeda Galaxy'],
-            ['Distance Bridged',  '2.537 × 10⁶ light-years'],
-            ['Throat Radius',     'Rs ≈ 1.2 (tunable)'],
-            ['Transit Time',      '~0 proper time (instantaneous at c)'],
-            ['Alternate Density', '1.4× our starfield (older population)'],
-            ['Stability Class',   'STABLE ALIEN BRIDGE (Type-X)'],
-            ['Sector',            '99-Z  |  Coords: 8.00 / −3.00 / −8.00'],
-        ],
-        features: [
-            'Alternate-universe starfield uses distinct hash offset (+100) for different star positions',
-            'Gold-orange star colour bias reflects Andromeda\'s older, redder stellar population',
-            'Larger-than-average distortion preset creates more dramatic lensing before threshold',
-            '"Void Gate" preset opens a narrower, more unstable looking throat with extreme bending',
-        ],
-        facts: [
-            'M31 and the Milky Way are on a collision course — merger expected in ~4.5 billion years',
-            'Andromeda contains ~1 trillion stars vs our ~300 billion — 3× more massive',
-            'Its central black hole (M31*) masses ~1.1 × 10⁸ M☉ — 26× larger than Sgr A*',
-            'Andromeda is the most distant object visible to the naked eye on a dark night',
-            'The merger will reshape both galaxies into a giant elliptical — most stars won\'t collide',
-        ],
-    },
-    magnetar_1806: {
-        overview: `SGR 1806-20 is the most extreme magnetar ever detected. On December 27, 2004, it emitted a magnetar flare that briefly outshone the full Moon in gamma rays — the brightest transient event ever observed from outside the Solar System. The pulse lasted only 0.2 seconds but deposited more energy than the Sun radiates in 250,000 years.
-
-The simulated pulsar jets represent the polar emission cones, while the dipole field lines visualise the record-setting 1.6 × 10¹⁵ G magnetic field — strong enough to distort the electron orbitals of hydrogen atoms.`,
-        params: [
-            ['Mass',           '2.1 M☉'],
-            ['Radius',         '~11 km'],
-            ['Spin Period',    '7.56 s  (slow magnetar rotation)'],
-            ['B-field',        '1.6 × 10¹⁵ G  (strongest known)'],
-            ['Distance',       '~50,000 light-years (Galactic far side)'],
-            ['Flare Energy',   '~10⁴⁶ erg (2004 giant flare)'],
-            ['Sector',         '18-F  |  Coords: −7.00 / −5.00 / 2.00'],
-        ],
-        features: [
-            'Magnetar-Burst preset: max distortion 2.5, spin 4.2, doppler 2.4 — violent field lines',
-            'Magnetic Red-Violet palette: red for thermal X-ray + purple for hard gamma emission',
-            'Dipole field line density at maximum — 16 azimuthal slices visible',
-            'Rest-state preset shows quieter inter-burst phase with calmer field topology',
-        ],
-        facts: [
-            'The 2004 flare ionised Earth\'s upper ionosphere from 50,000 light-years away',
-            'If SGR 1806-20 were within 10 light-years, the flare would have caused mass extinction',
-            'The field is so strong it bends X-ray photon paths — a phenomenon called vacuum birefringence',
-            'At 1.6 × 10¹⁵ G, quantum effects dominate — B > B_QED (4.4 × 10¹³ G)',
-            'Magnetar fields decay on timescales of ~10,000 years — they are cosmically short-lived',
+            'Proposed by Freeman Dyson in 1960',
+            'A full solid sphere is gravitationally unstable — a real one would be a swarm',
+            'Tabby\'s Star (KIC 8462852) briefly raised Dyson-swarm speculation in 2015',
+            'Detecting one would show up as an infrared excess in star surveys',
         ],
     },
 };
 
 // ===== Dossier Data (Russian) =====
 const OBJECT_DOSSIERS_RU = {
-    gargantua: {
-        overview: `Сингулярность Гаргантюа — сверхмассивная чёрная дыра шварцшильдовского класса в секторе 04-A. С массой 4.3 × 10⁶ солнечных она создаёт одно из самых мощных гравитационных линзирований в каталоге, искривляя свет фоновых звёзд в полное эйнштейновское кольцо при сближении.
+    sgr_a: {
+        overview: `Стрелец A* — сверхмассивная чёрная дыра в центре Млечного Пути, примерно в 26 000 световых лет от Земли. С массой 4.15 × 10⁶ M☉ она удерживает гравитационную структуру всего галактического ядра.
 
-Окружающий аккреционный диск простирается от 2.2 Rs до 9.5 Rs и вращается с кеплеровским профилем скоростей. У внутреннего края газ достигает 0.42c — заметен релятивистский Доплер-биминг: приближающаяся сторона выглядит ярче и голубее, удаляющаяся — тусклее и краснее.`,
+В этой сцене диск вращается медленно, а линзирование фоновых звёзд мягкое — задача показать тихое величие горизонта, а не яростную вспышку.`,
         params: [
-            ['Масса',               '4.3 × 10⁶ M☉'],
-            ['Радиус Шварцшильда',  'Rs ≈ 12.7 × 10⁹ км'],
+            ['Масса',               '4.15 × 10⁶ M☉'],
+            ['Радиус Шварцшильда',  'Rs ≈ 12.3 × 10⁹ км'],
+            ['Расстояние от Земли', '~26 000 св. лет'],
+            ['Температура диска',   '~10⁷ K (внутр. край)'],
             ['Фотонная сфера',      '1.5 Rs (нестабильная)'],
-            ['ISCO',                '3 Rs (мин. стабильная орбита)'],
-            ['Температура диска',   '8.4 × 10⁶ K (внутр. край)'],
-            ['Температура Хокинга', '~10⁻¹⁴ K (≈ 0)'],
-            ['Сектор',              '04-A  |  Координаты: −1.00 / 0.60 / 3.90'],
+            ['ISCO',                '3 Rs'],
+            ['Температура Хокинга', '~10⁻¹⁴ K'],
         ],
         features: [
-            'Полный реймарчинг геодезик Шварцшильда — 130 шагов GPU на луч',
-            'Объёмный 3D аккреционный диск с искажающим fbm-шумом Перлина',
-            'Релятивистский Доплер-биминг: D = 1/(γ(1 − β·cosθ))³ по пикселю',
-            'Гравитационное красное смещение по радиусу: √(1 − Rs/r)',
-            'Свечение фотонного кольца у границы горизонта событий',
-            'Тонмаппинг Рейнхарда для HDR-блюма',
+            'Реймарчинг по геодезикам Шварцшильда, мягкое линзирование',
+            'Объёмный аккреционный диск, кеплеровское вращение, тихий Доплер',
+            'Спокойные пресеты (медленное вращение, низкая амплитуда биминга)',
+            'Две темы: тёплый янтарь, холодный кобальт',
         ],
         facts: [
-            'Часы на 1.1 Rs идут в 3 раза медленнее, чем на бесконечности — видно как цветовой сдвиг',
-            'Фотонная сфера на 1.5 Rs ловит свет на орбиту — задевший её фотон сваливается внутрь',
-            'Излучение Хокинга при такой массе испарит дыру за 10⁸⁴ лет',
-            'С Земли тень такой дыры была бы ~52 мкс — разрешается телескопом EHT',
-            'Приливные силы у горизонта так слабы, что человек не почувствовал бы пересечения',
+            'Снят коллаборацией Event Horizon Telescope в 2022 году',
+            'Несмотря на массу, угловой размер на небе меньше 50 микросекунд',
+            'Звезда S2 проходит мимо со скоростью до 7 650 км/с, подтверждая ОТО',
+            'Фотон на фотонной сфере может обогнуть дыру несколько раз перед побегом',
         ],
     },
-    vela: {
-        overview: `Пульсар Vela — быстро вращающаяся нейтронная звезда, рождённая в коллапсе сверхновой ~11 000 лет назад. Ось вращения наклонена на 45° относительно магнитной оси, поэтому релятивистские радиоджеты заметают пространство конусом — эффект маяка, дающий периодические импульсы, регистрируемые по всей галактике.
+    orion_nebula: {
+        overview: `Туманность Ориона (M42) — одна из самых ярких и изученных звёздных колыбелей, видимых с Земли. Лежит примерно в 1 344 световых годах от нас в созвездии Ориона. Внутри этого светящегося облака водорода и пыли прямо сейчас рождаются тысячи молодых звёзд.
 
-Прецессирующая дипольная магнитосфера здесь отрисована по реальной топологии силовых линий: они выгибаются у экватора и сходятся к магнитным полюсам, где парное рождение электронов и позитронов порождает джеты.`,
+Её розово-фиолетовое свечение возникает из-за того, что горячие молодые звёзды в скоплении Трапеция ионизируют окружающий водород.`,
         params: [
-            ['Масса',                '1.44 M☉'],
-            ['Радиус',               '~12 км'],
-            ['Период вращения',      '89 мс  (11.2 Гц)'],
-            ['Поверхностное B-поле', '3.4 × 10¹² Гс'],
-            ['Полуугол джета',       '7° (конический пучок)'],
-            ['Температура поверхн.', '~7 × 10⁵ K'],
-            ['Сектор',               '12-C  |  Координаты: 0.90 / 0.50 / −3.90'],
+            ['Расстояние',      '1 344 св. лет'],
+            ['Диаметр',         '~24 св. лет'],
+            ['Полная масса',    '~2 000 M☉'],
+            ['Возраст',         '~3 млн лет'],
+            ['Видимые звёзды',  '~700 (формируются)'],
+            ['Видимая величина','+4.0 (видна глазом)'],
         ],
         features: [
-            'Прецессирующая дипольная магнитосфера с сеткой силовых линий',
-            'Конический релятивистский джет от полюсов (GLSL реймарчинг, 90 шагов)',
-            'Импульсная модуляция: яркость следует 1 + 0.3·sin(r·1.5 − t·12)',
-            'Магнитное «горячее пятно» на поверхности (пик яркости)',
-            'Настраиваемый полуугол джета через слайдер Beaming Scale',
+            'Объёмное реймарченное облако с мягким fbm-шумом и медленным дрейфом',
+            'Двухтоновый градиент: розовое ядро Hα → фиолетовые внешние нити',
+            'Без пульсации и вспышек — медитативный, спокойный вид',
+            'Звёздный фон естественно сливается с краями облака',
         ],
         facts: [
-            'Вещество нейтронной звезды настолько плотное, что чайная ложка весит ~10¹⁴ кг',
-            'Сила тяжести на поверхности ~2 × 10¹¹ g — упавшее перо разгоняется до 0.6c',
-            'Импульсы Vela — естественные часы для проверки ОТО с точностью 10⁻⁵',
-            '«Глитчи» — внезапные ускорения вращения — выдают сверхтекучий слой в коре',
-            'Звёздный ветер раздул туманность пульсара протяжённостью ~250 световых лет',
+            'Открыта Николя-Клодом Фабри де Пейреском в 1610 году',
+            'Видна невооружённым глазом как «меч» Ориона',
+            'Hubble сфотографировал сотни протопланетных дисков внутри неё',
+            'Свет, ушедший из M42 в 681 году, доходит до Земли прямо сейчас',
+        ],
+    },
+    horsehead: {
+        overview: `Барнард 33 — туманность Конская Голова — плотное облако холодного газа и пыли, видимое силуэтом на фоне яркой красной эмиссионной туманности IC 434 в Орионе. Знаменитая форма головы лошади — это чистая тень.
+
+Один из самых узнаваемых силуэтов в ночном небе и классический пример тёмной туманности, видимой по поглощению.`,
+        params: [
+            ['Расстояние',  '~1 375 св. лет'],
+            ['Диаметр',     '~3.5 св. лет'],
+            ['Масса',       '~300 M☉'],
+            ['Созвездие',   'Орион'],
+            ['Тип',         'Тёмное молекулярное облако'],
+            ['Подсветка',   'IC 434 (эмиссия Hα)'],
+        ],
+        features: [
+            'Высокий uDistortion формирует характерный тёмный силуэт',
+            'Тёплая красно-оранжевая подсветка пробивается сквозь края облака',
+            'Почти статика — крайне медленный дрейф, без мерцаний',
+            'Две темы: яркий «уголь и пламя» и глубокая «уголь и ржавчина»',
+        ],
+        facts: [
+            'Впервые сфотографирована Уильяминой Флеминг в 1888 году',
+            'Пылевое облако со временем рассеется — по космическим меркам недолговечно',
+            'Внутри плотнейших узлов всё ещё формируются новые звёзды',
+            'Видна только при длинной выдержке или в крупный телескоп',
+        ],
+    },
+    crab_nebula: {
+        overview: `Мессье 1, Крабовидная туманность — расширяющийся остаток сверхновой, которую китайские астрономы зафиксировали в 1054 году. В центре сидит быстро вращающийся пульсар, подсвечивающий газ синхротронным излучением.
+
+Результат — туманное облако фиолетовых и бирюзовых нитей, расширяющееся со скоростью около 1 500 км/с.`,
+        params: [
+            ['Расстояние',       '~6 500 св. лет'],
+            ['Диаметр',          '~11 св. лет'],
+            ['Масса',            '~4.6 M☉'],
+            ['Скорость расширения','~1 500 км/с'],
+            ['Возраст',          '~970 лет'],
+            ['Центральный пульсар','33 мс период'],
+        ],
+        features: [
+            'Объёмное облако с дополнительным wisp-слоем для нитей',
+            'Синхротронная палитра — фиолетовое ядро, бирюзовые нити',
+            'Медленный направленный дрейф имитирует расширение',
+            'Мягкий ореол в центре намекает на встроенный пульсар',
+        ],
+        facts: [
+            'Сверхновая 1054 года была видна днём 23 дня подряд',
+            'Зафиксирована китайскими, японскими и арабскими астрономами',
+            'Центральный пульсар PSR B0531+21 делает 30 оборотов в секунду',
+            'Шарль Мессье каталогизировал её первой — она стала Messier 1',
+        ],
+    },
+    pleiades: {
+        overview: `Мессье 45 — Плеяды, или Семь Сестёр — самое известное рассеянное скопление на небе. Около 444 световых лет от нас в созвездии Тельца. Состоит из горячих молодых голубых звёзд, окутанных нежной отражательной туманностью.
+
+Многие культуры в истории включали Плеяды в свои мифы — они видны невооружённым глазом и безошибочно узнаваемы ясной зимней ночью.`,
+        params: [
+            ['Расстояние',        '~444 св. лет'],
+            ['Полная масса',      '~800 M☉'],
+            ['Возраст',           '~100 млн лет'],
+            ['Ярких звёзд',       '7 видны глазом'],
+            ['Всего звёзд',       '~1 000 (связанных)'],
+            ['Диаметр',           '~17 св. лет'],
+        ],
+        features: [
+            'Активирован кластер-режим — 7 встроенных ярких звёзд внутри облака',
+            'Палитра отражательной туманности: голубое облако, бело-кремовые звёзды',
+            'Минимум движения — скопление выглядит спокойным и неподвижным',
+            'Две темы: классическая «отражательная синева» и тёплая «кремовая»',
+        ],
+        facts: [
+            'Названы в честь семи сестёр из греческой мифологии',
+            'Изображены на логотипе Subaru (subaru = «плеяды» по-японски)',
+            'Отражательная туманность — это просто пыль, через которую сейчас проходит скопление',
+            'Через ~250 млн лет скопление рассеется и перестанет быть скоплением',
         ],
     },
     cygnus: {
-        overview: `Червоточина Cygnus — стабильная проходимая Морриса–Торна в секторе 07-F. В отличие от чёрной дыры, горло не содержит сингулярности — пространство-время гладкое в точке перехода, а луч, проникший в r < Rs, испытывает инверсию координат и выходит в независимое пространство альтернативной вселенной с собственным звёздным фоном.
+        overview: `Червоточина Лебедя — топологический мост через искривлённое пространство-время, мост Морриса-Торна. Через горло видно звёздное поле другой вселенной, смешанное с гравитационным линзированием нашей.
 
-Горло поддерживается экзотической материей с отрицательной плотностью энергии. Светящееся кольцо — гравитационная фокусировка фотонов фона вокруг горла.`,
+В этой сцене горло стабильно, а цветовой дрейф медленный — это позволяет рассматривать геометрию, а не быть оглушённым движением.`,
         params: [
-            ['Радиус горла',         'Rs (настраивается: 0.35 – 1.2)'],
-            ['Экзотическая материя', 'Требуется: ρ < 0 (типа Казимира)'],
-            ['Уравнение линзы',      'Метрика Морриса–Торна, ℓ-координата'],
-            ['Переход горла',        'p_new = −p × 1.01 (инверсия)'],
-            ['Цветовой сдвиг',       'Кольцо: оранж ↔ циан по скорости'],
-            ['Класс стабильности',   'STABLE GATEWAY (без отриц. обр. связи)'],
-            ['Сектор',               '07-F  |  Координаты: 5.40 / −0.80 / −2.50'],
+            ['Радиус горла',      'Rs ≈ 1.1 (настраивается)'],
+            ['Тип массы-энергии', 'Экзотическая / отрицательная'],
+            ['Стабильность',      'Стабилизирована'],
+            ['Длина моста',       'Теоретически пренебрежимо мала'],
+            ['Приливные силы',    'Проходимы (большое горло)'],
+            ['Видимый спектр',    'Смешанный, альтернативный'],
         ],
         features: [
-            'Два звёздных фона: наша вселенная (синяя туманность) и альтернативная (тёплое золото)',
-            'Гладкий переход горла — инверсия направления и координат при r < Rs',
-            'Хроматическое кольцо вокруг горла, цикл оттенков по spin-параметру',
-            'Яркость альтернативной туманности — слайдер Doppler',
-            'Независимый 3D fbm-шум для текстуры каждой вселенной',
+            'Инверсия координат при r < Rs — луч уходит в альтернативную вселенную',
+            'Независимое звёздное поле, видимое сквозь горло',
+            'Линзирование в форме эйнштейновского кольца на границе',
+            'Медленный хроматический дрейф — без агрессивной смены цвета',
         ],
         facts: [
-            'Статья Морриса–Торна (1988) — первое строгое доказательство, что ОТО допускает червоточины',
-            'Экзотическая материя с ρ < 0 существует в эффекте Казимира, но в ничтожном масштабе',
-            'Червоточина теоретически позволяет путешествия во времени при релятивистском разгоне одного устья',
-            'Прохождение со скоростью c заняло бы нулевое собственное время независимо от расстояния',
-            'Гипотеза защиты хронологии Хокинга: квантовые эффекты схлопывают такие червоточины до использования',
+            'Теоретически предложена Моррисом и Торном в 1988 году',
+            'Требует экзотической материи с отрицательной плотностью энергии',
+            'Квантовая теория поля допускает отрицательную энергию (эффект Казимира)',
+            'Червоточины ни разу не наблюдались — пока только решения ОТО',
         ],
     },
     kepler: {
-        overview: `Сфера Дайсона Kepler — мегаструктура цивилизации II типа: вращающийся геометрический рой солнечных коллекторов вокруг звезды массой 1.08 M☉. Панели образуют геодезическую сетку с систематическими зазорами, через которые видны вспышки звезды и активность короны.
+        overview: `Сфера Дайсона Кеплера — мегаструктура II типа по шкале Кардашёва. Рой геометрических солнечных коллекторов, окружающих звезду солнечного класса. Свет пробивается сквозь зазоры между панелями, обрисовывая силуэт искусственного мира.
 
-В отличие от сплошной оболочки (которая была бы динамически нестабильной), рой использует орбитальную механику для поддержания зазоров. Внутренняя поверхность превращает свет в энергию, внешняя излучает отходное тепло в ИК.`,
+Это то, что могла бы построить продвинутая цивилизация, чтобы захватить всю энергию своей звезды.`,
         params: [
-            ['Масса звезды-хозяина',   '1.08 M☉'],
-            ['Радиус оболочки',        '2.8 Rs (настраивается)'],
-            ['Покрытие панелями',      '~94% (зазоры — 6%)'],
-            ['Температура звезды',     '5780 K (солнечный тип)'],
-            ['Тепловой выход',         'Полная светимость звезды перехвачена'],
-            ['Класс структуры',        'Кардашев II типа'],
-            ['Сектор',                 '19-B  |  Координаты: 7.00 / 1.00 / 0.50'],
+            ['Центральная звезда','1.08 M☉ (G-класс)'],
+            ['Радиус оболочки',   '~1 а.е.'],
+            ['Площадь поверхности','~2.8 × 10²³ м²'],
+            ['Захваченная энергия','~3.8 × 10²⁶ Вт'],
+            ['Цивилизация',       'II тип Кардашёва'],
+            ['Конструкция',       'Гипотетическая'],
         ],
         features: [
-            'Аналитическое пересечение сферы — без реймарчинга для оболочки',
-            'Процедурная сетка панелей через fract(θ·freq) и fract(φ·freq) с порогом зазора',
-            'Детали схем на каждой панели (фотовольтаика)',
-            'Корона звезды видна сквозь зазоры с экспоненциальным затуханием',
-            'Параллакс задней панели и щелей: видна внутренняя поверхность сквозь зазоры',
+            'Аналитическое пересечение луча со сферой — чистая геометрия, очень быстро',
+            'Сетка панелей нарисована линиями широты и долготы',
+            'Мягкое тепловое излучение от панелей',
+            'Две темы: «солнечное золото», «бело-голубой Сириус»',
         ],
         facts: [
-            'Сфера Дайсона на 1 а.е. перехватывала бы все 3.8 × 10²⁶ Вт солнечного выхода',
-            'Фримен Дайсон предложил концепцию в 1960 как цель поиска SETI',
-            'Тайна «звезды Табби» (KIC 8462852) частично объяснялась гипотезой мегаструктуры',
-            'Для постройки нужно разобрать Юпитер — ~1.9 × 10²⁷ кг материала',
-            'Отходное тепло заставит её светиться в ИК при ~300 K — обнаружимо телескопами',
-        ],
-    },
-    sgr_a: {
-        overview: `Стрелец A* — сверхмассивная чёрная дыра в гравитационном центре Млечного Пути, в секторе 00-CORE на галактическом начале координат. Впервые сфотографирована телескопом EHT в 2022 году — вторая в истории прямо снятая ЧД, с характерной тенью и ярким эмиссионным кольцом.
-
-Темп аккреции плазмы низкий (тихая фаза, как у Сейфертов), но ИК-вспышки от падающего вещества наблюдаются по несколько раз в день. Звёзды в центральном парсеке вращаются вокруг неё со скоростью до 3% от скорости света.`,
-        params: [
-            ['Масса',               '4.154 × 10⁶ M☉'],
-            ['Радиус Шварцшильда',  'Rs = 1.23 × 10⁷ км'],
-            ['Диаметр тени',        '52 мкс (измерение EHT)'],
-            ['Расстояние от Земли', '~26 670 св. лет (8.178 кпк)'],
-            ['Темп аккреции',       '~10⁻⁸ M☉/год (низкоэффективный)'],
-            ['Температура диска',   '1.5 × 10⁷ K (эпизоды вспышек)'],
-            ['Сектор',              '00-CORE  |  Координаты: 0.00 / 0.00 / 0.00'],
-        ],
-        features: [
-            'Тот же Шварцшильдовский шейдер, что у Гаргантюа, но с пресетом большей массы / искажения',
-            'Помещён в начало сцены — все другие объекты вращаются вокруг этого центра',
-            'Пресет «high-spin» резко усиливает линзирование и угловой размер диска',
-            'Пресет «quiet horizon» имитирует наблюдаемое состояние тихой аккреции',
-        ],
-        facts: [
-            'S2 — ближайшая звезда — обходит её за 16 лет на 0.77% от c',
-            'Sgr A* был радиомолчалив до 1974 — настолько тусклый, что его считали шумом',
-            'Массу доказали по орбитам звёзд задолго до прямого снимка силуэта',
-            'Фотон, испущенный сразу за горизонтом, выходит на 1 Rs за 40 секунд',
-            'Через ~5 млрд лет сольётся с центральной ЧД Андромеды',
-        ],
-    },
-    andromeda: {
-        overview: `Шлюз Андромеды — гипотетическая искусственно стабилизированная червоточина класса M, соединяющая нашу Местную группу с галактикой Андромеда (M31) на расстоянии 2.537 млн световых лет. Альтернативный звёздный фон через горло показывает плотную звёздную популяцию галактического ядра Андромеды с характерным тёплым оранжевым оттенком от старых звёзд.
-
-Горло удерживается экзотической материей, посеянной на границе, и крупномасштабная гравитационная линза создаёт искажённый вид со стороны Андромеды ещё до пересечения.`,
-        params: [
-            ['Цель соединения',     'M31 — галактика Андромеда'],
-            ['Перекрытое расст.',   '2.537 × 10⁶ св. лет'],
-            ['Радиус горла',        'Rs ≈ 1.2 (настраивается)'],
-            ['Время прохождения',   '~0 собств. времени (на скорости c)'],
-            ['Плотность альт.',     '1.4× нашего звёздного фона (старая поп.)'],
-            ['Класс стабильности',  'STABLE ALIEN BRIDGE (Тип-X)'],
-            ['Сектор',              '99-Z  |  Координаты: −7.20 / 2.50 / −3.50'],
-        ],
-        features: [
-            'Звёздный фон альт. вселенной использует hash-сдвиг (+100) — другие позиции звёзд',
-            'Золотисто-оранжевый цвет звёзд отражает старую красную популяцию Андромеды',
-            'Увеличенный пресет distortion создаёт более драматичное линзирование до перехода',
-            'Пресет «Void Gate» — узкое нестабильное горло с экстремальным искривлением',
-        ],
-        facts: [
-            'M31 и Млечный Путь летят навстречу — слияние через ~4.5 млрд лет',
-            'В Андромеде ~1 трлн звёзд против наших ~300 млрд — в 3 раза массивнее',
-            'Её центральная ЧД (M31*) массой ~1.1 × 10⁸ M☉ — в 26 раз больше Sgr A*',
-            'Андромеда — самый далёкий объект, видимый невооружённым глазом в тёмную ночь',
-            'Слияние превратит обе галактики в гигантский эллипс — большинство звёзд не столкнутся',
-        ],
-    },
-    magnetar_1806: {
-        overview: `SGR 1806-20 — самый экстремальный магнетар из когда-либо обнаруженных. 27 декабря 2004 года он испустил вспышку, которая ненадолго затмила полную Луну в гамма-диапазоне — ярчайшее транзиентное событие, наблюдаемое вне Солнечной системы. Импульс длился 0.2 секунды, но выделил больше энергии, чем Солнце излучает за 250 000 лет.
-
-Смоделированные джеты — полярные эмиссионные конусы, а дипольные линии визуализируют рекордное магнитное поле 1.6 × 10¹⁵ Гс — достаточное, чтобы исказить орбитали электронов в атомах водорода.`,
-        params: [
-            ['Масса',           '2.1 M☉'],
-            ['Радиус',          '~11 км'],
-            ['Период вращения', '7.56 с  (медленный магнетар)'],
-            ['B-поле',          '1.6 × 10¹⁵ Гс  (рекордное)'],
-            ['Расстояние',      '~50 000 св. лет (дальняя сторона Галактики)'],
-            ['Энергия вспышки', '~10⁴⁶ эрг (гигантская вспышка 2004)'],
-            ['Сектор',          '18-F  |  Координаты: −5.40 / −1.20 / 2.50'],
-        ],
-        features: [
-            'Пресет «Magnetar-Burst»: distortion 2.5, spin 4.2, doppler 2.4 — буйные линии поля',
-            'Палитра Red-Violet: красный для теплового X-ray + фиолет для жёсткого гамма',
-            'Максимальная плотность дипольных линий — 16 азимутальных секторов',
-            'Пресет «rest-state» — спокойная межвспышечная фаза',
-        ],
-        facts: [
-            'Вспышка 2004 ионизировала верхнюю ионосферу Земли с 50 000 св. лет',
-            'Будь SGR 1806-20 ближе 10 св. лет — вспышка вызвала бы массовое вымирание',
-            'Поле так сильно, что искривляет пути X-ray фотонов — вакуумное двулучепреломление',
-            'При 1.6 × 10¹⁵ Гс квантовые эффекты доминируют — B > B_QED (4.4 × 10¹³ Гс)',
-            'Магнетарные поля распадаются за ~10 000 лет — космически короткоживущие',
+            'Предложена Фрименом Дайсоном в 1960 году',
+            'Сплошная сфера гравитационно неустойчива — реальная была бы роем',
+            'Звезда Табби (KIC 8462852) в 2015 ненадолго оживила гипотезу о Дайсоне',
+            'Обнаружение проявилось бы как избыток ИК-излучения в обзоре звёзд',
         ],
     },
 };
@@ -551,7 +514,7 @@ const DOSSIER_LABELS = {
 // ===== State =====
 let appState = 'BOOT';
 let nodeLabels = {};
-let activeObjectId = 'gargantua';
+let activeObjectId = 'sgr_a';
 let activeThemeIdx = 0;
 let autoRotate = true;
 
@@ -918,6 +881,45 @@ function createNodeTexture(hex, type) {
         sc.addColorStop(0.8, hex + '88'); sc.addColorStop(1, 'rgba(0,0,0,0)');
         ctx.fillStyle = sc; ctx.beginPath(); ctx.arc(cx, cy, R * 0.18, 0, Math.PI * 2); ctx.fill();
 
+    } else if (type === 'nebula') {
+        // ── Mini nebula: soft layered cloud + faint embedded stars ──
+        // outer diffuse halo
+        const halo = ctx.createRadialGradient(cx, cy, R * 0.10, cx, cy, R * 0.95);
+        halo.addColorStop(0, hex + 'ee');
+        halo.addColorStop(0.25, hex + 'aa');
+        halo.addColorStop(0.55, hex + '55');
+        halo.addColorStop(0.85, hex + '1a');
+        halo.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = halo; ctx.beginPath(); ctx.arc(cx, cy, R * 0.95, 0, Math.PI * 2); ctx.fill();
+
+        // soft wispy lobes (3 offset blobs)
+        ctx.globalCompositeOperation = 'lighter';
+        const rng = s => { const x = Math.sin(s * 9301 + 49297) * 43758; return x - Math.floor(x); };
+        for (let i = 0; i < 3; i++) {
+            const ang = rng(i * 1.7) * Math.PI * 2;
+            const off = R * 0.18;
+            const lx = cx + Math.cos(ang) * off;
+            const ly = cy + Math.sin(ang) * off;
+            const lr = R * (0.32 + rng(i * 2.3) * 0.18);
+            const g = ctx.createRadialGradient(lx, ly, 0, lx, ly, lr);
+            g.addColorStop(0, hex + '88');
+            g.addColorStop(0.5, hex + '33');
+            g.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = g; ctx.beginPath(); ctx.arc(lx, ly, lr, 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.globalCompositeOperation = 'source-over';
+
+        // embedded stars
+        ctx.shadowBlur = 0; ctx.fillStyle = '#ffffff';
+        for (let i = 0; i < 5; i++) {
+            const ang = rng(i * 5.13) * Math.PI * 2;
+            const dist = rng(i * 0.91) * R * 0.40;
+            const sr = 1.0 + rng(i * 2.07) * 1.6;
+            ctx.globalAlpha = 0.7 + rng(i * 1.3) * 0.3;
+            ctx.beginPath(); ctx.arc(cx + Math.cos(ang) * dist, cy + Math.sin(ang) * dist, sr, 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+
     } else {
         // Generic fallback (hexagon)
         ctx.shadowColor = hex; ctx.shadowBlur = 12; ctx.strokeStyle = hex; ctx.lineWidth = 3;
@@ -978,6 +980,7 @@ async function initApp() {
     SHADERS['shaders/pulsar.frag']      = loadShader('shader-pulsar');
     SHADERS['shaders/wormhole.frag']    = loadShader('shader-wormhole');
     SHADERS['shaders/dyson-sphere.frag']= loadShader('shader-dyson');
+    SHADERS['shaders/nebula.frag']      = loadShader('shader-nebula');
 
     // cache dom
     sidebar = document.getElementById('control-sidebar');
@@ -1003,7 +1006,7 @@ async function initApp() {
     scene = new THREE.Scene();
     clock = new THREE.Clock();
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 200);
-    camera.position.set(0, 20, 45);
+    camera.position.set(0, 32, 72);
 
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
@@ -1339,19 +1342,19 @@ function buildGalaxyMap() {
 
     // 5. System Nodes (type-specific sprites, facing camera)
     const nodeColors = {
-        gargantua: '#f0a030',
-        vela: '#00ffff',
-        cygnus: '#ff00ff',
-        kepler: '#ffcc00',
-        sgr_a: '#ff4500',
-        andromeda: '#bf55ec',
-        magnetar_1806: '#ff3366'
+        sgr_a: '#ff8a3a',
+        orion_nebula: '#ff7aa0',
+        horsehead: '#ff7a3a',
+        crab_nebula: '#b56cff',
+        pleiades: '#a8c8ff',
+        cygnus: '#b56cff',
+        kepler: '#ffcc66'
     };
 
     const objectTypes = {
-        gargantua: 'blackhole', sgr_a: 'blackhole',
-        vela: 'pulsar', magnetar_1806: 'pulsar',
-        cygnus: 'wormhole', andromeda: 'wormhole',
+        sgr_a: 'blackhole',
+        orion_nebula: 'nebula', horsehead: 'nebula', crab_nebula: 'nebula', pleiades: 'nebula',
+        cygnus: 'wormhole',
         kepler: 'dyson'
     };
 
@@ -1465,11 +1468,15 @@ function onTransitionComplete() {
         document.getElementById('accessory-title').innerHTML = '<i class="fas fa-circle-notch"></i> Structure';
     }
 
+    // embedded cluster stars only for Pleiades; off for other nebulae
+    uniforms.uBeamingScale.value = (activeObjectId === 'pleiades') ? 1.6 : 0.0;
+
     // slider bounds
-    if (activeObjectId === 'vela' || activeObjectId === 'magnetar_1806') {
-        sliders.rs.min = 0.2; sliders.rs.max = 1.6; sliders.rs.step = 0.05;
-        sliders.outer.min = 6.0; sliders.outer.max = 20.0; sliders.outer.step = 0.2;
-    } else if (activeObjectId === 'cygnus' || activeObjectId === 'andromeda') {
+    const nebulaIds = ['orion_nebula', 'horsehead', 'crab_nebula', 'pleiades'];
+    if (nebulaIds.indexOf(activeObjectId) !== -1) {
+        sliders.rs.min = 0.6; sliders.rs.max = 2.5; sliders.rs.step = 0.05;
+        sliders.outer.min = 7.0; sliders.outer.max = 16.0; sliders.outer.step = 0.2;
+    } else if (activeObjectId === 'cygnus') {
         sliders.rs.min = 0.3; sliders.rs.max = 1.8; sliders.rs.step = 0.05;
         sliders.outer.min = 6.0; sliders.outer.max = 15.0; sliders.outer.step = 0.1;
     } else if (activeObjectId === 'kepler') {
@@ -1520,10 +1527,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         setTimeout(() => {
             appState = 'GALAXY';
-            camera.position.set(0, 20, 45);
+            camera.position.set(0, 32, 72);
             controls.target.set(0, 0, 0);
-            controls.maxDistance = 80.0;
-            controls.minDistance = 6.0;
+            controls.maxDistance = 120.0;
+            controls.minDistance = 10.0;
             autoRotate = true;
             btnAutopilot.classList.remove('active');
         }, 500);

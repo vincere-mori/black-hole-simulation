@@ -5,12 +5,12 @@
 <h1 align="center">🌌 Stellar Cartography</h1>
 
 <p align="center">
-  Interactive 3D galaxy map with real-time relativistic simulations of<br>
-  black holes, pulsars, wormholes and megastructures — running entirely in the browser
+  Interactive 3D galaxy map: nebulae, a star cluster, a supernova remnant,<br>
+  a black hole, a wormhole and a Dyson sphere - all running in the browser
 </p>
 
 <p align="center">
-  <b>7 unique anomalies</b> · 4 raymarched GLSL shaders · 65,000 galaxy particles · full dossier per object
+  <b>7 objects</b> · 5 raymarched GLSL shaders · 65,000 galaxy particles · full dossier per object
 </p>
 
 <p align="center">
@@ -42,36 +42,36 @@
 
 ## About
 
-A deep-space simulator that runs entirely in the browser — no backend, no bundler, no third-party engine. A single HTML file loads Three.js, four raymarched GLSL shaders compute relativistic physics on the GPU, and 65,000 particles draw a logarithmic spiral galaxy with two arms and a central bulge.
+A deep-space simulator running entirely in the browser - no backend, no bundler, no third-party engine. A single HTML file loads Three.js, five raymarched GLSL shaders compute the physics on the GPU, and 65,000 particles draw a logarithmic spiral galaxy with two arms and a central bulge.
 
-The map hosts 7 unique objects — each rendered with its own shader, with custom presets, color themes and a full scientific dossier. Click a node to open the info card, ENTER ORBIT to enter orbital mode with real-time physics sliders, DOSSIER to drop a terminal overlay with the full breakdown: overview, parameters, render features, interesting facts.
+The catalogue is seven diverse objects: nebulae and a star cluster for beauty, a black hole, a wormhole and a Dyson sphere for the exotic science. Each object is rendered with its own shader, presets, color themes and a full dossier. The animation is calm, no aggressive flashing - you can just sit and watch.
 
 ---
 
 ## Features
 
-- 🌀 **4 GLSL shaders** — raymarching with 90–130 steps per pixel, compiled on the GPU
-- ⚫ **Black holes** — Schwarzschild geodesics, volumetric accretion disk, relativistic Doppler beaming, gravitational redshift
-- ⚡ **Pulsars / magnetars** — conical radio jets from magnetic poles, precessing dipole magnetosphere, pulse modulation
-- 🕳️ **Wormholes** — Morris–Thorne throat crossing, coordinate inversion at r < Rs, independent "alternate universe"
-- 🔮 **Dyson spheres** — geometric collector swarm, coronal flares through gaps, thermal IR emission
-- 🌌 **Galaxy map** — 65,000 particles (disk, bulge, nebula) + 10,800 background stars + 800 bright highlights
-- 🖥️ **JARVIS boot** — three-column terminal: center log + GRAV SCAN / PARTICLE FLUX / SYS RESOURCES / NAV CALIB
-- 📋 **Object dossiers** — terminal overlay with overview, physics params, render features and scientific facts
-- 🎨 **Full customization** — 2–3 color themes and 2 presets per object, 6 real-time sliders
+- 🌀 **5 GLSL shaders** - raymarching 60-130 steps per pixel, compiled on the GPU
+- 🌌 **Nebulae & cluster** - volumetric clouds with slow drift: Orion M42, Horsehead, Crab Nebula, Pleiades M45
+- ⚫ **Black hole** - Schwarzschild geodesics, volumetric accretion disk, gentle gravitational lensing (Sagittarius A*)
+- 🕳️ **Wormhole** - Morris-Thorne throat crossing, coordinate inversion at r < Rs, alternate-universe starfield
+- 🔮 **Dyson sphere** - geometric collector swarm, thermal emission through panel gaps
+- 🪐 **Galaxy map** - 65,000 particles (disk, bulge, nebula) + 10,800 background stars + 800 bright highlights
+- 🖥️ **JARVIS boot** - three-column terminal: center log + GRAV SCAN / PARTICLE FLUX / SYS RESOURCES / NAV CALIB
+- 📋 **Object dossiers** - terminal overlay with overview, parameters, render features and facts (RU/EN)
+- 🎨 **Customisation** - 2 color themes and 2 presets per object, real-time sliders
 
 ---
 
-## Anomaly Catalog
+## Object Catalog
 
 | # | Object | Class | Sector | Highlight |
 |:-:|--------|-------|:------:|-----------|
 | 1 | **Sagittarius A\*** | Supermassive Black Hole | 00-CORE | Milky Way galactic center, 4.15×10⁶ M☉ |
-| 2 | **Gargantua Singularity** | Schwarzschild Black Hole | 04-A | 4.3×10⁶ M☉, Doppler-shifted accretion disk |
-| 3 | **Vela Pulsar** | Rotating Neutron Star | 12-C | Conical radio jets, dipole magnetosphere |
-| 4 | **SGR 1806-20 Magnetar** | Extreme Magnetar | 18-F | Strongest known magnetic field (1.6×10¹⁵ G) |
-| 5 | **Cygnus Wormhole** | Morris–Thorne Bridge | 07-F | Throat crossing to alternate universe |
-| 6 | **Andromeda Gateway** | Intergalactic Wormhole | 99-Z | Stabilized bridge to the Andromeda galaxy |
+| 2 | **Orion Nebula M42** | Emission Nebula | 03-O | Stellar nursery in Orion, 1,344 ly |
+| 3 | **Horsehead Nebula** | Dark Nebula (B33) | 03-H | Silhouette against IC 434 |
+| 4 | **Crab Nebula M1** | Supernova Remnant | 12-T | Remnant of SN 1054, synchrotron filaments |
+| 5 | **Pleiades M45** | Open Star Cluster | 06-S | Seven Sisters, reflection nebula |
+| 6 | **Cygnus Wormhole** | Morris-Thorne Bridge | 07-F | Throat crossing to alternate universe |
 | 7 | **Kepler Dyson Sphere** | Type II Megastructure | 19-B | Geometric solar collector swarm |
 
 ---
@@ -168,9 +168,11 @@ python main.py
   <code>gravitational-lensing</code> &nbsp;
   <code>wormhole</code> &nbsp;
   <code>morris-thorne</code> &nbsp;
-  <code>pulsar</code> &nbsp;
-  <code>magnetar</code> &nbsp;
-  <code>neutron-star</code> &nbsp;
+  <code>nebula</code> &nbsp;
+  <code>orion-nebula</code> &nbsp;
+  <code>supernova-remnant</code> &nbsp;
+  <code>star-cluster</code> &nbsp;
+  <code>pleiades</code> &nbsp;
   <code>dyson-sphere</code> &nbsp;
   <code>megastructure</code> &nbsp;
   <code>galaxy</code> &nbsp;
