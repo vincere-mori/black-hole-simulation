@@ -24,7 +24,7 @@ uniform float uStarDensity;     // Density of background stars
 uniform vec3 uColorTheme1;      // Accretion disk hot color (inner)
 uniform vec3 uColorTheme2;      // Accretion disk cold color (outer)
 
-#define MAX_STEPS 130
+#define MAX_STEPS 80
 #define PI 3.14159265359
 
 // Volumetric thickness parameters
@@ -93,7 +93,7 @@ vec4 sampleDiskVolume(vec3 pos, float dist, vec3 v) {
     if (density < 0.005) return vec4(0.0);
     
     // Base temperature color mapping
-    vec3 baseColor = mix(uColorTheme1 * 2.5, uColorTheme2, pow(x, 1.2));
+    vec3 baseColor = mix(uColorTheme1 * 1.6, uColorTheme2, pow(x, 1.2));
     
     // Relativistic Doppler beaming
     vec3 diskVelocityDir = normalize(vec3(-pos.z, 0.0, pos.x)); // Counter-clockwise flow
@@ -104,7 +104,7 @@ vec4 sampleDiskVolume(vec3 pos, float dist, vec3 v) {
     float gamma = 1.0 / sqrt(1.0 - beta * beta);
     float dopplerFactor = 1.0 / (gamma * (1.0 - beta * cosTheta));
     
-    float beaming = pow(dopplerFactor, 3.0 + uBeamingScale) * uDopplerStrength;
+    float beaming = pow(dopplerFactor, 2.5 + uBeamingScale) * uDopplerStrength;
     beaming = mix(1.0, beaming, clamp(uDopplerStrength, 0.0, 1.0));
     density *= beaming;
     
@@ -159,13 +159,13 @@ vec3 getNebula(vec3 rd) {
         a *= 0.5;
     }
     
-    vec3 colBlue = vec3(0.005, 0.02, 0.1);
-    vec3 colPurple = vec3(0.06, 0.008, 0.06);
-    vec3 colSpace = vec3(0.001, 0.0, 0.003);
+    vec3 colBlue = vec3(0.008, 0.025, 0.12);
+    vec3 colPurple = vec3(0.07, 0.012, 0.08);
+    vec3 colDeep = vec3(0.002, 0.001, 0.008);
     
-    vec3 col = mix(colSpace, colBlue, n);
-    col = mix(col, colPurple, pow(n, 2.0));
-    return col;
+    vec3 col = mix(colDeep, colBlue, n);
+    col = mix(col, colPurple, pow(n, 1.8));
+    return col * 0.8;
 }
 
 void main() {
@@ -231,7 +231,7 @@ void main() {
                 diskColorAccum.a += alpha;
                 
                 // Accumulate volumetric glow/bloom along the ray
-                bloomAccum += diskSample.rgb * alpha * exp(-abs(p.y) * 4.0) * 0.12;
+                bloomAccum += diskSample.rgb * alpha * exp(-abs(p.y) * 4.0) * 0.05;
                 
                 if (diskColorAccum.a >= 0.98) {
                     diskColorAccum.a = 1.0;
@@ -258,13 +258,13 @@ void main() {
     
     // Relativistic atmospheric scattering/corona glow near horizon
     float centerDist = length(cross(rayOrigin, rayDirWorld));
-    float horizonGlow = exp(-max(0.0, centerDist - uRs) * 2.6) * 0.22;
+    float horizonGlow = exp(-max(0.0, centerDist - uRs) * 2.6) * 0.12;
     if (centerDist > uRs && !hitBH) {
         finalColor += vec3(0.9, 0.48, 0.15) * horizonGlow * (1.0 - diskColorAccum.a);
     }
     
     // Cinematic tone mapping & gamma correction
-    finalColor = finalColor / (finalColor + vec3(0.85)); // Reinhard mapping
+    finalColor = finalColor / (finalColor + vec3(1.0)); // Reinhard mapping
     finalColor = pow(finalColor, vec3(1.0 / 2.2));       // Gamma correction
     
     fragColor = vec4(finalColor, 1.0);

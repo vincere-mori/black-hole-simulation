@@ -23,7 +23,7 @@ uniform vec3 uColorTheme1;
 uniform vec3 uColorTheme2;
 uniform int  uShapeMode;        // 0=orion, 1=horsehead, 2=crab, 3=pleiades
 
-#define MAX_STEPS 96
+#define MAX_STEPS 60
 #define PI 3.14159265359
 
 float hash3(vec3 p) {
@@ -90,7 +90,7 @@ float densOrion(vec3 p, float outerR, float coreR) {
 
     float shape = max(lobe + wing - hollow * 0.45, 0.0);
 
-    float drift = uTime * uSpinSpeed * 0.025;
+    float drift = uTime * uSpinSpeed * 0.015;
     float base = fbm3(p * uNoiseScale * 0.45 + vec3(drift, drift * 0.6, -drift * 0.7));
     float wisp = fbm3(p * uNoiseScale * 1.4 - vec3(drift * 1.3, 0.0, drift));
 
@@ -102,47 +102,64 @@ float densOrion(vec3 p, float outerR, float coreR) {
 // ----- Horsehead: bright IC 434 slab behind, dark silhouette in front -----
 // returns (emission, dust-absorption)
 vec2 densHorsehead(vec3 p, float outerR, float coreR) {
-    // emission slab toward -z half (IC 434 plane)
-    float bgZ = smoothstep(outerR * 0.1, -outerR * 0.6, p.z);
-    float bgRad = exp(-(p.x * p.x + p.y * p.y) / (outerR * outerR * 0.55));
-    float drift = uTime * uSpinSpeed * 0.022;
-    float bgFbm = fbm3(p * uNoiseScale * 0.55 + vec3(drift));
-    float bgEmit = bgZ * bgRad * smoothstep(0.18, 0.8, bgFbm) * 1.4;
+    // Wide IC 434 emission background — spans the full field
+    // Bright pink H-alpha wall on the +y half, fading down
+    float bgY = smoothstep(-outerR * 0.8, outerR * 0.6, p.y) * 0.8 + 0.2;
+    float bgZ = smoothstep(outerR * 0.3, -outerR * 0.5, p.z);
+    float bgRad = exp(-(p.x * p.x) / (outerR * outerR * 1.2));
+    float drift = uTime * uSpinSpeed * 0.013;
+    float bgFbm = fbm3(p * uNoiseScale * 0.4 + vec3(drift, drift * 0.4, -drift * 0.3));
+    float bgWisp = fbm3(p * uNoiseScale * 0.9 - vec3(drift * 0.7, 0.0, drift * 0.5));
+    float bgEmit = bgY * bgZ * bgRad * (smoothstep(0.15, 0.75, bgFbm) * 0.9 + smoothstep(0.4, 0.85, bgWisp) * 0.4);
 
-    // build a horse-head silhouette in front (z slightly positive)
-    vec3 hp = p - vec3(0.0, -0.3, 0.4);
+    // Horse-head dark silhouette — positioned against the glow
+    vec3 hp = p - vec3(0.0, -0.15, 0.25);
 
-    // neck (vertical squashed sphere)
+    // Neck — tall vertical column
     vec3 body = hp;
-    body.x *= 1.7;
-    body.z *= 1.4;
-    float bodyD = length(body) - coreR * 1.45;
+    body.x *= 1.5;
+    body.z *= 1.6;
+    float bodyD = length(body) - coreR * 1.6;
 
-    // head bulge
-    vec3 head = hp - vec3(-0.1, coreR * 1.6, 0.0);
-    head.x *= 1.25;
-    float headD = length(head) - coreR * 1.0;
+    // Head bulge — offset upward and slightly left
+    vec3 head = hp - vec3(-0.15, coreR * 1.8, 0.0);
+    head.x *= 1.15;
+    head.z *= 1.3;
+    float headD = length(head) - coreR * 1.1;
 
-    // pointed ear top
-    vec3 ear = hp - vec3(-0.55, coreR * 2.5, 0.0);
-    ear.y *= 0.65;
-    float earD = length(ear) - coreR * 0.45;
+    // Pointed ear — distinctive peak at top-left
+    vec3 ear = hp - vec3(-0.5, coreR * 2.7, 0.0);
+    ear.y *= 0.55;
+    ear.x *= 0.85;
+    float earD = length(ear) - coreR * 0.5;
 
-    // snout protruding right
-    vec3 snout = hp - vec3(coreR * 1.3, coreR * 0.4, 0.0);
-    snout.y *= 1.5;
-    snout.x *= 0.9;
-    float snoutD = length(snout) - coreR * 0.7;
+    // Snout — protruding to the right
+    vec3 snout = hp - vec3(coreR * 1.4, coreR * 0.6, 0.0);
+    snout.y *= 1.6;
+    snout.x *= 0.8;
+    float snoutD = length(snout) - coreR * 0.75;
 
-    // smooth-min union
-    float k = 0.55;
-    float dShape = -log(exp(-bodyD / k) + exp(-headD / k) + exp(-earD / k) + exp(-snoutD / k)) * k;
+    // Base cloud — wide dark cloud below the horse
+    vec3 baseCloud = hp - vec3(0.0, -coreR * 1.0, 0.0);
+    baseCloud.y *= 0.5;
+    baseCloud.x *= 0.6;
+    float baseD = length(baseCloud) - coreR * 2.5;
 
-    float inside = smoothstep(0.05, -0.45, dShape);
+    // Smooth union of all parts
+    float k = 0.5;
+    float dShape = -log(exp(-bodyD/k) + exp(-headD/k) + exp(-earD/k) + exp(-snoutD/k) + exp(-baseD/k)) * k;
 
-    // turbulent dust mass
-    float dustN = fbm3(p * uNoiseScale * 1.05 - vec3(drift * 1.4));
-    float dust = inside * smoothstep(0.22, 0.7, dustN) * 2.8;
+    // Strong absorption inside silhouette
+    float inside = smoothstep(0.1, -0.6, dShape);
+
+    // Turbulent dust texture
+    float dustN = fbm3(p * uNoiseScale * 0.85 - vec3(drift * 0.8, drift * 0.3, drift * 0.5));
+    float dustDetail = fbm3(p * uNoiseScale * 1.8 + vec3(drift * 1.2));
+    float dust = inside * (smoothstep(0.18, 0.65, dustN) * 2.2 + smoothstep(0.5, 0.9, dustDetail) * 1.0);
+
+    // Rim glow — bright edge where silhouette meets emission
+    float rim = smoothstep(-0.6, -0.05, dShape) * smoothstep(0.15, -0.15, dShape);
+    bgEmit += rim * 0.6 * bgZ;
 
     return vec2(bgEmit, dust);
 }
@@ -254,7 +271,7 @@ void main() {
         float t = tNear + stepLen * 0.5;
 
         // slow global rotation - gives all clouds gentle motion
-        mat3 rot = rotY(uTime * uSpinSpeed * 0.012);
+        mat3 rot = rotY(uTime * uSpinSpeed * 0.007);
 
         for (int i = 0; i < MAX_STEPS; i++) {
             if (accumA > 0.97) break;
@@ -274,20 +291,26 @@ void main() {
             else if (uShapeMode == 1) {
                 // Horsehead - emission + absorption
                 vec2 d = densHorsehead(p, outerR, coreR);
-                if (d.x > 0.005) {
-                    vec3 emitCol = mix(uColorTheme1, uColorTheme2, 0.35);
-                    float a = d.x * uDopplerStrength * 0.6 * stepLen * (1.0 - accumA);
+                // Emission background (IC 434 H-alpha glow)
+                if (d.x > 0.003) {
+                    // Pink-magenta gradient: brighter at top, deeper at edges
+                    float yFade = smoothstep(-outerR * 0.5, outerR * 0.5, p.y);
+                    vec3 emitCol = mix(uColorTheme1 * 0.7, uColorTheme1, yFade);
+                    emitCol = mix(emitCol, uColorTheme2, 0.15);
+                    float a = d.x * uDopplerStrength * 0.45 * stepLen * (1.0 - accumA);
                     accumCol += emitCol * a;
                     accumA += a;
                 }
+                // Dark dust absorption (horse silhouette)
                 if (d.y > 0.01) {
-                    // dark dust eats accumulated light, contributes very dim self-color
-                    float k = d.y * stepLen * 1.9;
-                    accumCol *= exp(-k * 1.6);
-                    vec3 dustCol = mix(uColorTheme1, vec3(0.05, 0.03, 0.06), 0.85);
-                    float a = k * 0.18 * (1.0 - accumA);
+                    float k = d.y * stepLen * 2.4;
+                    // Strong extinction — eats the pink glow behind
+                    accumCol *= exp(-k * 2.2);
+                    // Very faint self-emission from warm dust
+                    vec3 dustCol = vec3(0.03, 0.015, 0.025);
+                    float a = k * 0.08 * (1.0 - accumA);
                     accumCol += dustCol * a;
-                    accumA += k * 0.35 * (1.0 - accumA);
+                    accumA += k * 0.5 * (1.0 - accumA);
                 }
             }
             else if (uShapeMode == 2) {
@@ -299,9 +322,9 @@ void main() {
                     float mt = clamp(r / outerR + sin(ang * 6.0) * 0.12, 0.0, 1.0);
                     vec3 col = mix(uColorTheme1, uColorTheme2, mt);
                     if (r < coreR * 0.6) {
-                        col = mix(col, vec3(1.4, 1.3, 1.55), 0.55);
+                        col = mix(col, vec3(0.9, 0.85, 1.1), 0.45);
                     }
-                    float bright = dens * uDopplerStrength * 0.5;
+                    float bright = dens * uDopplerStrength * 0.35;
                     float a = bright * stepLen * 0.95 * (1.0 - accumA);
                     accumCol += col * a;
                     accumA += a;
@@ -314,7 +337,7 @@ void main() {
                     float r = length(p - vec3(-0.8, 0.4, 0.0));
                     float mt = clamp(r / outerR * 0.95, 0.0, 1.0);
                     vec3 col = mix(uColorTheme1, uColorTheme2, mt);
-                    float bright = dens * uDopplerStrength * 0.55;
+                    float bright = dens * uDopplerStrength * 0.4;
                     float a = bright * stepLen * 0.9 * (1.0 - accumA);
                     accumCol += col * a;
                     accumA += a;
@@ -334,7 +357,7 @@ void main() {
         finalCol += uColorTheme1 * halo * (1.0 - accumA);
     }
 
-    finalCol = finalCol / (finalCol + vec3(0.95));
+    finalCol = finalCol / (finalCol + vec3(1.1));
     finalCol = pow(finalCol, vec3(1.0 / 2.2));
 
     fragColor = vec4(finalCol, 1.0);

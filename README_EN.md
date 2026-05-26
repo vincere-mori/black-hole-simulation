@@ -5,8 +5,7 @@
 <h1 align="center">🌌 Stellar Cartography</h1>
 
 <p align="center">
-  <em>Fall into a black hole, reach through a wormhole,<br>
-  get lost in a nebula — all without a single server request.</em>
+  <em>A meditative space explorer right in your browser. No servers, no noise — just volumetric raymarching, particles, and the laws of astrophysics.</em>
 </p>
 
 <p align="center">
@@ -19,7 +18,7 @@
 
 <p align="center">
   <a href="https://vincere-mori.github.io/stellar-cartography/">
-    <img src="https://img.shields.io/badge/▶%20Live%20Demo-vincere--mori.github.io-e8943a?style=for-the-badge" alt="Live Demo"/>
+    <img src="https://img.shields.io/badge/▶%20Open%20Interactive%20Map-vincere--mori.github.io-e8943a?style=for-the-badge" alt="Live Demo"/>
   </a>
 </p>
 
@@ -36,148 +35,109 @@
 
 ---
 
-## Why this exists
+### Why did I build this?
 
-I wanted to build something you can just *look at*. Not click, not grind — sit back and watch gas spiral around an event horizon. Watch light bend at the throat of a wormhole. Watch nebula clouds drift in slow motion.
+This project started from a simple desire to build an interactive digital canvas that is just beautiful to look at. There are no game loops, high scores, or time limits here. It is a living cosmic simulation.
 
-Everything runs in the browser. One HTML file, five raymarched shaders, 65,000 particles for the galaxy. No backend, no bundler — Three.js, some vanilla JS, and raw math on the GPU.
+You can watch stellar gas spiral into the event horizon of a supermassive black hole, peer through the warped throat of a wormhole into another universe, or study the complex geometry of a Dyson sphere.
 
-The catalogue has 7 objects, each with its own shader, color themes, and a detailed dossier. Three nebulae for the beauty. A black hole, a wormhole, a Dyson sphere for the exotic science. A star cluster because the Pleiades are the Pleiades.
-
----
-
-## What's inside
-
-**Shaders** — 5 of them, raymarching 60–130 steps per pixel, compiled right on the GPU.
-
-**Nebulae** — Orion M42, Horsehead, Crab Nebula. Volumetric clouds, slow drift, no flat textures anywhere.
-
-**Black hole** — Schwarzschild geodesics, a volumetric accretion disk, Doppler color shift. This is Sgr A*, 4 million solar masses.
-
-**Wormhole** — Morris-Thorne throat. Cross it and the coordinates invert — a different starfield opens up on the other side. A different universe.
-
-**Dyson sphere** — a geometric collector swarm around a star, thermal glow leaking through the gaps between panels.
-
-**Galaxy map** — 65,000 particles (disk, bulge, gas clouds), background stars, two spiral arms.
-
-**JARVIS boot** — a three-column terminal with logs, gravity scans, and navigation calibration. Pure atmosphere.
-
-**Customisation** — 2 color themes and 2 presets per object, sliders update in real time.
+Everything runs locally on your GPU. No heavy bundlers, no backend — just vanilla JavaScript, Three.js, and raw physics computed inside GLSL fragment shaders.
 
 ---
 
-## Catalogue
+### Key Features
 
-| # | Object | What it is | Sector | Why it's cool |
-|:-:|--------|------------|:------:|---------------|
-| 1 | **Sagittarius A\*** | Supermassive Black Hole | 00-CORE | Galactic center, 4.15×10⁶ M☉ |
-| 2 | **Orion Nebula M42** | Emission Nebula | 03-O | Stellar nursery, 1,344 ly away |
-| 3 | **Horsehead Nebula** | Dark Nebula (B33) | 03-H | Dark silhouette against IC 434's glow |
-| 4 | **Crab Nebula M1** | Supernova Remnant | 12-T | SN 1054 aftermath, synchrotron filaments |
-| 5 | **Pleiades M45** | Open Star Cluster | 06-S | Seven Sisters with a reflection nebula |
-| 6 | **Cygnus Wormhole** | Morris-Thorne Bridge | 07-F | Throat crossing to an alternate universe |
-| 7 | **Kepler Dyson Sphere** | Type II Megastructure | 19-B | Geometric solar collector swarm |
+* **Volumetric Raymarching** — all major celestial anomalies are rendered on the GPU using a custom raymarching loop (60–80 steps per ray).
+* **3D Nebulae** — realistic gas and dust clouds (Orion M42, the Crab Nebula, and the Horsehead silhouette) with complex color gradients, without using any flat sprites.
+* **Black Hole (Sagittarius A\*)** — realistic gravitational lensing computed on-the-fly using the Schwarzschild metric, complete with relativistic Doppler beaming (frequency and brightness shifting of the gas).
+* **Traversable Wormhole** — a Morris-Thorne bridge. As you approach the throat, space coordinates invert, seamlessly transitioning you into an alternate universe with its own custom starfield.
+* **Dyson Sphere (Kepler)** — a futuristic swarm of solar panel collectors orbiting a host star with glowing circuit patterns and light filtering through the gaps.
+* **Milky Way Map** — 55,000 particles mapped along spiral arms, a dense central bulge, and dust clouds.
+* **Terminal Experience** — a retro sci-fi boot sequence inspired by onboard navigation computer diagnostics.
 
 ---
 
-## The physics (if you're curious)
+### Anomaly Registry
 
-These aren't decorative sprites — the shaders compute real math.
-
-**Gravitational lensing** — light rays bend step by step following the Schwarzschild metric:
-```
-a = −1.5 × Rs × |L|² / r⁵ × p
-```
-Angular momentum `L = p × v`, `Rs` is the event horizon radius.
-
-**Accretion disk** — it's a 3D participating medium, not a flat circle:
-```
-ρ(r, y) = Noise3D(r, θ) × exp(−y² / h²)
-```
-That's why it actually looks like a gas torus when viewed at an angle.
-
-**Doppler beaming** — gas moving toward you is brighter and bluer; away from you — dimmer and redder:
-```
-D = 1 / (γ × (1 − β · cos θ))
-```
-
-**Wormhole** — when `r < Rs`, the ray flips and exits into a separate coordinate system:
-```
-r < Rs  →  p_new = −p × 1.01
-```
+| # | Anomaly | Class | Sector | Highlight |
+|:-:|:---|:---|:---:|:---|
+| 1 | **Sagittarius A\*** | Supermassive Black Hole | `00-CORE` | Center of the Milky Way, 4.15 million solar masses |
+| 2 | **Orion Nebula M42** | Emission Nebula | `03-O` | A vast stellar nursery located 1,344 light-years away |
+| 3 | **Horsehead Nebula** | Dark Nebula (B33) | `03-H` | An iconic dark dust silhouette backlit by IC 434's emission |
+| 4 | **Crab Nebula M1** | Supernova Remnant | `12-T` | Aftermath of the 1054 supernova with a central precessing pulsar |
+| 5 | **Pleiades M45** | Open Star Cluster | `06-S` | The Seven Sisters wrapped in a delicate reflection nebula |
+| 6 | **Cygnus Wormhole** | Einstein-Rosen Bridge | `07-F` | A stable wormhole featuring high-distortion ring lensing |
+| 7 | **Kepler Dyson Sphere** | Megastructure | `19-B` | Swarm of geometric panels harvesting the energy of its star |
 
 ---
 
-## Getting started
+### The Physics
+
+If you want to know how the math works in the shaders:
+
+1. **Light Bending (Gravitational Lensing):** light ray directions are updated at each step of the march using the Schwarzschild geodesic approximation:
+   $$\vec{a} = -1.5 \cdot R_s \cdot \frac{|\vec{L}|^2}{r^5} \cdot \vec{p}$$
+   Where $\vec{L} = \vec{p} \times \vec{v}$ is the angular momentum, and $R_s$ is the Schwarzschild radius.
+   
+2. **Accretion Disk Volume:** the gas density is modeled as a 3D torus with a Gaussian vertical decay and domain-warped fractal noise:
+   $$\rho(r, y) = \text{WarpedNoise}(r, \theta) \cdot \exp\left(-\frac{y^2}{h^2}\right)$$
+
+3. **Relativistic Beaming:** the brightness of the accretion disk is modulated by the Doppler factor, making the gas moving toward you brighter and blue-shifted, and gas moving away dimmer and red-shifted:
+   $$D = \frac{1}{\gamma \cdot (1 - \beta \cos\theta)}$$
+
+4. **Wormhole Transition:** when the ray passes inside the throat ($r < R_s$), the coordinates are inverted:
+   $$\vec{p}_{new} = -\vec{p} \cdot 1.01$$
+
+---
+
+### Quick Start
+
+The project is completely self-contained. However, modern browsers block shader imports via the `file://` protocol due to CORS security policies. You will need a simple local server to run it.
 
 ```bash
+# Clone the repository
 git clone https://github.com/vincere-mori/stellar-cartography.git
 cd stellar-cartography
 
-# Browsers block shader files on file://, so you need a local server
+# Start a simple python web server
 python -m http.server 7821
-# → http://localhost:7821
 ```
 
-### Desktop version (OpenGL)
+Now open your browser and navigate to: **`http://localhost:7821`**
 
+#### Desktop Standalone Version (OpenGL / Python)
+You can also run the project locally as a native window:
 ```bash
 pip install -r requirements.txt
 python main.py
 ```
 
 <details>
-<summary>Keyboard & mouse controls (desktop)</summary>
+<summary>⌨️ Keyboard Controls (Desktop Version)</summary>
 
-| Input | What it does |
+| Key | Action |
 |---|---|
-| Mouse drag | Orbit camera |
-| Scroll | Zoom |
-| `Space` | Toggle autopilot |
-| `1`–`7` | Switch object |
-| `Q` / `A` | Schwarzschild radius (Rs) |
-| `W` / `S` | Orbital speed |
-| `E` / `D` | Jet intensity |
-| `R` / `F` | Gravitational lensing |
-| `T` | Cycle color theme |
-| `Esc` | Close |
+| `Mouse Drag` | Rotate the camera around the active object |
+| `Mouse Scroll` | Zoom in / out |
+| `Space` | Toggle autopilot camera orbit |
+| `1` – `7` | Select celestial object |
+| `Q` / `A` | Adjust anomaly radius ($R_s$) |
+| `W` / `S` | Adjust accretion disk / panel rotation speed |
+| `E` / `D` | Adjust Doppler beaming / jet glow intensity |
+| `R` / `F` | Adjust gravity distortion / lensing strength |
+| `T` | Cycle through color themes |
+| `Esc` | Quit the application |
 
 </details>
 
 ---
 
-## Stack
+### Tech Stack
 
-| | |
-|---|---|
-| Renderer | Three.js r128 · WebGL2 · GLSL 3.00 ES |
-| Language | Vanilla JavaScript ES2022 |
-| Desktop | Python 3 · PyOpenGL · GLFW |
-| Build | Zero bundler — single HTML entry point |
-
----
-
-<p align="center">
-  <code>webgl</code> &nbsp;
-  <code>threejs</code> &nbsp;
-  <code>glsl</code> &nbsp;
-  <code>raymarching</code> &nbsp;
-  <code>black-hole</code> &nbsp;
-  <code>schwarzschild</code> &nbsp;
-  <code>accretion-disk</code> &nbsp;
-  <code>gravitational-lensing</code> &nbsp;
-  <code>wormhole</code> &nbsp;
-  <code>morris-thorne</code> &nbsp;
-  <code>nebula</code> &nbsp;
-  <code>dyson-sphere</code> &nbsp;
-  <code>galaxy</code> &nbsp;
-  <code>astrophysics</code> &nbsp;
-  <code>physics-simulation</code> &nbsp;
-  <code>scientific-visualization</code> &nbsp;
-  <code>3d</code> &nbsp;
-  <code>interactive</code> &nbsp;
-  <code>javascript</code>
-</p>
+* **Graphics:** Three.js (r128) · WebGL2 · GLSL 3.00 ES
+* **Frontend:** Vanilla ES2022 JavaScript + CSS3
+* **Desktop:** Python 3 · PyOpenGL · GLFW
+* **Build:** None (zero-bundler, runs out of the box)
 
 ---
 

@@ -24,7 +24,7 @@ uniform float uStarDensity;     // Starfield density
 uniform vec3 uColorTheme1;      // Alternate universe nebula color 1 (e.g., purple)
 uniform vec3 uColorTheme2;      // Alternate universe nebula color 2 (e.g., green/pink)
 
-#define MAX_STEPS 120
+#define MAX_STEPS 60
 #define PI 3.14159265359
 
 // Hash helpers
@@ -79,7 +79,7 @@ vec3 getAltUniverseSky(vec3 rd) {
         if (h > 1.0 - (0.009 * uStarDensity)) {
             float dist = length(fp - vec3(0.5));
             // Golden and blue stars
-            vec3 col = mix(vec3(1.2, 0.8, 0.4), vec3(0.6, 0.9, 1.4), h);
+            vec3 col = mix(vec3(0.85, 0.6, 0.3), vec3(0.45, 0.65, 1.0), h);
             stars += col * exp(-dist / 0.045) * h;
         }
     }
@@ -165,7 +165,7 @@ void main() {
     
     // Add glowing refraction ring around the throat boundary (Einstein Ring effect)
     float centerDist = length(cross(rayOrigin, rayDirWorld));
-    float throatGlow = exp(-max(0.0, centerDist - uRs) * 3.5) * 0.25;
+    float throatGlow = exp(-max(0.0, centerDist - uRs) * 3.5) * 0.15;
     // Chromatic dispersion color (e.g. glowing orange/cyan boundary)
     vec3 ringColor = mix(vec3(0.9, 0.6, 0.2), vec3(0.2, 0.7, 0.9), sin(uTime * uSpinSpeed) * 0.5 + 0.5);
     finalColor += ringColor * throatGlow;

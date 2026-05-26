@@ -24,7 +24,7 @@ uniform float uStarDensity;     // Star density
 uniform vec3 uColorTheme1;      // Jet color (e.g. bright blue/cyan)
 uniform vec3 uColorTheme2;      // Magnetosphere color (e.g. deep purple)
 
-#define MAX_STEPS 90
+#define MAX_STEPS 60
 #define PI 3.14159265359
 
 // Noise helper
@@ -116,12 +116,12 @@ void main() {
             float n = fbm(surfUV * uNoiseScale);
             
             // Core color: extremely hot blue-white
-            vec3 coreCol = vec3(0.7, 0.9, 1.5) * (1.5 + n);
+            vec3 coreCol = vec3(0.5, 0.65, 1.0) * (1.2 + n * 0.6);
             
             // Hotspots at magnetic poles
             float align = abs(dot(normal, magAxis));
-            float hotspot = pow(align, 8.0) * 1.5;
-            coreCol += vec3(0.8, 1.1, 2.0) * hotspot;
+            float hotspot = pow(align, 8.0) * 0.7;
+            coreCol += vec3(0.4, 0.6, 1.0) * hotspot;
             
             float alpha = 1.0 - alphaAccum;
             colorAccum += coreCol * alpha;
@@ -143,7 +143,7 @@ void main() {
         if (absCos > jetThreshold) {
             // Inside the relativistic jet beam!
             float jetFactor = (absCos - jetThreshold) / (1.0 - jetThreshold);
-            float jetGlow = pow(jetFactor, 4.0) * uDopplerStrength * 1.8;
+            float jetGlow = pow(jetFactor, 4.0) * uDopplerStrength * 0.9;
             
             // Decrease intensity with distance, but add pulses
             float pulse = 1.0 + 0.3 * sin(r * 1.5 - uTime * 12.0);
@@ -188,7 +188,7 @@ void main() {
     
     // Star glow/bloom approximation around the core
     float centerDist = length(cross(rayOrigin, rayDirWorld));
-    float starGlow = exp(-max(0.0, centerDist - uRs) * 2.0) * 0.35;
+    float starGlow = exp(-max(0.0, centerDist - uRs) * 2.0) * 0.2;
     finalColor += vec3(0.6, 0.8, 1.2) * starGlow * (1.0 - alphaAccum);
     
     // Tone mapping and gamma

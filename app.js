@@ -15,11 +15,11 @@ const OBJECTS = {
         accentParticles: true,
         position: new THREE.Vector3(0, 0, 0),
         presets: {
-            "tranquil-core": { rs: 1.1, distortion: 0.9, outer: 9.0, speed: 0.7, doppler: 0.55, stars: 1.0, theme: 0 },
-            "deep-horizon":  { rs: 1.6, distortion: 1.1, outer: 12.0, speed: 0.45, doppler: 0.35, stars: 1.1, theme: 1 }
+            "tranquil-core": { rs: 1.1, distortion: 0.9, outer: 9.0, speed: 0.4, doppler: 0.35, stars: 1.0, theme: 0 },
+            "deep-horizon":  { rs: 1.6, distortion: 1.1, outer: 12.0, speed: 0.3, doppler: 0.25, stars: 1.1, theme: 1 }
         },
         themes: [
-            { c1: '#ff7a2e', c2: '#ffb86b', name: 'Warm Amber', temp: '8.4e6' },
+            { c1: '#e85a1a', c2: '#ffb86b', name: 'Warm Amber', temp: '8.4e6' },
             { c1: '#7ec8ff', c2: '#2a4cff', name: 'Cool Cobalt', temp: '1.1e7' }
         ],
         labels: { rs: "Horizon Mass (Rs)", distortion: "Warp Lensing", outer: "Disk Outer Bound", speed: "Disk Rotation", doppler: "Doppler Beaming" }
@@ -55,16 +55,15 @@ const OBJECTS = {
         rad: "BACKLIT SILHOUETTE",
         desc: "Тёмное облако пыли в созвездии Ориона, подсвеченное сзади красным сиянием IC 434. Силуэт напоминает голову лошади.",
         shader: "shaders/nebula.frag",
-        renderMode: "particles",
-        particleType: "horsehead",
+        accentParticles: true,
         position: new THREE.Vector3(-3.1, -0.4, 4.8),
         presets: {
-            "silhouette":{ rs: 1.0, distortion: 1.6, outer: 9.0, speed: 0.18, doppler: 0.9, stars: 1.1, theme: 0 },
-            "deep-dust": { rs: 1.4, distortion: 1.2, outer: 11.0, speed: 0.12, doppler: 0.7, stars: 1.3, theme: 1 }
+            "silhouette":{ rs: 1.0, distortion: 1.6, outer: 9.0, speed: 0.08, doppler: 0.6, stars: 1.1, theme: 0 },
+            "deep-dust": { rs: 1.4, distortion: 1.2, outer: 11.0, speed: 0.06, doppler: 0.5, stars: 1.3, theme: 1 }
         },
         themes: [
-            { c1: '#ff6a3a', c2: '#1a1f4a', name: 'Backlit Ember', temp: '7.5e3' },
-            { c1: '#d04a2a', c2: '#0a0e2a', name: 'Coal & Rust', temp: '6.0e3' }
+            { c1: '#e03878', c2: '#0d0b2e', name: 'H-alpha Rose', temp: '7.5e3' },
+            { c1: '#cc2860', c2: '#0a0820', name: 'Deep Emission', temp: '6.0e3' }
         ],
         labels: { rs: "Dust Density", distortion: "Silhouette Shape", outer: "Cloud Extent", speed: "Drift Speed", doppler: "Backlight Glow" }
     },
@@ -1045,9 +1044,9 @@ async function initApp() {
         composer.addPass(new THREE.RenderPass(objectScene, camera));
         bloomPass = new THREE.UnrealBloomPass(
             new THREE.Vector2(window.innerWidth, window.innerHeight),
-            0.45,  // strength
-            0.4,   // radius
-            0.7    // threshold
+            0.25,  // strength
+            0.35,  // radius
+            0.82,  // threshold
         );
         composer.addPass(bloomPass);
 
@@ -1055,8 +1054,8 @@ async function initApp() {
         const finalShader = {
             uniforms: {
                 tDiffuse:  { value: null },
-                uExposure: { value: 1.0 },
-                uVignette: { value: 0.45 },
+                uExposure: { value: 0.85 },
+                uVignette: { value: 0.35 },
                 uChromaAb: { value: 0.0025 }
             },
             vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
@@ -1135,7 +1134,7 @@ async function initApp() {
         const elapsed = clock.getElapsedTime();
 
         if (transitionProgress < 1.0) {
-            transitionProgress += delta * 1.5;
+            transitionProgress += delta * 0.8;
             if (transitionProgress >= 1.0) {
                 transitionProgress = 1.0;
                 onTransitionComplete();
@@ -1148,7 +1147,7 @@ async function initApp() {
         }
 
         if (appState === 'GALAXY' || appState === 'TRANSITION') {
-            const galaxyAngle = elapsed * 0.03;
+            const galaxyAngle = elapsed * 0.015;
             if (galaxyParticles) galaxyParticles.rotation.y = galaxyAngle;
             if (galaxyDust) galaxyDust.rotation.y = galaxyAngle;
 
@@ -1161,12 +1160,12 @@ async function initApp() {
                     node.position.z = -bp.x * sinA + bp.z * cosA;
                     node.position.y = bp.y;
                 }
-                const pulse = 2.0 + 0.18 * Math.sin(elapsed * 4.0 + node.position.x);
+                const pulse = 2.0 + 0.18 * Math.sin(elapsed * 2.4 + node.position.x);
                 node.scale.set(pulse, pulse, 1.0);
             });
 
             if (autoRotate && transitionProgress === 1.0) {
-                const mt = elapsed * 0.03;
+                const mt = elapsed * 0.015;
                 const radius = 45.0;
                 camera.position.x = radius * Math.cos(mt);
                 camera.position.z = radius * Math.sin(mt);
@@ -1204,7 +1203,7 @@ async function initApp() {
             const particleMode = obj && obj.renderMode === 'particles';
 
             if (controls && autoRotate) {
-                const mt = elapsed * 0.04;
+                const mt = elapsed * 0.02;
                 const orbitR = particleMode ? 14.0 : 17.0;
                 camera.position.x = orbitR * Math.cos(mt);
                 camera.position.z = orbitR * Math.sin(mt);
@@ -1317,14 +1316,14 @@ function buildGalaxyMap() {
     const pos = new Float32Array(count * 3);
     const col = new Float32Array(count * 3);
 
-    const cCore = new THREE.Color('#ffe199');
+    const cCore = new THREE.Color('#ffcc66');
     const cArm = new THREE.Color('#4d66ff');
     const cEdge = new THREE.Color('#03011c');
 
     for (let i = 0; i < count; i++) {
         const r = Math.pow(Math.random(), 2.3) * 24.0;
         const armIdx = i % 2;
-        const theta = (armIdx * Math.PI) + (r * 0.45);
+        const theta = (armIdx * Math.PI) + (r * 0.65);
         const sx = (Math.random() - 0.5) * (1.8 / (r * 0.1 + 0.5));
         const sy = (Math.random() - 0.5) * (1.2 / (r * 0.15 + 0.5));
         const sz = (Math.random() - 0.5) * (1.8 / (r * 0.1 + 0.5));
@@ -1370,7 +1369,7 @@ function buildGalaxyMap() {
     for (let i = 0; i < dustCount; i++) {
         const r = Math.pow(Math.random(), 1.8) * 24.0;
         const armIdx = i % 2;
-        const theta = (armIdx * Math.PI) + (r * 0.45) + (Math.random() - 0.5) * 0.22;
+        const theta = (armIdx * Math.PI) + (r * 0.65) + (Math.random() - 0.5) * 0.22;
         
         const sx = (Math.random() - 0.5) * (3.3 / (r * 0.1 + 0.5));
         const sy = (Math.random() - 0.5) * (1.8 / (r * 0.15 + 0.5));
@@ -1398,11 +1397,11 @@ function buildGalaxyMap() {
     dustGeo.setAttribute('color', new THREE.BufferAttribute(dustCol, 3));
     
     const dustMat = new THREE.PointsMaterial({
-        size: 2.0,
+        size: 2.8,
         map: createNebulaTexture(),
         vertexColors: true,
         transparent: true,
-        opacity: 0.14,
+        opacity: 0.22,
         blending: THREE.AdditiveBlending,
         depthWrite: false
     });
@@ -1414,12 +1413,12 @@ function buildGalaxyMap() {
     const coreSpriteMat = new THREE.SpriteMaterial({
         map: createCoreGlowTexture(),
         transparent: true,
-        opacity: 0.6,
+        opacity: 0.7,
         blending: THREE.AdditiveBlending,
         depthWrite: false
     });
     coreSprite = new THREE.Sprite(coreSpriteMat);
-    coreSprite.scale.set(7.0, 7.0, 1.0);
+    coreSprite.scale.set(10.0, 10.0, 1.0);
     scene.add(coreSprite);
 
     // 5. System Nodes (type-specific sprites, facing camera)

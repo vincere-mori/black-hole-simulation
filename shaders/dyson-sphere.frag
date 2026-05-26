@@ -24,7 +24,7 @@ uniform float uStarDensity;     // Star density
 uniform vec3 uColorTheme1;      // Circuit glow color (e.g. neon orange/gold)
 uniform vec3 uColorTheme2;      // Star color (e.g. hot yellow/white)
 
-#define MAX_STEPS 100
+#define MAX_STEPS 60
 #define PI 3.14159265359
 
 // Noise helper
@@ -137,7 +137,7 @@ void main() {
             // Panel ambient noise
             float n = fbm(vec2(theta * 5.0, phi * 10.0)) * 0.05;
             
-            vec3 circColor = uColorTheme1 * circuit * uDopplerStrength * 2.2;
+            vec3 circColor = uColorTheme1 * circuit * uDopplerStrength * 1.4;
             finalColor = metalBase + circColor + vec3(n);
         } else {
             // Gap in the shell: light passes through!
@@ -148,7 +148,7 @@ void main() {
                 float starNoise = fbm(starUV + vec2(uTime * 0.8));
                 
                 // Star surface: hot, glowing, active
-                vec3 starCol = uColorTheme2 * (2.2 + starNoise * 1.5);
+                vec3 starCol = uColorTheme2 * (1.4 + starNoise * 0.8);
                 finalColor = starCol;
             } else {
                 // Missed star, crossed back of shell
@@ -175,7 +175,7 @@ void main() {
             
             // Volumetric glowing corona/god-rays from star escaping through gaps
             float centerDist = length(cross(rayOrigin, rayDirWorld));
-            float coronaGlow = exp(-max(0.0, centerDist - rStar) * 1.5) * 0.45;
+            float coronaGlow = exp(-max(0.0, centerDist - rStar) * 1.5) * 0.28;
             finalColor += uColorTheme2 * coronaGlow;
         }
     } else {
@@ -184,7 +184,7 @@ void main() {
         
         // Solar system glare / glow around Dyson structure
         float centerDist = length(cross(rayOrigin, rayDirWorld));
-        float outerGlow = exp(-max(0.0, centerDist - rShell) * 1.8) * 0.25;
+        float outerGlow = exp(-max(0.0, centerDist - rShell) * 1.8) * 0.15;
         finalColor += uColorTheme2 * outerGlow;
     }
     
