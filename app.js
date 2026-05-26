@@ -12,6 +12,7 @@ const OBJECTS = {
         rad: "EVENT HORIZON STABLE",
         desc: "Сверхмассивная чёрная дыра в центре Млечного Пути. Аккреционный диск, мягкое гравитационное линзирование и спокойное вращение плазмы вокруг горизонта.",
         shader: "shaders/black-hole.frag",
+        accentParticles: true,
         position: new THREE.Vector3(0, 0, 0),
         presets: {
             "tranquil-core": { rs: 1.1, distortion: 0.9, outer: 9.0, speed: 0.7, doppler: 0.55, stars: 1.0, theme: 0 },
@@ -32,6 +33,8 @@ const OBJECTS = {
         rad: "Hα EMISSION",
         desc: "Один из самых ярких звёздных питомников в небе. Огромное облако водорода и пыли, подсвеченное молодыми голубыми звёздами в центре.",
         shader: "shaders/nebula.frag",
+        renderMode: "particles",
+        particleType: "orion",
         position: new THREE.Vector3(-4.2, 0.8, 3.4),
         presets: {
             "ha-glow":   { rs: 1.4, distortion: 0.6, outer: 11.0, speed: 0.25, doppler: 1.0, stars: 1.0, theme: 0 },
@@ -52,6 +55,8 @@ const OBJECTS = {
         rad: "BACKLIT SILHOUETTE",
         desc: "Тёмное облако пыли в созвездии Ориона, подсвеченное сзади красным сиянием IC 434. Силуэт напоминает голову лошади.",
         shader: "shaders/nebula.frag",
+        renderMode: "particles",
+        particleType: "horsehead",
         position: new THREE.Vector3(-3.1, -0.4, 4.8),
         presets: {
             "silhouette":{ rs: 1.0, distortion: 1.6, outer: 9.0, speed: 0.18, doppler: 0.9, stars: 1.1, theme: 0 },
@@ -72,6 +77,8 @@ const OBJECTS = {
         rad: "SYNCHROTRON EMISSION",
         desc: "Остаток сверхновой 1054 года. Расширяющееся облако филаментов, в центре - пульсар, который подпитывает свечение синхротронным излучением.",
         shader: "shaders/nebula.frag",
+        renderMode: "particles",
+        particleType: "crab",
         position: new THREE.Vector3(5.4, 0.5, 2.2),
         presets: {
             "filaments":  { rs: 1.2, distortion: 0.5, outer: 10.0, speed: 0.3, doppler: 1.0, stars: 1.0, theme: 0 },
@@ -92,6 +99,8 @@ const OBJECTS = {
         rad: "REFLECTION NEBULA",
         desc: "Молодое звёздное скопление в созвездии Тельца. Семь ярких голубых звёзд погружены в нежную отражательную туманность.",
         shader: "shaders/nebula.frag",
+        renderMode: "particles",
+        particleType: "pleiades",
         position: new THREE.Vector3(4.1, 1.2, -3.6),
         presets: {
             "seven-sisters":{ rs: 1.6, distortion: 0.3, outer: 10.5, speed: 0.2, doppler: 0.7, stars: 1.2, theme: 0 },
@@ -112,6 +121,7 @@ const OBJECTS = {
         rad: "STABLE GATEWAY",
         desc: "Топологический мост через искривлённое пространство. Через горло видна звёздная панорама другой вселенной.",
         shader: "shaders/wormhole.frag",
+        accentParticles: true,
         position: new THREE.Vector3(5.4, -0.8, -2.5),
         presets: {
             "stable-gate":   { rs: 1.1, distortion: 0.8, outer: 10.0, speed: 0.5, doppler: 0.9, stars: 1.0, theme: 0 },
@@ -132,6 +142,8 @@ const OBJECTS = {
         rad: "THERMAL EMISSION",
         desc: "Рой геометрических солнечных коллекторов, окружающих звезду. Свет пробивается через зазоры между панелями, обрисовывая силуэт мегаструктуры.",
         shader: "shaders/dyson-sphere.frag",
+        renderMode: "particles",
+        particleType: "dyson",
         position: new THREE.Vector3(7.0, 1.0, 0.5),
         presets: {
             "dyson-orbit": { rs: 0.9, distortion: 0.0, outer: 2.8, speed: 0.7, doppler: 1.1, stars: 1.0, theme: 0 },
@@ -699,6 +711,7 @@ let hudFps, hudTemp;
 // ===== Three.js =====
 let renderer, scene, camera, controls, clock;
 let orthoCamera, orthoScene, shaderMaterial;
+let objectScene, composer, bloomPass, currentNebulaGroup = null;
 let uniforms = {};
 let galaxyParticles, galaxyDust, coreSprite, systemNodes = [];
 let raycaster, mouse;
@@ -1019,9 +1032,68 @@ async function initApp() {
 
     buildGalaxyMap();
 
-    // ortho scene for shaders
+    // ortho scene for raymarched shaders (black hole, wormhole, dyson)
     orthoScene = new THREE.Scene();
     orthoCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+    // 3D scene for particle-based nebulae
+    objectScene = new THREE.Scene();
+
+    // postprocessing - bloom for the WOW factor
+    if (typeof THREE.EffectComposer !== 'undefined') {
+        composer = new THREE.EffectComposer(renderer);
+        composer.addPass(new THREE.RenderPass(objectScene, camera));
+        bloomPass = new THREE.UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            0.45,  // strength
+            0.4,   // radius
+            0.7    // threshold
+        );
+        composer.addPass(bloomPass);
+
+        // ACES tonemap + subtle chromatic aberration + vignette (cinematic post)
+        const finalShader = {
+            uniforms: {
+                tDiffuse:  { value: null },
+                uExposure: { value: 1.0 },
+                uVignette: { value: 0.45 },
+                uChromaAb: { value: 0.0025 }
+            },
+            vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+            fragmentShader: `
+                precision highp float;
+                varying vec2 vUv;
+                uniform sampler2D tDiffuse;
+                uniform float uExposure;
+                uniform float uVignette;
+                uniform float uChromaAb;
+
+                // ACES filmic tonemap - graceful highlight roll-off, no harsh white
+                vec3 aces(vec3 x) {
+                    float a = 2.51, b = 0.03, c = 2.43, d = 0.59, e = 0.14;
+                    return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
+                }
+
+                void main() {
+                    vec2 cen = vUv - 0.5;
+                    float dist = length(cen);
+                    vec2 off = cen * dist * uChromaAb;
+                    vec3 col;
+                    col.r = texture2D(tDiffuse, vUv + off).r;
+                    col.g = texture2D(tDiffuse, vUv).g;
+                    col.b = texture2D(tDiffuse, vUv - off).b;
+                    col *= uExposure;
+                    col = aces(col);
+                    float vig = 1.0 - smoothstep(0.55, 1.1, dist * 2.0) * uVignette;
+                    col *= vig;
+                    gl_FragColor = vec4(col, 1.0);
+                }
+            `
+        };
+        const finalPass = new THREE.ShaderPass(finalShader);
+        finalPass.renderToScreen = true;
+        composer.addPass(finalPass);
+    }
 
     uniforms = {
         uCamPos: { value: new THREE.Vector3() },
@@ -1038,6 +1110,7 @@ async function initApp() {
         uBeamingScale: { value: 0.0 },
         uDistortion: { value: 1.0 },
         uStarDensity: { value: 1.0 },
+        uShapeMode: { value: 0 },
         uColorTheme1: { value: new THREE.Color() },
         uColorTheme2: { value: new THREE.Color() }
     };
@@ -1075,10 +1148,19 @@ async function initApp() {
         }
 
         if (appState === 'GALAXY' || appState === 'TRANSITION') {
-            if (galaxyParticles) galaxyParticles.rotation.y = elapsed * 0.03;
-            if (galaxyDust) galaxyDust.rotation.y = elapsed * 0.03;
+            const galaxyAngle = elapsed * 0.03;
+            if (galaxyParticles) galaxyParticles.rotation.y = galaxyAngle;
+            if (galaxyDust) galaxyDust.rotation.y = galaxyAngle;
 
+            // rotate object markers with the galaxy spiral
+            const cosA = Math.cos(galaxyAngle), sinA = Math.sin(galaxyAngle);
             systemNodes.forEach(node => {
+                const bp = node.userData.basePos;
+                if (bp) {
+                    node.position.x = bp.x * cosA + bp.z * sinA;
+                    node.position.z = -bp.x * sinA + bp.z * cosA;
+                    node.position.y = bp.y;
+                }
                 const pulse = 2.0 + 0.18 * Math.sin(elapsed * 4.0 + node.position.x);
                 node.scale.set(pulse, pulse, 1.0);
             });
@@ -1118,10 +1200,14 @@ async function initApp() {
             }
 
         } else if (appState === 'ORBIT') {
+            const obj = OBJECTS[activeObjectId];
+            const particleMode = obj && obj.renderMode === 'particles';
+
             if (controls && autoRotate) {
                 const mt = elapsed * 0.04;
-                camera.position.x = 17.0 * Math.cos(mt);
-                camera.position.z = 17.0 * Math.sin(mt);
+                const orbitR = particleMode ? 14.0 : 17.0;
+                camera.position.x = orbitR * Math.cos(mt);
+                camera.position.z = orbitR * Math.sin(mt);
             }
 
             controls.update();
@@ -1129,22 +1215,18 @@ async function initApp() {
             uniforms.uInvProjection.value.copy(camera.projectionMatrixInverse);
             uniforms.uCamWorld.value.copy(camera.matrixWorld);
             uniforms.uTime.value = elapsed;
-            
-            renderer.autoClear = false;
-            renderer.clear();
-            systemNodes.forEach(n => n.visible = false);
-            if (galaxyDust) galaxyDust.visible = false;
-            if (galaxyParticles) galaxyParticles.visible = false;
-            if (coreSprite) coreSprite.visible = false;
-            renderer.render(scene, camera);
-            
-            renderer.render(orthoScene, orthoCamera);
-            
-            systemNodes.forEach(n => n.visible = true);
-            if (galaxyDust) galaxyDust.visible = true;
-            if (galaxyParticles) galaxyParticles.visible = true;
-            if (coreSprite) coreSprite.visible = true;
-            renderer.autoClear = true;
+
+            NebulaParticles.tick(elapsed);
+            // universal: rotate/pulse any group marked with userData.spin/pulse
+            if (currentNebulaGroup) {
+                NebulaParticles.tickOrbitals(currentNebulaGroup, delta, elapsed);
+            }
+
+            if (composer) {
+                composer.render();
+            } else {
+                renderer.render(objectScene, camera);
+            }
         }
     }
 
@@ -1370,7 +1452,7 @@ function buildGalaxyMap() {
         sprite.position.copy(obj.position).multiplyScalar(2.5);
         sprite.scale.set(2.8, 2.8, 1.0);
         sprite.renderOrder = 999;
-        sprite.userData = { id: key };
+        sprite.userData = { id: key, basePos: sprite.position.clone() };
         scene.add(sprite);
         systemNodes.push(sprite);
     }
@@ -1468,7 +1550,10 @@ function onTransitionComplete() {
         document.getElementById('accessory-title').innerHTML = '<i class="fas fa-circle-notch"></i> Structure';
     }
 
-    // embedded cluster stars only for Pleiades; off for other nebulae
+    // per-object shape mode for nebula shader (0=orion, 1=horsehead, 2=crab, 3=pleiades)
+    const shapeModeMap = { orion_nebula: 0, horsehead: 1, crab_nebula: 2, pleiades: 3 };
+    uniforms.uShapeMode.value = (activeObjectId in shapeModeMap) ? shapeModeMap[activeObjectId] : 0;
+    // pleiades reuses uBeamingScale as per-star brightness
     uniforms.uBeamingScale.value = (activeObjectId === 'pleiades') ? 1.6 : 0.0;
 
     // slider bounds
@@ -1491,23 +1576,51 @@ function onTransitionComplete() {
     populateThemesPicker(obj);
     applyPresetConfig(obj, Object.keys(obj.presets)[0]);
 
-    shaderMaterial = new THREE.ShaderMaterial({
-        vertexShader: vtx,
-        fragmentShader: shaderSrc,
-        uniforms: uniforms,
-        depthWrite: false,
-        depthTest: false,
-        transparent: true,
-        glslVersion: THREE.GLSL3
-    });
-
+    // dispose previous object group if any
+    if (currentNebulaGroup) {
+        objectScene.remove(currentNebulaGroup);
+        NebulaParticles.dispose(currentNebulaGroup);
+        currentNebulaGroup = null;
+    }
     orthoScene.clear();
-    orthoScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), shaderMaterial));
 
-    camera.position.set(0, 5, 17);
+    const themeIdx = obj.presets[Object.keys(obj.presets)[0]].theme || 0;
+    const theme = obj.themes[themeIdx];
+    currentNebulaGroup = new THREE.Group();
+
+    if (obj.renderMode === 'particles' && typeof NebulaParticles !== 'undefined') {
+        currentNebulaGroup.add(NebulaParticles.build(obj.particleType, theme, renderer));
+        camera.position.set(0, 2, 14);
+        controls.maxDistance = 40.0;
+        controls.minDistance = 4.0;
+    } else {
+        // raymarched shader as fullscreen background plane in objectScene
+        shaderMaterial = new THREE.ShaderMaterial({
+            vertexShader: vtx,
+            fragmentShader: shaderSrc,
+            uniforms: uniforms,
+            depthWrite: false,
+            depthTest: false,
+            transparent: true,
+            glslVersion: THREE.GLSL3
+        });
+        const bgMesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), shaderMaterial);
+        bgMesh.frustumCulled = false;
+        bgMesh.renderOrder = -1000;
+        currentNebulaGroup.add(bgMesh);
+
+        // 3D accent particles in front of the shader background
+        if (obj.accentParticles && typeof NebulaParticles !== 'undefined') {
+            const accent = NebulaParticles.buildAccent(activeObjectId, theme, renderer);
+            if (accent) currentNebulaGroup.add(accent);
+        }
+        camera.position.set(0, 5, 17);
+        controls.maxDistance = 35.0;
+        controls.minDistance = 3.5;
+    }
+    objectScene.add(currentNebulaGroup);
+
     controls.target.set(0, 0, 0);
-    controls.maxDistance = 35.0;
-    controls.minDistance = 3.5;
     autoRotate = true;
     btnAutopilot.classList.add('active');
 
@@ -1533,6 +1646,12 @@ document.addEventListener('DOMContentLoaded', () => {
             controls.minDistance = 10.0;
             autoRotate = true;
             btnAutopilot.classList.remove('active');
+            // free particle nebula memory
+            if (currentNebulaGroup) {
+                objectScene.remove(currentNebulaGroup);
+                NebulaParticles.dispose(currentNebulaGroup);
+                currentNebulaGroup = null;
+            }
         }, 500);
     });
 
@@ -1688,6 +1807,7 @@ function onWindowResize() {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    if (composer) composer.setSize(window.innerWidth, window.innerHeight);
 }
 
 // ===== Side Panel Animations =====
