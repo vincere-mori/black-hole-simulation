@@ -35,6 +35,8 @@ const OBJECTS = {
         shader: "shaders/nebula.frag",
         renderMode: "particles",
         particleType: "orion",
+        orbitRadius: 16.4,
+        orbitSwing: 0.24,
         position: new THREE.Vector3(-4.2, 0.8, 3.4),
         presets: {
             "ha-glow":   { rs: 1.4, distortion: 0.6, outer: 11.0, speed: 0.25, doppler: 1.0, stars: 1.0, theme: 0 },
@@ -46,26 +48,29 @@ const OBJECTS = {
         ],
         labels: { rs: "Core Density", distortion: "Cloud Shape", outer: "Cloud Extent", speed: "Drift Speed", doppler: "Emission Strength" }
     },
-    horsehead: {
-        name: "Horsehead Nebula",
-        class: "DARK NEBULA (B33)",
+    aurelia: {
+        name: "Aurelia Rogue Planet",
+        class: "ROGUE EXOPLANET ANOMALY",
         sector: "SECTOR 03-H",
         coords: "X: -3.10 / Y: -0.40 / Z: 4.80",
-        mass: "~300 M☉",
-        rad: "BACKLIT SILHOUETTE",
-        desc: "Тёмное облако пыли в созвездии Ориона, подсвеченное сзади красным сиянием IC 434. Силуэт напоминает голову лошади.",
+        mass: "~2.3 Mj",
+        rad: "AURORA PLASMA WAKE",
+        desc: "Одинокая планета-гигант без звезды: холодный мир с сильным магнитным полем, полярными сияниями, прозрачными кольцами и хвостом ионизированной плазмы.",
         shader: "shaders/nebula.frag",
-        accentParticles: true,
+        renderMode: "particles",
+        particleType: "aurelia",
+        orbitRadius: 18.0,
+        orbitSwing: 0.35,
         position: new THREE.Vector3(-3.1, -0.4, 4.8),
         presets: {
-            "silhouette":{ rs: 1.0, distortion: 1.6, outer: 9.0, speed: 0.08, doppler: 0.6, stars: 1.1, theme: 0 },
-            "deep-dust": { rs: 1.4, distortion: 1.2, outer: 11.0, speed: 0.06, doppler: 0.5, stars: 1.3, theme: 1 }
+            "aurora-storm": { rs: 1.35, distortion: 0.9, outer: 8.4, speed: 0.34, doppler: 1.1, stars: 1.0, theme: 0 },
+            "eclipse-rings":{ rs: 1.10, distortion: 1.2, outer: 10.2, speed: 0.22, doppler: 0.85, stars: 1.2, theme: 1 }
         },
         themes: [
-            { c1: '#e03878', c2: '#0d0b2e', name: 'H-alpha Rose', temp: '7.5e3' },
-            { c1: '#cc2860', c2: '#0a0820', name: 'Deep Emission', temp: '6.0e3' }
+            { c1: '#25f0ff', c2: '#7a4dff', name: 'Aurora Cyan', temp: '87 K' },
+            { c1: '#ff7a3d', c2: '#3de0ff', name: 'Ion Ember', temp: '112 K' }
         ],
-        labels: { rs: "Dust Density", distortion: "Silhouette Shape", outer: "Cloud Extent", speed: "Drift Speed", doppler: "Backlight Glow" }
+        labels: { rs: "Planet Radius", distortion: "Magnetic Shear", outer: "Ring Span", speed: "Storm Drift", doppler: "Plasma Glow" }
     },
     crab_nebula: {
         name: "Crab Nebula M1",
@@ -78,6 +83,8 @@ const OBJECTS = {
         shader: "shaders/nebula.frag",
         renderMode: "particles",
         particleType: "crab",
+        orbitRadius: 21,
+        orbitSwing: 0.32,
         position: new THREE.Vector3(5.4, 0.5, 2.2),
         presets: {
             "filaments":  { rs: 1.2, distortion: 0.5, outer: 10.0, speed: 0.3, doppler: 1.0, stars: 1.0, theme: 0 },
@@ -100,6 +107,8 @@ const OBJECTS = {
         shader: "shaders/nebula.frag",
         renderMode: "particles",
         particleType: "pleiades",
+        orbitRadius: 18.0,
+        orbitSwing: 0.34,
         position: new THREE.Vector3(4.1, 1.2, -3.6),
         presets: {
             "seven-sisters":{ rs: 1.6, distortion: 0.3, outer: 10.5, speed: 0.2, doppler: 0.7, stars: 1.2, theme: 0 },
@@ -143,6 +152,8 @@ const OBJECTS = {
         shader: "shaders/dyson-sphere.frag",
         renderMode: "particles",
         particleType: "dyson",
+        orbitRadius: 20,
+        orbitSwing: 0.55,
         position: new THREE.Vector3(7.0, 1.0, 0.5),
         presets: {
             "dyson-orbit": { rs: 0.9, distortion: 0.0, outer: 2.8, speed: 0.7, doppler: 1.1, stars: 1.0, theme: 0 },
@@ -515,6 +526,54 @@ const OBJECT_DOSSIERS_RU = {
     },
 };
 
+OBJECT_DOSSIERS_EN.aurelia = {
+    overview: `Aurelia is a fictional rogue exoplanet anomaly: a cold gas giant drifting without a parent star, still visible through charged auroras, translucent rings, and a long ionized plasma wake.`,
+    params: [
+        ['Mass', '~2.3 Mj'],
+        ['Type', 'Rogue gas giant'],
+        ['Thermal State', 'Cryogenic upper clouds'],
+        ['Field', 'Extreme magnetosphere'],
+        ['Visible Feature', 'Aurora and plasma tail'],
+        ['Ring Material', 'Ice and metallic dust'],
+    ],
+    features: [
+        'Procedural 3D planet shader with animated storm bands',
+        'Transparent atmosphere, cloud layer, rings, moons, and magnetic arcs',
+        'Aurora curtains above both poles',
+        'A plasma wake makes the object read clearly from orbit',
+    ],
+    facts: [
+        'Rogue planets are expected to exist between star systems',
+        'Strong magnetospheres can produce auroras without direct starlight',
+        'Ring systems can survive around giant planets far from a star',
+        'The visual design references Jupiter bands, Saturn rings, and polar aurora imagery',
+    ],
+};
+
+OBJECT_DOSSIERS_RU.aurelia = {
+    overview: `Aurelia - вымышленная аномалия: холодная планета-гигант без родительской звезды, видимая за счет заряженных полярных сияний, прозрачных колец и длинного хвоста ионизированной плазмы.`,
+    params: [
+        ['Масса', '~2.3 Mj'],
+        ['Тип', 'одинокий газовый гигант'],
+        ['Состояние', 'криогенные верхние облака'],
+        ['Поле', 'экстремальная магнитосфера'],
+        ['Главный признак', 'сияния и плазменный хвост'],
+        ['Кольца', 'лед и металлическая пыль'],
+    ],
+    features: [
+        'Процедурный 3D-шейдер планеты с живыми штормовыми поясами',
+        'Прозрачная атмосфера, облачный слой, кольца, луны и магнитные дуги',
+        'Полярные aurora-завесы над обоими полюсами',
+        'Плазменный хвост делает объект читаемым в orbit mode',
+    ],
+    facts: [
+        'Одинокие планеты должны встречаться между звездными системами',
+        'Сильная магнитосфера может создавать сияния даже без прямого света звезды',
+        'Кольцевые системы могут сохраняться вокруг планет-гигантов далеко от звезды',
+        'Визуальная база: пояса Юпитера, кольца Сатурна и полярные сияния',
+    ],
+};
+
 // Active language (default: Russian, swap via toggle)
 let dossierLang = 'ru';
 const DOSSIER_LABELS = {
@@ -851,6 +910,51 @@ function createNodeTexture(hex, type) {
         ctx.shadowBlur = 6; ctx.strokeStyle = '#ffffff55'; ctx.lineWidth = 1.2;
         ctx.beginPath(); ctx.arc(cx, cy, R * 0.52, 0, Math.PI * 2); ctx.stroke();
 
+    } else if (type === 'planet') {
+        // Mini rogue planet: crescent disk, rings, and aurora rim.
+        const planetR = R * 0.38;
+        const ringR = R * 0.64;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(-0.28);
+        ctx.shadowColor = hex;
+        ctx.shadowBlur = 18;
+        ctx.strokeStyle = hex + 'aa';
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, ringR, ringR * 0.26, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.shadowBlur = 4;
+        ctx.strokeStyle = '#ffffff55';
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, ringR * 0.78, ringR * 0.18, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+
+        const body = ctx.createRadialGradient(cx - planetR * 0.35, cy - planetR * 0.32, 0, cx, cy, planetR);
+        body.addColorStop(0, '#ffffff');
+        body.addColorStop(0.18, hex);
+        body.addColorStop(0.58, '#18235a');
+        body.addColorStop(1, '#020411');
+        ctx.shadowColor = hex;
+        ctx.shadowBlur = 20;
+        ctx.fillStyle = body;
+        ctx.beginPath();
+        ctx.arc(cx, cy, planetR, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.strokeStyle = '#6fffffdd';
+        ctx.lineWidth = 2;
+        ctx.shadowBlur = 14;
+        for (let i = -1; i <= 1; i++) {
+            ctx.beginPath();
+            ctx.arc(cx, cy - planetR * 0.42 + i * 5, planetR * 0.58, Math.PI * 0.15, Math.PI * 0.82);
+            ctx.stroke();
+        }
+        ctx.globalCompositeOperation = 'source-over';
+
     } else if (type === 'dyson') {
         // ── Mini Dyson sphere: star peeking through metallic grid cage ──
         const RG = R * 0.60;
@@ -1044,9 +1148,9 @@ async function initApp() {
         composer.addPass(new THREE.RenderPass(objectScene, camera));
         bloomPass = new THREE.UnrealBloomPass(
             new THREE.Vector2(window.innerWidth, window.innerHeight),
-            0.25,  // strength
+            0.14,  // strength
             0.35,  // radius
-            0.82,  // threshold
+            0.9,   // threshold
         );
         composer.addPass(bloomPass);
 
@@ -1054,7 +1158,7 @@ async function initApp() {
         const finalShader = {
             uniforms: {
                 tDiffuse:  { value: null },
-                uExposure: { value: 0.85 },
+                uExposure: { value: 0.62 },
                 uVignette: { value: 0.35 },
                 uChromaAb: { value: 0.0025 }
             },
@@ -1147,24 +1251,26 @@ async function initApp() {
         }
 
         if (appState === 'GALAXY' || appState === 'TRANSITION') {
-            const galaxyAngle = elapsed * 0.015;
-            if (galaxyParticles) galaxyParticles.rotation.y = galaxyAngle;
-            if (galaxyDust) galaxyDust.rotation.y = galaxyAngle;
+            if (appState === 'GALAXY') {
+                const galaxyAngle = elapsed * 0.015;
+                if (galaxyParticles) galaxyParticles.rotation.y = galaxyAngle;
+                if (galaxyDust) galaxyDust.rotation.y = galaxyAngle;
 
-            // rotate object markers with the galaxy spiral
-            const cosA = Math.cos(galaxyAngle), sinA = Math.sin(galaxyAngle);
-            systemNodes.forEach(node => {
-                const bp = node.userData.basePos;
-                if (bp) {
-                    node.position.x = bp.x * cosA + bp.z * sinA;
-                    node.position.z = -bp.x * sinA + bp.z * cosA;
-                    node.position.y = bp.y;
-                }
-                const pulse = 2.0 + 0.18 * Math.sin(elapsed * 2.4 + node.position.x);
-                node.scale.set(pulse, pulse, 1.0);
-            });
+                // rotate object markers with the galaxy spiral
+                const cosA = Math.cos(galaxyAngle), sinA = Math.sin(galaxyAngle);
+                systemNodes.forEach(node => {
+                    const bp = node.userData.basePos;
+                    if (bp) {
+                        node.position.x = bp.x * cosA + bp.z * sinA;
+                        node.position.z = -bp.x * sinA + bp.z * cosA;
+                        node.position.y = bp.y;
+                    }
+                    const pulse = 2.0 + 0.18 * Math.sin(elapsed * 2.4 + node.position.x);
+                    node.scale.set(pulse, pulse, 1.0);
+                });
+            }
 
-            if (autoRotate && transitionProgress === 1.0) {
+            if (appState === 'GALAXY' && autoRotate && transitionProgress === 1.0) {
                 const mt = elapsed * 0.015;
                 const radius = 45.0;
                 camera.position.x = radius * Math.cos(mt);
@@ -1204,9 +1310,14 @@ async function initApp() {
 
             if (controls && autoRotate) {
                 const mt = elapsed * 0.02;
-                const orbitR = particleMode ? 14.0 : 17.0;
-                camera.position.x = orbitR * Math.cos(mt);
-                camera.position.z = orbitR * Math.sin(mt);
+                const orbitR = obj.orbitRadius || (particleMode ? 22.0 : 17.0);
+                const swing = obj.orbitSwing || 1.0;
+                const a = swing < 0.98 ? Math.sin(mt) * swing : mt;
+                camera.position.x = orbitR * Math.sin(a);
+                camera.position.z = orbitR * Math.cos(a);
+                if (particleMode) {
+                    camera.position.y = 2.4 + Math.sin(elapsed * 0.19) * 0.45;
+                }
             }
 
             controls.update();
@@ -1234,7 +1345,7 @@ async function initApp() {
 
 function buildGalaxyMap() {
     // 1. Distant background starfield
-    const bgCount = 10000;
+    const bgCount = 16000;
     const bgGeo = new THREE.BufferGeometry();
     const bgPos = new Float32Array(bgCount * 3);
     const bgCol = new Float32Array(bgCount * 3);
@@ -1248,7 +1359,7 @@ function buildGalaxyMap() {
         bgPos[i * 3 + 1] = r * Math.cos(theta);
         bgPos[i * 3 + 2] = r * Math.sin(theta) * Math.sin(phi);
 
-        const brightness = 0.72 + Math.random() * 0.28;
+        const brightness = 0.48 + Math.random() * 0.38;
         // Slight color variation: warm whites, blue-whites, orange tints
         const tint = Math.random();
         if (tint < 0.15) {
@@ -1262,12 +1373,12 @@ function buildGalaxyMap() {
     bgGeo.setAttribute('position', new THREE.BufferAttribute(bgPos, 3));
     bgGeo.setAttribute('color', new THREE.BufferAttribute(bgCol, 3));
     const bgMat = new THREE.PointsMaterial({
-        size: 2.2,
+        size: 1.55,
         sizeAttenuation: false,
         map: createStarTexture(),
         vertexColors: true,
         transparent: true,
-        opacity: 1.0,
+        opacity: 0.82,
         blending: THREE.AdditiveBlending,
         depthWrite: false
     });
@@ -1275,7 +1386,7 @@ function buildGalaxyMap() {
     scene.add(bgStars);
 
     // Extra bright-star highlights (~800 larger stars scattered in background)
-    const brightCount = 800;
+    const brightCount = 520;
     const brightGeo = new THREE.BufferGeometry();
     const brightPos = new Float32Array(brightCount * 3);
     const brightCol = new Float32Array(brightCount * 3);
@@ -1299,42 +1410,47 @@ function buildGalaxyMap() {
     brightGeo.setAttribute('position', new THREE.BufferAttribute(brightPos, 3));
     brightGeo.setAttribute('color', new THREE.BufferAttribute(brightCol, 3));
     const brightMat = new THREE.PointsMaterial({
-        size: 4.0,
+        size: 3.1,
         sizeAttenuation: false,
         map: createStarTexture(),
         vertexColors: true,
         transparent: true,
-        opacity: 0.95,
+        opacity: 0.72,
         blending: THREE.AdditiveBlending,
         depthWrite: false
     });
     scene.add(new THREE.Points(brightGeo, brightMat));
 
-    // 2. Bright stars of the galaxy (40000 particles)
-    const count = 40000;
+    // 2. Bright stars of the galaxy
+    const count = 56000;
     const geo = new THREE.BufferGeometry();
     const pos = new Float32Array(count * 3);
     const col = new Float32Array(count * 3);
 
-    const cCore = new THREE.Color('#ffcc66');
-    const cArm = new THREE.Color('#4d66ff');
-    const cEdge = new THREE.Color('#03011c');
+    const cCore = new THREE.Color('#d88932');
+    const cArm = new THREE.Color('#5f9dff');
+    const cEdge = new THREE.Color('#05071c');
 
     for (let i = 0; i < count; i++) {
         const r = Math.pow(Math.random(), 2.3) * 24.0;
         const armIdx = i % 2;
         const theta = (armIdx * Math.PI) + (r * 0.65);
-        const sx = (Math.random() - 0.5) * (1.8 / (r * 0.1 + 0.5));
-        const sy = (Math.random() - 0.5) * (1.2 / (r * 0.15 + 0.5));
-        const sz = (Math.random() - 0.5) * (1.8 / (r * 0.1 + 0.5));
+        const sx = (Math.random() - 0.5) * (1.45 / (r * 0.1 + 0.5));
+        const sy = (Math.random() - 0.5) * (0.72 / (r * 0.15 + 0.5));
+        const sz = (Math.random() - 0.5) * (1.45 / (r * 0.1 + 0.5));
 
         pos[i * 3]     = r * Math.cos(theta) + sx;
         pos[i * 3 + 1] = sy;
         pos[i * 3 + 2] = r * Math.sin(theta) + sz;
 
         let mc;
-        if (r < 3.0) mc = cCore.clone().lerp(cArm, r / 3.0);
-        else mc = cArm.clone().lerp(cEdge, (r - 3.0) / 13.0);
+        if (r < 3.0) {
+            mc = cCore.clone().lerp(cArm, r / 3.0);
+            mc.multiplyScalar(0.30 + (r / 3.0) * 0.22);
+        } else {
+            mc = cArm.clone().lerp(cEdge, (r - 3.0) / 13.0);
+            mc.multiplyScalar(0.72);
+        }
 
         col[i * 3]     = mc.r;
         col[i * 3 + 1] = mc.g;
@@ -1345,10 +1461,11 @@ function buildGalaxyMap() {
     geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
 
     const mat = new THREE.PointsMaterial({
-        size: 0.14,
+        size: 0.096,
         map: createStarTexture(),
         vertexColors: true,
         transparent: true,
+        opacity: 0.54,
         blending: THREE.AdditiveBlending,
         depthWrite: false
     });
@@ -1356,24 +1473,24 @@ function buildGalaxyMap() {
     galaxyParticles = new THREE.Points(geo, mat);
     scene.add(galaxyParticles);
 
-    // 3. Volumetric dust/nebula clouds (15000 particles)
-    const dustCount = 15000;
+    // 3. Volumetric dust/nebula clouds
+    const dustCount = 24000;
     const dustGeo = new THREE.BufferGeometry();
     const dustPos = new Float32Array(dustCount * 3);
     const dustCol = new Float32Array(dustCount * 3);
     
-    const colorArmA = new THREE.Color('#38bdf8');
-    const colorArmB = new THREE.Color('#ea00ff');
-    const colorCoreGlow = new THREE.Color('#f0a030');
+    const colorArmA = new THREE.Color('#1f9ed5');
+    const colorArmB = new THREE.Color('#a545c8');
+    const colorCoreGlow = new THREE.Color('#d88b32');
     
     for (let i = 0; i < dustCount; i++) {
         const r = Math.pow(Math.random(), 1.8) * 24.0;
         const armIdx = i % 2;
         const theta = (armIdx * Math.PI) + (r * 0.65) + (Math.random() - 0.5) * 0.22;
         
-        const sx = (Math.random() - 0.5) * (3.3 / (r * 0.1 + 0.5));
-        const sy = (Math.random() - 0.5) * (1.8 / (r * 0.15 + 0.5));
-        const sz = (Math.random() - 0.5) * (3.3 / (r * 0.1 + 0.5));
+        const sx = (Math.random() - 0.5) * (3.9 / (r * 0.1 + 0.5));
+        const sy = (Math.random() - 0.5) * (1.15 / (r * 0.15 + 0.5));
+        const sz = (Math.random() - 0.5) * (3.9 / (r * 0.1 + 0.5));
         
         dustPos[i * 3]     = r * Math.cos(theta) + sx;
         dustPos[i * 3 + 1] = sy;
@@ -1381,7 +1498,7 @@ function buildGalaxyMap() {
         
         let c;
         if (r < 3.0) {
-            c = colorCoreGlow.clone().lerp(colorArmB, r / 3.0);
+            c = colorCoreGlow.clone().lerp(colorArmB, r / 3.0).multiplyScalar(0.38);
         } else {
             c = (armIdx === 0) 
                 ? colorArmB.clone().lerp(colorArmA, (r - 3.0) / 13.0)
@@ -1397,11 +1514,11 @@ function buildGalaxyMap() {
     dustGeo.setAttribute('color', new THREE.BufferAttribute(dustCol, 3));
     
     const dustMat = new THREE.PointsMaterial({
-        size: 2.8,
+        size: 2.35,
         map: createNebulaTexture(),
         vertexColors: true,
         transparent: true,
-        opacity: 0.22,
+        opacity: 0.085,
         blending: THREE.AdditiveBlending,
         depthWrite: false
     });
@@ -1413,19 +1530,19 @@ function buildGalaxyMap() {
     const coreSpriteMat = new THREE.SpriteMaterial({
         map: createCoreGlowTexture(),
         transparent: true,
-        opacity: 0.7,
+        opacity: 0.16,
         blending: THREE.AdditiveBlending,
         depthWrite: false
     });
     coreSprite = new THREE.Sprite(coreSpriteMat);
-    coreSprite.scale.set(10.0, 10.0, 1.0);
+    coreSprite.scale.set(5.2, 5.2, 1.0);
     scene.add(coreSprite);
 
     // 5. System Nodes (type-specific sprites, facing camera)
     const nodeColors = {
         sgr_a: '#ff8a3a',
         orion_nebula: '#ff7aa0',
-        horsehead: '#ff7a3a',
+        aurelia: '#25f0ff',
         crab_nebula: '#b56cff',
         pleiades: '#a8c8ff',
         cygnus: '#b56cff',
@@ -1434,7 +1551,7 @@ function buildGalaxyMap() {
 
     const objectTypes = {
         sgr_a: 'blackhole',
-        orion_nebula: 'nebula', horsehead: 'nebula', crab_nebula: 'nebula', pleiades: 'nebula',
+        orion_nebula: 'nebula', aurelia: 'planet', crab_nebula: 'nebula', pleiades: 'nebula',
         cygnus: 'wormhole',
         kepler: 'dyson'
     };
@@ -1449,7 +1566,7 @@ function buildGalaxyMap() {
         });
         const sprite = new THREE.Sprite(spriteMat);
         sprite.position.copy(obj.position).multiplyScalar(2.5);
-        sprite.scale.set(2.8, 2.8, 1.0);
+        sprite.scale.set(2.25, 2.25, 1.0);
         sprite.renderOrder = 999;
         sprite.userData = { id: key, basePos: sprite.position.clone() };
         scene.add(sprite);
@@ -1470,6 +1587,13 @@ function buildGalaxyMap() {
             nodeLabels[key] = lbl;
         }
     }
+}
+
+function getCurrentNodePosition(id) {
+    const node = systemNodes.find(n => n.userData && n.userData.id === id);
+    if (node) return node.position.clone();
+    const obj = OBJECTS[id];
+    return obj ? obj.position.clone().multiplyScalar(2.5) : new THREE.Vector3();
 }
 
 // ===== Raycasting =====
@@ -1549,17 +1673,20 @@ function onTransitionComplete() {
         document.getElementById('accessory-title').innerHTML = '<i class="fas fa-circle-notch"></i> Structure';
     }
 
-    // per-object shape mode for nebula shader (0=orion, 1=horsehead, 2=crab, 3=pleiades)
-    const shapeModeMap = { orion_nebula: 0, horsehead: 1, crab_nebula: 2, pleiades: 3 };
+    // per-object shape mode for legacy nebula shader (0=orion, 2=crab, 3=pleiades)
+    const shapeModeMap = { orion_nebula: 0, crab_nebula: 2, pleiades: 3 };
     uniforms.uShapeMode.value = (activeObjectId in shapeModeMap) ? shapeModeMap[activeObjectId] : 0;
     // pleiades reuses uBeamingScale as per-star brightness
     uniforms.uBeamingScale.value = (activeObjectId === 'pleiades') ? 1.6 : 0.0;
 
     // slider bounds
-    const nebulaIds = ['orion_nebula', 'horsehead', 'crab_nebula', 'pleiades'];
+    const nebulaIds = ['orion_nebula', 'crab_nebula', 'pleiades'];
     if (nebulaIds.indexOf(activeObjectId) !== -1) {
         sliders.rs.min = 0.6; sliders.rs.max = 2.5; sliders.rs.step = 0.05;
         sliders.outer.min = 7.0; sliders.outer.max = 16.0; sliders.outer.step = 0.2;
+    } else if (activeObjectId === 'aurelia') {
+        sliders.rs.min = 0.8; sliders.rs.max = 2.2; sliders.rs.step = 0.05;
+        sliders.outer.min = 5.0; sliders.outer.max = 12.0; sliders.outer.step = 0.1;
     } else if (activeObjectId === 'cygnus') {
         sliders.rs.min = 0.3; sliders.rs.max = 1.8; sliders.rs.step = 0.05;
         sliders.outer.min = 6.0; sliders.outer.max = 15.0; sliders.outer.step = 0.1;
@@ -1589,8 +1716,8 @@ function onTransitionComplete() {
 
     if (obj.renderMode === 'particles' && typeof NebulaParticles !== 'undefined') {
         currentNebulaGroup.add(NebulaParticles.build(obj.particleType, theme, renderer));
-        camera.position.set(0, 2, 14);
-        controls.maxDistance = 40.0;
+        camera.position.set(0, 2.4, obj.orbitRadius || 22.0);
+        controls.maxDistance = Math.max(40.0, (obj.orbitRadius || 22.0) * 2.2);
         controls.minDistance = 4.0;
     } else {
         // raymarched shader as fullscreen background plane in objectScene
@@ -1791,8 +1918,9 @@ function setupUIEvents() {
             if (!obj) return;
             appState = 'TRANSITION';
             transitionProgress = 0.0;
-            targetCameraPos.copy(obj.position).multiplyScalar(2.5).add(new THREE.Vector3(0, 3, 7));
-            targetLookAt.copy(obj.position).multiplyScalar(2.5);
+            const nodePos = getCurrentNodePosition(activeObjectId);
+            targetCameraPos.copy(nodePos).add(new THREE.Vector3(0, 3, 7));
+            targetLookAt.copy(nodePos);
             currentLookAt.copy(controls.target);
             infoCard.classList.add('hidden');
             autoRotate = false;
